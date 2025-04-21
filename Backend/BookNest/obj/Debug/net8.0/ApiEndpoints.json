@@ -1,0 +1,28 @@
+[
+  {
+    "ContainingType": "BookNest.Controllers.AuthController",
+    "Method": "VerifyToken",
+    "RelativePath": "api/Auth/jwtverify",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookNest.Controllers.AuthController",
+    "Method": "LoginUser",
+    "RelativePath": "api/Auth/register",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "obj",
+        "Type": "BookNest.Models.UserInfosModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  }
+]
