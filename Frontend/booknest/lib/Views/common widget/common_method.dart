@@ -80,11 +80,11 @@ Future<void> clearUserData() async
 }
 
 // Method to handle API response and save data if status code is 200
-Future<void> handleResponse(Map<String, dynamic> responseData) async
+Future<void> handleResponse(Map<dynamic, dynamic> responseData) async
 {
-  String token = responseData['token']!;
-  String email = responseData['email']!;
-  String User_Type = responseData['usertype']!;
+  String token = responseData['Token']!;
+  String email = responseData['Email']!;
+  String User_Type = responseData['Role']!;
   String login_date = DateTime.now().toUtc().toIso8601String();
   await saveJwtToken(token);
   await saveUserCredentials(email, User_Type, login_date);

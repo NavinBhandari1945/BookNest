@@ -1,5 +1,6 @@
 ﻿using BookNest.Data;
 using BookNest.Models;
+using BookNest.Models.DTOModels;
 using BookNest.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -129,52 +130,52 @@ namespace BookNest.Controllers
 
         }
 
-        //[HttpPost]
-        //[Route("login")]
-        //public async Task<IActionResult> LoginUser([FromBody] LoginModel obj)
-        //{
-        //    try
-        //    {
-        //        if (ModelState.IsValid)
-        //        {
-        //            // Check if the user exists
-        //            var user_data = await database.Signininfos.FirstOrDefaultAsync(x => x.Username == obj.Username);
+        [HttpPost]
+        [Route("login")]
+        public async Task<IActionResult> LoginUser([FromBody] LoginDTOModel obj)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    // Check if the user exists
+                    var user_data = await Database.UserInfos.FirstOrDefaultAsync(x => x.Email == obj.Email);
 
-        //            if (user_data != null)
-        //            {
-        //                // Validate password (assuming you store hashed passwords)
-        //                if (user_data.Password == HashPassword(obj.Password))
-        //                {
-        //                    // Generate token
-        //                    string token = GenerateToken();
-        //                    // Return response
-        //                    return Ok(new
-        //                    {
-        //                        token = token,
-        //                        username = user_data.Username,
-        //                        usertype = user_data.Type
-        //                    });
-        //                }
-        //                else
-        //                {
-        //                    return StatusCode(503, "Invalid password.");
-        //                }
-        //            }
-        //            else
-        //            {
-        //                return StatusCode(501, "No user with the provided username not found.");
-        //            }
-        //        }
-        //        else
-        //        {
-        //            return StatusCode(502, "Provide correct format.");
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, $"Exception caught in login action method.\n{ex.Message}"); // 500 Internal Server Error
-        //    }
-        //}
+                    if (user_data != null)
+                    {
+                        // Validate password (assuming you store hashed passwords)
+                        if (user_data.Password == BCrypt.Net.BCrypt.HashPassword(obj.Password))
+                        {
+                            // Generate token
+                            string token = TokenServices.GenerateTokenUser(user_data);
+                            // Return response
+                            return Ok(new
+                            {
+                                Token = token,
+                                Email = user_data.Email,
+                                Role = user_data.Role
+                            });
+                        }
+                        else
+                        {
+                            return StatusCode(503, "Invalid password.");
+                        }
+                    }
+                    else
+                    {
+                        return StatusCode(501, "No user with the provided email found.");
+                    }
+                }
+                else
+                {
+                    return StatusCode(502, "Provide correct format.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Exception caught in login action method.\n{ex.Message}"); // 500 Internal Server Error
+            }
+        }
 
 
 

@@ -35,7 +35,7 @@ class _UserNotLoginHomeScreenState extends State<UserNotLoginHomeScreen> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: shortestval * 0.02),
               child: ElevatedButton(
-                onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen())),
+                onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => LoginHomePage())),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue[600],
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),

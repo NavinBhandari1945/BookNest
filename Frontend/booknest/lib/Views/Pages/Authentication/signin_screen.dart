@@ -299,7 +299,7 @@ class _SignUpScreenState extends State<SignUpScreen> with SingleTickerProviderSt
   {
     return TextButton(
       onPressed: () {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginScreen()));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginHomePage()));
       },
       child: Text(
         "Go to login screen. Click me.",

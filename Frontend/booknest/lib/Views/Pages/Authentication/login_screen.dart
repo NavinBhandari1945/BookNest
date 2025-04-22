@@ -1,18 +1,30 @@
+import 'dart:convert';
+
+import 'package:booknest/Views/Pages/Admin/admin_screen.dart';
+import 'package:booknest/Views/Pages/Home/user_not_login_home_screen.dart';
+import 'package:booknest/Views/Pages/Staff/staff_home_page.dart';
 import 'package:booknest/Views/common%20widget/commonbutton.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:velocity_x/velocity_x.dart';
+import '../../../constant/constant.dart';
 import '../../../constant/styles.dart';
 import '../../common widget/CommonTextfield_obs_val_true.dart';
+import '../../common widget/common_method.dart';
 import '../../common widget/commontextfield_obs_false.dart';
+import 'package:http/http.dart' as http;
+
+import '../../common widget/toast.dart';
 
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class LoginHomePage extends StatefulWidget {
+  const LoginHomePage({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<LoginHomePage> createState() => _LoginHomePageState();
 }
 
-class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStateMixin {
+class _LoginHomePageState extends State<LoginHomePage> with SingleTickerProviderStateMixin {
   var email_cont = TextEditingController();
   var passwoord_cont = TextEditingController();
   late AnimationController _animationController;
@@ -54,44 +66,115 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
     super.dispose();
   }
 
-  // Future<int> login_user({required String username, required String password}) async {
-  //   try {
-  //     final Map<String, dynamic> userData = {"Username": username, "Password": password};
-  //     const String url = Backend_Server_Url + "api/Authentication/login";
-  //     final response = await http.post(
-  //       Uri.parse(url),
-  //       headers: {"Content-Type": "application/json"},
-  //       body: json.encode(userData),
-  //     );
-  //     if (response.statusCode == 200) {
-  //       Map<String, dynamic> responseData = jsonDecode(response.body);
-  //       await handleResponse(responseData);
-  //       return 1;
-  //     } else if (response.statusCode == 503) {
-  //       print("Invalid password.");
-  //       return 3;
-  //     } else if (response.statusCode == 501) {
-  //       print("Username don't found.");
-  //       return 4;
-  //     } else if (response.statusCode == 502) {
-  //       print("Incorrect format of provided details.");
-  //       return 5;
-  //     } else if (response.statusCode == 400) {
-  //       print("Incorrect provided details.");
-  //       return 6;
-  //     } else {
-  //       print("Other status code.Error.");
-  //       print("Status code = ${response.statusCode}");
-  //       return 2;
-  //     }
-  //   } catch (Obj) {
-  //     print("Exception caight in login user method in http method.");
-  //     print(Obj.toString());
-  //     return 0;
-  //   }
-  // }
+  Future<int> login_user({required String email, required String password}) async {
+    try {
+      final Map<String, dynamic> userData = {"Email": email, "Password": password};
+      const String url = Backend_Server_Url + "api/Auth/login";
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {"Content-Type": "application/json"},
+        body: json.encode(userData),
+      );
+      if (response.statusCode == 200) {
+        Map<dynamic, dynamic> responseData = jsonDecode(response.body);
+        await handleResponse(responseData);
+        return 1;
+      } else if (response.statusCode == 503) {
+        print("Invalid password.");
+        return 3;
+      } else if (response.statusCode == 501) {
+        print("Email don't found.");
+        return 4;
+      } else if (response.statusCode == 502) {
+        print("Incorrect format of provided details.");
+        return 5;
+      } else if (response.statusCode == 400) {
+        print("Incorrect provided details.");
+        return 6;
+      } else {
+        print("Other status code.Error.");
+        print("Status code = ${response.statusCode}");
+        return 2;
+      }
+    } catch (Obj) {
+      print("Exception caight in login user method in http method.");
+      print(Obj.toString());
+      return 0;
+    }
+  }
 
-  @override
+  Future<int> _login() async {
+    try {
+      if (email_cont.text.isEmptyOrNull || passwoord_cont.text.isEmptyOrNull) {
+        Toastget().Toastmsg("All fields are mandatory. Fill first and try again.");
+        return 0;
+      }
+      int login_rsult = await login_user(email: email_cont.text, password: passwoord_cont.text);
+      print("Login result");
+      print(login_rsult);
+      if (login_rsult == 1) {
+        final box = await Hive.openBox('userData');
+        String? jwtToken = await box.get('jwt_token');
+        Map<dynamic, dynamic> userData = await getUserCredentials();
+        if (jwtToken.isEmptyOrNull && userData == null)
+        {
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginHomePage()));
+          Toastget().Toastmsg("Login Failed. Try again.");
+          return 0;
+        } else {
+          if (userData["usertype"] == "Admin") {
+            Toastget().Toastmsg("Login success");
+            Navigator.pushReplacement (
+              context,
+              MaterialPageRoute(
+                builder: (context) => AdminHomePage()
+              ),
+            );
+            return 1;
+          }
+          else if(userData["usertype"] == "Staff")
+          {
+            Toastget().Toastmsg("Login success");
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => StaffHomePage()
+              ),
+            );
+          }
+          else if(userData["usertype"] == "Member")
+          {
+            Toastget().Toastmsg("Login success");
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => LoginHomePage()
+              ),
+            );
+          }
+        }
+      } else if (login_rsult == 5) {
+        Toastget().Toastmsg("Enter details in correct format.");
+      } else if (login_rsult == 4) {
+        Toastget().Toastmsg("Username not found. Enter valid username.");
+      } else if (login_rsult == 3) {
+        Toastget().Toastmsg("Invalid password. Login failed.");
+      } else if (login_rsult == 6) {
+        Toastget().Toastmsg("Invalid entered details. Login failed.");
+      } else {
+        Toastget().Toastmsg("Login failed. Try again.");
+      }
+    } catch (obj) {
+      print("${obj.toString()}");
+      Toastget().Toastmsg("Server error. Try again.");
+    } finally {
+      isloading_getx_cont.change_isloadingval(false);
+    }
+  }
+}
+
+
+@override
   Widget build(BuildContext context) {
     var shortestval = MediaQuery.of(context).size.shortestSide;
     var widthval = MediaQuery.of(context).size.width;
@@ -197,7 +280,12 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                       ),
                       SizedBox(height: shortestval * 0.06),
                       Center(
-                        child: Commonbutton("Login", (){}, context, Colors.red),
+                        child: Commonbutton("Login", ()async{
+
+
+
+
+                        }, context, Colors.red),
                       ),
                       SizedBox(height: shortestval * 0.04),
                       Row(

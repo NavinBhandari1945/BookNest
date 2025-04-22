@@ -7,9 +7,10 @@ namespace BookNest.Models.DTOModels
         [Required]
         [StringLength(200)]
         [EmailAddress]
-        public string Email { get; set; } = string.Empty;
+        public string Email { get; set; }
 
         [Required]
-        public string Password { get; set; } = string.Empty;
+        [StringLength(200)]
+        public string Password { get; set; } 
     }
 }
