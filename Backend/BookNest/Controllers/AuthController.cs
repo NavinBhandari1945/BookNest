@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace BookNest.Controllers
 {
@@ -21,6 +23,26 @@ namespace BookNest.Controllers
         {
             this.Database = Database;
             this.TokenServices = TokenServices;
+        }
+
+
+        private string HashPassword(string password)
+        {
+            using (var sha256 = SHA256.Create())
+            {
+                // Compute hash for the password
+                var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+                // Convert the byte array to a hexadecimal string
+                if (hashedBytes!=null)
+                {
+                    return BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
+                }
+                else
+                {
+                    return "";
+                }
+               
+            }
         }
 
         [HttpPost]
@@ -49,54 +71,78 @@ namespace BookNest.Controllers
                         if (!await Database.UserInfos.AnyAsync(u=>u.Role=="Admin"))
                         {
 
-                            obj.Password = BCrypt.Net.BCrypt.HashPassword(obj.Password);
-                            UserInfosModel UserDataAdmin = new UserInfosModel
-                                (
-                                        UserId:obj.UserId,           
-                                        FirstName:obj.FirstName,                 
-                                        LastName: obj.LastName,           
-                                        Email: obj.Email,           
-                                        PhoneNumber: obj.PhoneNumber,      
-                                        Password: obj.Password,           
-                                        Role: "Admin"                      
-                                );
-                            await Database.UserInfos.AddAsync(UserDataAdmin);
-                            await Database.SaveChangesAsync();
-                            return Ok(new { UserDataAdmin, Message = "User registered as admin." });
+                            var Encrypted_Password_Admin = HashPassword(obj.Password);
+                            if(Encrypted_Password_Admin!="" && Encrypted_Password_Admin!=null)
+                            {
+                                UserInfosModel UserDataAdmin = new UserInfosModel
+                          (
+                                  UserId: obj.UserId,
+                                  FirstName: obj.FirstName,
+                                  LastName: obj.LastName,
+                                  Email: obj.Email,
+                                  PhoneNumber: obj.PhoneNumber,
+                                  Password: Encrypted_Password_Admin,
+                                  Role: "Admin"
+                          );
+                                await Database.UserInfos.AddAsync(UserDataAdmin);
+                                await Database.SaveChangesAsync();
+                                return Ok(new { UserDataAdmin, Message = "User registered as admin." });
+                            }
+                            else
+                            {
+                                return StatusCode(502,"Encrypting password fail.");
+                            }
+                      
 
                         }
-                        obj.Password = BCrypt.Net.BCrypt.HashPassword(obj.Password);
-                        UserInfosModel UserDataMember = new UserInfosModel
-                         (
-                                 UserId: obj.UserId,
-                                 FirstName: obj.FirstName,
-                                 LastName: obj.LastName,
-                                 Email: obj.Email,
-                                 PhoneNumber: obj.PhoneNumber,
-                                 Password: obj.Password,
-                                 Role:"Member"
-                         );
-                        await Database.UserInfos.AddAsync(UserDataMember); 
-                        await Database.SaveChangesAsync();
-                        return Ok(new { UserDataMember, Message = "User registered as member." });
-                    
+                        var Encrypted_Password_Member = HashPassword(obj.Password);
+                        if (Encrypted_Password_Member != "" && Encrypted_Password_Member != null)
+                        {
+                            UserInfosModel UserDataMember = new UserInfosModel
+                      (
+                              UserId: obj.UserId,
+                              FirstName: obj.FirstName,
+                              LastName: obj.LastName,
+                              Email: obj.Email,
+                              PhoneNumber: obj.PhoneNumber,
+                              Password: Encrypted_Password_Member,
+                              Role: "Member"
+                      );
+                            await Database.UserInfos.AddAsync(UserDataMember);
+                            await Database.SaveChangesAsync();
+                            return Ok(new { UserDataMember, Message = "User registered as member." });
+
+                        }
+                        else
+                        {
+                            return StatusCode(502, "Encrypting password fail.");
+                        }
+
                     }
                     else
                     {
-                        obj.Password = BCrypt.Net.BCrypt.HashPassword(obj.Password);
-                        UserInfosModel UserDataAdmin = new UserInfosModel
-                            (
-                                    UserId: obj.UserId,
-                                    FirstName: obj.FirstName,
-                                    LastName: obj.LastName,
-                                    Email: obj.Email,
-                                    PhoneNumber: obj.PhoneNumber,
-                                    Password: obj.Password,
-                                    Role: "Admin"
-                            );
-                        await Database.UserInfos.AddAsync(UserDataAdmin);
-                        await Database.SaveChangesAsync();
-                        return Ok(new { UserDataAdmin, Message = "User registered as admin." });
+                        var Encrypted_Password = HashPassword(obj.Password);
+                        if (Encrypted_Password!=null && Encrypted_Password!="")
+                        {
+                            UserInfosModel UserDataAdmin = new UserInfosModel
+                       (
+                               UserId: obj.UserId,
+                               FirstName: obj.FirstName,
+                               LastName: obj.LastName,
+                               Email: obj.Email,
+                               PhoneNumber: obj.PhoneNumber,
+                               Password: Encrypted_Password,
+                               Role: "Admin"
+                       );
+                            await Database.UserInfos.AddAsync(UserDataAdmin);
+                            await Database.SaveChangesAsync();
+                            return Ok(new { UserDataAdmin, Message = "User registered as admin." });
+                        }
+                        else
+                        {
+                            return StatusCode(502, "Encrypting password fail.");
+                        }
+
 
                     }
                 }
@@ -143,8 +189,11 @@ namespace BookNest.Controllers
 
                     if (user_data != null)
                     {
+                        var Encrypted_Password =HashPassword(obj.Password);
+                        Console.WriteLine("encrypted passsword");
+                        Console.WriteLine(Encrypted_Password);
                         // Validate password (assuming you store hashed passwords)
-                        if (user_data.Password == BCrypt.Net.BCrypt.HashPassword(obj.Password))
+                        if (user_data.Password ==Encrypted_Password)
                         {
                             // Generate token
                             string token = TokenServices.GenerateTokenUser(user_data);

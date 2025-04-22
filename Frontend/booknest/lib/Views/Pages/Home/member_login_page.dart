@@ -1,17 +1,17 @@
-import 'package:booknest/Views/Pages/Authentication/login_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../../../constant/styles.dart';
+import '../Authentication/login_screen.dart';
 import '../Authentication/signin_screen.dart';
 
-class LoginHomePage extends StatefulWidget {
-  const LoginHomePage({super.key});
+class MemberHomePage extends StatefulWidget {
+  const MemberHomePage({super.key});
 
   @override
-  State<LoginHomePage> createState() => _LoginHomePageState();
+  State<MemberHomePage> createState() => _MemberHomePageState();
 }
 
-class _LoginHomePageState extends State<LoginHomePage> {
+class _MemberHomePageState extends State<MemberHomePage> {
   @override
   Widget build(BuildContext context) {
     var shortestval = MediaQuery.of(context).size.shortestSide;
@@ -70,4 +70,5 @@ class _LoginHomePageState extends State<LoginHomePage> {
         )
     );
   }
+
 }

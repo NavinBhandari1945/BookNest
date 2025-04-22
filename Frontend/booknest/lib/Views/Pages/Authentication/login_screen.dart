@@ -1,7 +1,6 @@
 import 'dart:convert';
-
 import 'package:booknest/Views/Pages/Admin/admin_screen.dart';
-import 'package:booknest/Views/Pages/Home/user_not_login_home_screen.dart';
+import 'package:booknest/Views/Pages/Home/member_login_page.dart';
 import 'package:booknest/Views/Pages/Staff/staff_home_page.dart';
 import 'package:booknest/Views/common%20widget/commonbutton.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +12,6 @@ import '../../common widget/CommonTextfield_obs_val_true.dart';
 import '../../common widget/common_method.dart';
 import '../../common widget/commontextfield_obs_false.dart';
 import 'package:http/http.dart' as http;
-
 import '../../common widget/toast.dart';
 
 
@@ -24,7 +22,9 @@ class LoginHomePage extends StatefulWidget {
   State<LoginHomePage> createState() => _LoginHomePageState();
 }
 
-class _LoginHomePageState extends State<LoginHomePage> with SingleTickerProviderStateMixin {
+class _LoginHomePageState extends State<LoginHomePage> with SingleTickerProviderStateMixin
+{
+
   var email_cont = TextEditingController();
   var passwoord_cont = TextEditingController();
   late AnimationController _animationController;
@@ -99,8 +99,8 @@ class _LoginHomePageState extends State<LoginHomePage> with SingleTickerProvider
         Toastget().Toastmsg("All fields are mandatory. Fill first and try again.");
         return 0;
       }
-      int login_rsult = await login_user(email: email_cont.text, password: passwoord_cont.text);
-      print("Login result");
+      int login_rsult = await login_user(email: email_cont.text.toString(), password: passwoord_cont.text.toString());
+      print("Login result from http method");
       print(login_rsult);
       if (login_rsult == 1) {
         final box = await Hive.openBox('userData');
@@ -141,7 +141,7 @@ class _LoginHomePageState extends State<LoginHomePage> with SingleTickerProvider
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                  builder: (context) => LoginHomePage()
+                  builder: (context) => MemberHomePage()
               ),
             );
             return 1;
@@ -159,9 +159,21 @@ class _LoginHomePageState extends State<LoginHomePage> with SingleTickerProvider
         }
       } else if (login_rsult == 5) {
         Toastget().Toastmsg("Enter details in wrong format.");
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) => LoginHomePage()
+          ),
+        );
         return 0;
       } else if (login_rsult == 4) {
         Toastget().Toastmsg("Email not found. Enter register email.");
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) => LoginHomePage()
+          ),
+        );
         return 0;
       } else if (login_rsult == 3) {
         Toastget().Toastmsg("Invalid password.Login failed.");
@@ -179,11 +191,12 @@ class _LoginHomePageState extends State<LoginHomePage> with SingleTickerProvider
       return 0;
     }
   }
-}
 
-Widget _Login_UI_Layout(double shortestval, double widthval, double heightval) {
+
+Widget _Login_UI_Layout(double shortestval, double widthval, double heightval)
+{
   return FadeTransition(
-    opacity: ,
+    opacity:_fadeAnimation ,
     child: SlideTransition(
       position: _slideAnimation,
       child: Center(
@@ -259,8 +272,8 @@ Widget _Login_UI_Layout(double shortestval, double widthval, double heightval) {
                     Center(
                       child: Commonbutton("Login", ()async{
 
-
-
+                        int Login_Result=await _login();
+                        print("Login result from widget = ${Login_Result}");
 
                       }, context, Colors.red),
                     ),
@@ -327,6 +340,13 @@ Widget _Login_UI_Layout(double shortestval, double widthval, double heightval) {
       ),
     );
   }
+
+
+}
+
+
+
+
 
 
 

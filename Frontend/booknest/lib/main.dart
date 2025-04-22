@@ -1,11 +1,8 @@
-import 'package:booknest/Views/Pages/Authentication/login_screen.dart';
 import 'package:booknest/Views/Pages/Home/user_not_login_home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
-
-import 'Views/Pages/Home/Login_Home_Page.dart';
 import 'Views/common widget/common_method.dart';
 
 void main() async {

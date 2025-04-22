@@ -7,9 +7,11 @@ Widget CommonTextField_obs_val_true(
     String? title,
     String hintText,
     TextEditingController controllerVal,
-    BuildContext context, {
+    BuildContext context,
+    {
       InputDecoration? decoration, // Optional decoration parameter
-    }) {
+    }
+    ){
   var shortestVal = MediaQuery.of(context).size.shortestSide;
 
   // Default decoration if none provided

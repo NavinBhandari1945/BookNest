@@ -1,5 +1,4 @@
 import 'package:booknest/Views/Pages/Admin/admin_screen.dart';
-import 'package:booknest/Views/Pages/Authentication/login_screen.dart';
 import 'package:booknest/Views/Pages/Home/user_not_login_home_screen.dart';
 import 'package:booknest/Views/Pages/Staff/staff_home_page.dart';
 import 'package:flutter/cupertino.dart';
@@ -7,7 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 import '../../constant/constant.dart';
-import '../Pages/Home/Login_Home_Page.dart';
+import '../Pages/Home/member_login_page.dart';
+
 
 Future<void> saveJwtToken(String token) async
 {
@@ -82,9 +82,9 @@ Future<void> clearUserData() async
 // Method to handle API response and save data if status code is 200
 Future<void> handleResponse(Map<dynamic, dynamic> responseData) async
 {
-  String token = responseData['Token']!;
-  String email = responseData['Email']!;
-  String User_Type = responseData['Role']!;
+  String token = responseData['token']!;
+  String email = responseData['email']!;
+  String User_Type = responseData['role']!;
   String login_date = DateTime.now().toUtc().toIso8601String();
   await saveJwtToken(token);
   await saveUserCredentials(email, User_Type, login_date);
@@ -133,13 +133,13 @@ Future<Widget> Check_Jwt_Token_Start_Screen() async
 
     if (userData["usertype"] == "Member")
     {
-      // return Index_Home_Screen(username: userData["username"]!, usertype: userData["usertype"]!, jwttoken:jwtToken);
-      return LoginHomePage();
+
+      return MemberHomePage();
     }
 
     if (userData["usertype"] == "Staff")
     {
-      // return Index_Home_Screen(username: userData["username"]!, usertype: userData["usertype"]!, jwttoken:jwtToken);
+
       return StaffHomePage();
     }
 
