@@ -44,22 +44,12 @@ class _LoginHomePageState extends State<LoginHomePage> with SingleTickerProvider
     _slideAnimation = Tween<Offset>(begin: Offset(0, 0.3), end: Offset.zero).animate(
       CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
     );
-
-    // try {
-    //   Check_Jwt_Token_Landing_Screen(context: context);
-    // } catch (obj) {
-    //   print("Exception caught while checking for landing screen");
-    //   print(obj.toString());
-    //   clearUserData();
-    //   deleteTempDirectoryPostVideo();
-    //   deleteTempDirectoryCampaignVideo();
-    //   Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginScreen()));
-    // }
     _animationController.forward();
   }
 
   @override
-  void dispose() {
+  void dispose()
+  {
     _animationController.dispose();
     email_cont.dispose();
     passwoord_cont.dispose();
@@ -121,7 +111,8 @@ class _LoginHomePageState extends State<LoginHomePage> with SingleTickerProvider
           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginHomePage()));
           Toastget().Toastmsg("Login Failed. Try again.");
           return 0;
-        } else {
+        } else
+        {
           if (userData["usertype"] == "Admin") {
             Toastget().Toastmsg("Login success");
             Navigator.pushReplacement (
@@ -141,6 +132,8 @@ class _LoginHomePageState extends State<LoginHomePage> with SingleTickerProvider
                 builder: (context) => StaffHomePage()
               ),
             );
+
+            return 1;
           }
           else if(userData["usertype"] == "Member")
           {
@@ -151,31 +144,162 @@ class _LoginHomePageState extends State<LoginHomePage> with SingleTickerProvider
                   builder: (context) => LoginHomePage()
               ),
             );
+            return 1;
+          }
+          else {
+            Toastget().Toastmsg("Login fail.Server error.Try again.");
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => LoginHomePage()
+              ),
+            );
+            return 0;
           }
         }
       } else if (login_rsult == 5) {
-        Toastget().Toastmsg("Enter details in correct format.");
+        Toastget().Toastmsg("Enter details in wrong format.");
+        return 0;
       } else if (login_rsult == 4) {
-        Toastget().Toastmsg("Username not found. Enter valid username.");
+        Toastget().Toastmsg("Email not found. Enter register email.");
+        return 0;
       } else if (login_rsult == 3) {
-        Toastget().Toastmsg("Invalid password. Login failed.");
+        Toastget().Toastmsg("Invalid password.Login failed.");
+        return 0;
       } else if (login_rsult == 6) {
         Toastget().Toastmsg("Invalid entered details. Login failed.");
+        return 0;
       } else {
         Toastget().Toastmsg("Login failed. Try again.");
+        return 0;
       }
     } catch (obj) {
       print("${obj.toString()}");
       Toastget().Toastmsg("Server error. Try again.");
-    } finally {
-      isloading_getx_cont.change_isloadingval(false);
+      return 0;
     }
   }
 }
 
+Widget _Login_UI_Layout(double shortestval, double widthval, double heightval) {
+  return FadeTransition(
+    opacity: ,
+    child: SlideTransition(
+      position: _slideAnimation,
+      child: Center(
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Padding(
+            padding: EdgeInsets.all(shortestval * 0.05),
+            child: Card(
+              elevation: 8,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              child: Container(
+                width: widthval * 0.9,
+                padding: EdgeInsets.all(shortestval * 0.06),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.2),
+                      blurRadius: 10,
+                      offset: Offset(0, 5),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Welcome Back!",
+                      style: TextStyle(
+                        fontFamily: bold,
+                        fontSize: shortestval * 0.07,
+                        color: Colors.green[700],
+                      ),
+                    ),
+                    SizedBox(height: shortestval * 0.04),
+                    CommonTextField_obs_false(
+                      "Enter your email",
+                      "",
+                      false,
+                      email_cont,
+                      context,
+                      decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.person, color: Colors.green[700]),
+                        filled: true,
+                        fillColor: Colors.grey[100],
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide.none,
+                        ),
+                        hintStyle: TextStyle(color: Colors.grey[500], fontFamily: regular),
+                      ),
+                    ),
+                    SizedBox(height: shortestval * 0.04),
+                    CommonTextField_obs_val_true(
+                      "Enter your Password",
+                      "",
+                      passwoord_cont,
+                      context,
+                      decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.lock, color: Colors.green[700]),
+                        filled: true,
+                        fillColor: Colors.grey[100],
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide.none,
+                        ),
+                        hintStyle: TextStyle(color: Colors.grey[500], fontFamily: regular),
+                      ),
+                    ),
+                    SizedBox(height: shortestval * 0.06),
+                    Center(
+                      child: Commonbutton("Login", ()async{
+
+
+
+
+                      }, context, Colors.red),
+                    ),
+                    SizedBox(height: shortestval * 0.04),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        TextButton(
+                          onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) =>Container()),
+                          ),
+                          child: Text(
+                            "Forgot Password?",
+                            style: TextStyle(
+                              fontFamily: semibold,
+                              color: Colors.green[700],
+                              fontSize: shortestval * 0.04,
+                            ),
+                          ),
+                        ),
+
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
 
 @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context)
+{
     var shortestval = MediaQuery.of(context).size.shortestSide;
     var widthval = MediaQuery.of(context).size.width;
     var heightval = MediaQuery.of(context).size.height;
@@ -203,192 +327,6 @@ class _LoginHomePageState extends State<LoginHomePage> with SingleTickerProvider
       ),
     );
   }
-
-  Widget _Login_UI_Layout(double shortestval, double widthval, double heightval) {
-    return FadeTransition(
-      opacity: _fadeAnimation,
-      child: SlideTransition(
-        position: _slideAnimation,
-        child: Center(
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Padding(
-              padding: EdgeInsets.all(shortestval * 0.05),
-              child: Card(
-                elevation: 8,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                child: Container(
-                  width: widthval * 0.9,
-                  padding: EdgeInsets.all(shortestval * 0.06),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
-                        blurRadius: 10,
-                        offset: Offset(0, 5),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Welcome Back!",
-                        style: TextStyle(
-                          fontFamily: bold,
-                          fontSize: shortestval * 0.07,
-                          color: Colors.green[700],
-                        ),
-                      ),
-                      SizedBox(height: shortestval * 0.04),
-                      CommonTextField_obs_false(
-                        "Enter your email",
-                        "",
-                        false,
-                        email_cont,
-                        context,
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.person, color: Colors.green[700]),
-                          filled: true,
-                          fillColor: Colors.grey[100],
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide.none,
-                          ),
-                          hintStyle: TextStyle(color: Colors.grey[500], fontFamily: regular),
-                        ),
-                      ),
-                      SizedBox(height: shortestval * 0.04),
-                      CommonTextField_obs_val_true(
-                        "Enter your Password",
-                        "",
-                        passwoord_cont,
-                        context,
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.lock, color: Colors.green[700]),
-                          filled: true,
-                          fillColor: Colors.grey[100],
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide.none,
-                          ),
-                          hintStyle: TextStyle(color: Colors.grey[500], fontFamily: regular),
-                        ),
-                      ),
-                      SizedBox(height: shortestval * 0.06),
-                      Center(
-                        child: Commonbutton("Login", ()async{
-
-
-
-
-                        }, context, Colors.red),
-                      ),
-                      SizedBox(height: shortestval * 0.04),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          TextButton(
-                            onPressed: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) =>Container()),
-                            ),
-                            child: Text(
-                              "Forgot Password?",
-                              style: TextStyle(
-                                fontFamily: semibold,
-                                color: Colors.green[700],
-                                fontSize: shortestval * 0.04,
-                              ),
-                            ),
-                          ),
-
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-
-
-  // void _login() async {
-  //   try {
-  //     isloading_getx_cont.change_isloadingval(true);
-  //     if (username_cont.text.isEmptyOrNull || passwoord_cont.text.isEmptyOrNull) {
-  //       Toastget().Toastmsg("All fields are mandatory. Fill first and try again.");
-  //       isloading_getx_cont.change_isloadingval(false);
-  //       return;
-  //     }
-  //     int login_rsult = await login_user(username: username_cont.text, password: passwoord_cont.text);
-  //     print("Login result");
-  //     print(login_rsult);
-  //     if (login_rsult == 1) {
-  //       final box = await Hive.openBox('userData');
-  //       String? jwtToken = await box.get('jwt_token');
-  //       Map<dynamic, dynamic> userData = await getUserCredentials();
-  //       if (jwtToken == null && userData == null) {
-  //         isloading_getx_cont.change_isloadingval(false);
-  //         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AuthenticationHome()));
-  //         Toastget().Toastmsg("Login Failed. Try again.");
-  //       } else {
-  //         if (userData["usertype"] == "user") {
-  //           Toastget().Toastmsg("Login success");
-  //           Navigator.pushReplacement(
-  //             context,
-  //             MaterialPageRoute(
-  //               builder: (context) => Index_Home_Screen(
-  //                 username: userData["username"]!,
-  //                 usertype: userData["usertype"]!,
-  //                 jwttoken: jwtToken!,
-  //               ),
-  //             ),
-  //           );
-  //         } else if (userData["usertype"] == "admin") {
-  //           Toastget().Toastmsg("Login success");
-  //           Navigator.pushReplacement(
-  //             context,
-  //             MaterialPageRoute(
-  //               builder: (context) => AdminHome(
-  //                 jwttoken: jwtToken!,
-  //                 usertype: userData["usertype"]!,
-  //                 username: userData["username"]!,
-  //               ),
-  //             ),
-  //           );
-  //         }
-  //       }
-  //     } else if (login_rsult == 5) {
-  //       Toastget().Toastmsg("Enter details in correct format.");
-  //     } else if (login_rsult == 4) {
-  //       Toastget().Toastmsg("Username not found. Enter valid username.");
-  //     } else if (login_rsult == 3) {
-  //       Toastget().Toastmsg("Invalid password. Login failed.");
-  //     } else if (login_rsult == 6) {
-  //       Toastget().Toastmsg("Invalid entered details. Login failed.");
-  //     } else {
-  //       Toastget().Toastmsg("Login failed. Try again.");
-  //     }
-  //   } catch (obj) {
-  //     print("${obj.toString()}");
-  //     Toastget().Toastmsg("Server error. Try again.");
-  //   } finally {
-  //     isloading_getx_cont.change_isloadingval(false);
-  //   }
-  // }
-
-
-
-}
 
 
 

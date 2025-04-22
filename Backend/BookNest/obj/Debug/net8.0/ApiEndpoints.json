@@ -12,6 +12,22 @@
   {
     "ContainingType": "BookNest.Controllers.AuthController",
     "Method": "LoginUser",
+    "RelativePath": "api/Auth/login",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "obj",
+        "Type": "BookNest.Models.DTOModels.LoginDTOModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookNest.Controllers.AuthController",
+    "Method": "LoginUser",
     "RelativePath": "api/Auth/register",
     "HttpMethod": "POST",
     "IsController": true,
