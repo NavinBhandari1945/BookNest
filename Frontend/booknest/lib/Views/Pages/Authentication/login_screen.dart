@@ -129,7 +129,7 @@ class _LoginHomePageState extends State<LoginHomePage> with SingleTickerProvider
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => StaffHomePage()
+                builder: (context) =>StaffHomePage(jwttoken: jwtToken!, usertype:userData['usertype'], email: userData["email"],)
               ),
             );
 

@@ -3,7 +3,11 @@ import 'package:flutter/material.dart';
 import '../../../constant/styles.dart';
 
 class StaffHomePage extends StatefulWidget {
-  const StaffHomePage({super.key});
+  final String email;
+  final String usertype;
+  final String jwttoken;
+  const StaffHomePage({super.key,required this.jwttoken,required this.usertype,required this.email});
+
 
   @override
   State<StaffHomePage> createState() => _StaffHomePageState();

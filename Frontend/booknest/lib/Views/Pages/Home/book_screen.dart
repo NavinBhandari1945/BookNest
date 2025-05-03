@@ -185,7 +185,9 @@ class _BookScreenState extends State<BookScreen> {
                               Filter_User_Info_List.clear();
                               Filter_User_Info_List.add(user_info);
                             }
+
                           }
+
                           if(Filter_User_Info_List.length<=0)
                           {
                             Filter_User_Info_List.clear();

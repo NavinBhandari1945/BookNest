@@ -119,7 +119,7 @@ Future<Widget> Check_Jwt_Token_Start_Screen() async {
     }
 
     if (userData["usertype"] == "Staff") {
-      return StaffHomePage();
+      return StaffHomePage(jwttoken: jwtToken!, usertype:userData['usertype']!, email: userData["email"]!,);
     }
   } else {
     print("jwt token unverified in main.dart.");

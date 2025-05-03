@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:http/http.dart' as http;
-import 'package:velocity_x/velocity_x.dart';
+
 
 import '../../../constant/constant.dart';
 import '../../../constant/styles.dart';
@@ -126,7 +126,6 @@ class _AddBookState extends State<AddBook> {
         "DiscountEnd": DiscountEnd,
         "Photo":base64Image
       };
-
 
       const String url = Backend_Server_Url + "api/Admin/add_book";
 
