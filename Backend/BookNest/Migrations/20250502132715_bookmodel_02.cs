@@ -1,0 +1,48 @@
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+
+#nullable disable
+
+namespace BookNest.Migrations
+{
+    /// <inheritdoc />
+    public partial class bookmodel_02 : Migration
+    {
+        /// <inheritdoc />
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.CreateTable(
+                name: "BookInfos",
+                columns: table => new
+                {
+                    BookId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    BookName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Price = table.Column<decimal>(type: "numeric", nullable: false),
+                    Format = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Title = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Author = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Publisher = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    PublicationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Language = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    ListedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    AvailableQuantity = table.Column<int>(type: "integer", nullable: false),
+                    DiscountPercent = table.Column<decimal>(type: "numeric", nullable: false),
+                    DiscountStart = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    DiscountEnd = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BookInfos", x => x.BookId);
+                });
+        }
+
+        /// <inheritdoc />
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropTable(
+                name: "BookInfos");
+        }
+    }
+}

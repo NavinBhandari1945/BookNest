@@ -118,7 +118,7 @@ class _LoginHomePageState extends State<LoginHomePage> with SingleTickerProvider
             Navigator.pushReplacement (
               context,
               MaterialPageRoute(
-                builder: (context) => AdminHomePage()
+                builder: (context) => AdminHomePage(jwttoken: jwtToken!, usertype:userData['usertype'], email: userData["email"],)
               ),
             );
             return 1;
@@ -141,7 +141,7 @@ class _LoginHomePageState extends State<LoginHomePage> with SingleTickerProvider
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                  builder: (context) => MemberHomePage()
+                  builder: (context) => MemberHomePage(jwttoken: jwtToken!, usertype:userData['usertype'], email: userData["email"],)
               ),
             );
             return 1;

@@ -14,6 +14,8 @@ namespace BookNest.Data
 
         public DbSet<UserInfosModel> UserInfos { get; set; }
 
+        public DbSet<BookInfos> BookInfos { get; set; }
+
 
 
     }

@@ -1,49 +1,47 @@
-
-import 'dart:io';
 import 'dart:typed_data';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
-class pick_single_photo_getx_int extends GetxController
-{
-  RxString imagePath = "".obs; // To store the file path
+class PickSinglePhotoGetxInt extends GetxController {
+  RxString imagePath = "".obs; // To store the file name (not path in web)
   Rx<Uint8List?> imageBytes = Rx<Uint8List?>(null); // To store the image in bytes
+
   // Method to pick an image
   Future<int> pickImage() async {
-    try
-    {
+    try {
       final ImagePicker imagePicker = ImagePicker();
       final XFile? image = await imagePicker.pickImage(source: ImageSource.gallery);
+
       if (image != null) {
+        // Get the file name and extension
+        String fileName = image.name.toLowerCase();
+        String? fileExtension = fileName.split('.').last;
+
+        print("File name: $fileName");
+        print("File extension: $fileExtension");
+
         // Validate file extension
-        String fileExtension = image.path.split('.').last.toLowerCase();
         if (fileExtension == 'jpg' || fileExtension == 'jpeg' || fileExtension == 'png') {
-          // Update the image path
-          imagePath.value = image.path;
-          // Convert the image file to bytes and store
-          File imageFile = File(image.path);
-          imageBytes.value = await imageFile.readAsBytes();
-          print("image select success.");
+          // Update the image path (use file name for reference)
+          imagePath.value = fileName;
+
+          // Read the image as bytes
+          imageBytes.value = await image.readAsBytes();
+
+          print("Image selected successfully.");
           return 1;
-        }
-        else
-        {
-          print("invalid photo format.");
+        } else {
+          print("Invalid photo format. Selected file: $fileName");
           return 2;
         }
-      }
-      else
-      {
-        print("Image not select.image picker");
+      } else {
+        print("Image not selected.");
         return 3;
       }
-    }
-    catch (obj)
-    {
-      print("Exception caught while selecting image");
-      print("Exception = ${obj.toString()}");
+    } catch (e) {
+      print("Exception caught while selecting image: $e");
       return 4;
     }
   }
-
 }
+

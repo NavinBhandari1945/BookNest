@@ -1,5 +1,37 @@
 [
   {
+    "ContainingType": "BookNest.Controllers.AdminController",
+    "Method": "AddBook",
+    "RelativePath": "api/Admin/add_book",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "Obj",
+        "Type": "BookNest.Models.BookInfosStringModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookNest.Controllers.AdminController",
+    "Method": "Chnage_User_Role",
+    "RelativePath": "api/Admin/change_user_role",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "obj",
+        "Type": "BookNest.Models.DTOModels.ChangeUserRoleModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "BookNest.Controllers.AuthController",
     "Method": "VerifyToken",
     "RelativePath": "api/Auth/jwtverify",
@@ -39,6 +71,16 @@
         "IsRequired": true
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookNest.Controllers.MemberController",
+    "Method": "Get_Books_Infos",
+    "RelativePath": "api/Member/getbooksinfo",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   }
 ]
