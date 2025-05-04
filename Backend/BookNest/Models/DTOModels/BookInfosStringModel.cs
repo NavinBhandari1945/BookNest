@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
-namespace BookNest.Models
+namespace BookNest.Models.DTOModels
 {
     public class BookInfosStringModel
     {

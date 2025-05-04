@@ -16,6 +16,20 @@ namespace BookNest.Data
 
         public DbSet<BookInfos> BookInfos { get; set; }
 
+        public DbSet<ReviewModel> ReviewInfos { get; set; }
+
+        public DbSet<CartModel> CartInfos { get; set; }
+
+        public DbSet<BookmarkModel> BookmarkInfos { get; set; }
+
+        public DbSet<OrderModel> OrderInfos { get; set; }
+
+
+
+
+
+
+
 
 
     }

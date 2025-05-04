@@ -69,6 +69,8 @@ namespace BookNest.Models
         [Required(ErrorMessage = "Photo is required.")]
         public string Photo { get; set; }
 
+        public ICollection<ReviewModel> Books { get; set; } = [];
+
         public BookInfos(int BookId,string BookName, decimal Price, string Format, string Title, string Author, string Publisher,
                     DateTime PublicationDate, string Language, string Category, DateTime ListedAt,
                     int AvailableQuantity, decimal DiscountPercent, DateTime DiscountStart, DateTime DiscountEnd,string Photo)

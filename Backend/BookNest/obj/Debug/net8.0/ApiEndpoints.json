@@ -9,7 +9,7 @@
     "Parameters": [
       {
         "Name": "Obj",
-        "Type": "BookNest.Models.BookInfosStringModel",
+        "Type": "BookNest.Models.DTOModels.BookInfosStringModel",
         "IsRequired": true
       }
     ],
@@ -75,8 +75,122 @@
   },
   {
     "ContainingType": "BookNest.Controllers.MemberController",
+    "Method": "Add_Bookmark",
+    "RelativePath": "api/Member/add_bookmark",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "obj",
+        "Type": "BookNest.Models.DTOModels.BookmarkDTOModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookNest.Controllers.MemberController",
+    "Method": "Add_Cart",
+    "RelativePath": "api/Member/add_cart",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "obj",
+        "Type": "BookNest.Models.DTOModels.CartStringModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookNest.Controllers.MemberController",
+    "Method": "Add_Order_History",
+    "RelativePath": "api/Member/add_order",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "obj",
+        "Type": "BookNest.Models.DTOModels.OrderStringModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookNest.Controllers.MemberController",
+    "Method": "Add_Review",
+    "RelativePath": "api/Member/add_reviews",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "obj",
+        "Type": "BookNest.Models.DTOModels.ReviewStringModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookNest.Controllers.MemberController",
     "Method": "Get_Books_Infos",
     "RelativePath": "api/Member/getbooksinfo",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookNest.Controllers.MemberController",
+    "Method": "GetBooksWithReviews",
+    "RelativePath": "api/Member/getbookswithreviews",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookNest.Controllers.MemberController",
+    "Method": "GetCartUserBooks",
+    "RelativePath": "api/Member/getcartuserbooks",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookNest.Controllers.MemberController",
+    "Method": "GetOrderUserBooks",
+    "RelativePath": "api/Member/getorderuserbooks",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookNest.Controllers.MemberController",
+    "Method": "Get_Review_Infos",
+    "RelativePath": "api/Member/getreviewdata",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookNest.Controllers.MemberController",
+    "Method": "GetUserBookmarks",
+    "RelativePath": "api/Member/getuserbookmarks",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,

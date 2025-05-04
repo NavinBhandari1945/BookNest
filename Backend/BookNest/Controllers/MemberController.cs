@@ -1,4 +1,6 @@
 ﻿using BookNest.Data;
+using BookNest.Models;
+using BookNest.Models.DTOModels;
 using BookNest.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -11,9 +13,6 @@ namespace BookNest.Controllers
     [ApiController]
     public class MemberController : ControllerBase
     {
-
-   
-
         public DatabaseController Database { get; set; }
         public ILogger<MemberController> Logger { get; }
 
@@ -43,6 +42,403 @@ namespace BookNest.Controllers
                 return StatusCode(501, ex.Message);
             }
         }
+
+        [Authorize(Policy = "RequireMemberRole")]
+        [HttpGet]
+        [Route("getreviewdata")]
+        public async Task<IActionResult> Get_Review_Infos()
+        {
+
+            try
+            {
+                var Review_Data = await Database.ReviewInfos.ToListAsync();
+                if (Review_Data.Any())
+                {
+                    return Ok(Review_Data);
+                }
+                return StatusCode(500, "Database error while getting books info");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(501, ex.Message);
+            }
+        }
+
+        [Authorize(Policy = "RequireMemberRole")]
+        [HttpPost]
+        [Route("add_reviews")]
+        public async Task<IActionResult> Add_Review([FromBody] ReviewStringModel obj)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var Review_Date = DateTime.Parse(obj.ReviewDate).ToUniversalTime();
+
+                    ReviewModel review = new ReviewModel(
+                            reviewId: obj.ReviewId,
+                            comment: obj.Comment,
+                            rating: obj.Rating,
+                            reviewDate: Review_Date,
+                            userId: obj.UserId,
+                            bookId: obj.BookId,
+                            books: null,          // Passing null for optional navigation property
+                            users: null           // Passing null for optional navigation property
+                        );
+                    await Database.ReviewInfos.AddAsync(review);
+                    await Database.SaveChangesAsync();
+                    return Ok();
+                }
+                else
+                {
+                    return StatusCode(502, "Provide correct format.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Exception caught in login action method.\n{ex.Message}"); // 500 Internal Server Error
+            }
+        }
+
+
+        [Authorize(Policy = "RequireMemberRole")]
+        [HttpGet]
+        [Route("getbookswithreviews")]
+        public async Task<IActionResult> GetBooksWithReviews()
+        {
+            try
+            {
+                var query = @"
+                    SELECT 
+                        b.""BookId"",
+                        b.""BookName"",
+                        b.""Price"",
+                        b.""Format"",
+                        b.""Title"",
+                        b.""Author"",
+                        b.""Publisher"",
+                        b.""PublicationDate"",
+                        b.""Language"",
+                        b.""Category"",
+                        b.""ListedAt"",
+                        b.""AvailableQuantity"",
+                        b.""DiscountPercent"",
+                        b.""DiscountStart"",
+                        b.""DiscountEnd"",
+                        b.""Photo"",
+                        r.""ReviewId"",
+                        r.""Comment"",
+                        r.""Rating"",
+                        r.""ReviewDate"",
+                        r.""UserId"",
+                        r.""BookId"" AS ReviewBookId
+                    FROM ""BookInfos"" b
+                    INNER JOIN ""ReviewInfos"" r ON b.""BookId"" = r.""BookId""
+                ";
+
+                var result = await Database.Database
+                    .SqlQueryRaw<BooksWithReviewsDTO>(query)
+                    .ToListAsync();
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+    
+
+
+
+        [Authorize(Policy = "RequireMemberRole")]
+        [HttpPost]
+        [Route("add_bookmark")]
+        public async Task<IActionResult> Add_Bookmark([FromBody] BookmarkDTOModel obj)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+
+                    var User_Data = await Database.UserInfos.FirstOrDefaultAsync(x=>x.Email==obj.Email);
+                    if (User_Data!=null)
+                    {
+
+                        BookmarkModel bookmark = new BookmarkModel
+                        {
+                            BookmarkId = obj.BookmarkId,
+                            UserId = User_Data.UserId,
+                            BookId = obj.BookId,
+                            Books = null,
+                            Users = null
+                        };
+
+                        await Database.BookmarkInfos.AddAsync(bookmark);
+                        await Database.SaveChangesAsync();
+                        return Ok();
+
+                    }
+                    else
+                    {
+                        return StatusCode(503,"User doesn't exist.");
+                    }
+                }
+                else
+                {
+                    return StatusCode(502, "Provide correct format.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Exception caught in login action method.\n{ex.Message}"); // 500 Internal Server Error
+            }
+        }
+
+        [Authorize(Policy = "RequireMemberRole")]
+        [HttpPost]
+        [Route("add_cart")]
+        public async Task<IActionResult> Add_Cart([FromBody] CartStringModel obj)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+
+                    var Added_Date = DateTime.Parse(obj.AddedAt).ToUniversalTime();
+                    CartModel cart = new CartModel(
+                               cartId: obj.CartId,
+                               addedAt: Added_Date,
+                               quantity: obj.Quantity,
+                               userId: obj.UserId,
+                               bookId: obj.BookId,
+                               books: null,
+                               users: null
+                           );
+                    await Database.CartInfos.AddAsync(cart);
+                    await Database.SaveChangesAsync();
+                    return Ok();
+                }
+                else
+                {
+                    return StatusCode(502, "Provide correct format.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Exception caught in login action method.\n{ex.Message}"); // 500 Internal Server Error
+            }
+        }
+
+        [Authorize(Policy = "RequireMemberRole")]
+        [HttpPost]
+        [Route("add_order")]
+        public async Task<IActionResult> Add_Order_History([FromBody] OrderStringModel obj)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+
+                    var Order_Date = DateTime.Parse(obj.OrderDate).ToUniversalTime();
+
+                    OrderModel order = new OrderModel(
+                          orderId: obj.OrderId,
+                          status: obj.Status,
+                          bookQuantity:obj.BookQuantity,
+                          claimId:obj.ClaimId,
+                          discountAmount:obj.DiscountAmount,
+                          totalPrice:obj.TotalPrice,
+                          claimCode: obj.ClaimCode,
+                          orderDate: Order_Date,
+                          userId: obj.UserId,
+                          bookId: obj.BookId,
+                          books: null,
+                          users: null
+                      );
+                    await Database.OrderInfos.AddAsync(order);
+                    await Database.SaveChangesAsync();
+                    return Ok();
+                }
+                else
+                {
+                    return StatusCode(502, "Provide correct format.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Exception caught in login action method.\n{ex.Message}"); // 500 Internal Server Error
+            }
+        }
+
+        [Authorize(Policy = "RequireMemberRole")]
+        [HttpGet]
+        [Route("getuserbookmarks")]
+        public async Task<IActionResult> GetUserBookmarks()
+        {
+            try
+            {
+                var query = @"
+                    SELECT 
+                        u.""UserId"" AS UserId,
+                        u.""FirstName"",
+                        u.""LastName"",
+                        u.""Email"",
+                        u.""PhoneNumber"",
+                        u.""Password"",
+                        u.""Role"",
+                        b.""BookmarkId"",
+                        b.""UserId"" AS BookmarkUserId,
+                        b.""BookId"" AS BookmarkBookId,
+                        bi.""BookId"" AS BookId,
+                        bi.""BookName"",
+                        bi.""Price"",
+                        bi.""Format"",
+                        bi.""Title"",
+                        bi.""Author"",
+                        bi.""Publisher"",
+                        bi.""PublicationDate"",
+                        bi.""Language"",
+                        bi.""Category"",
+                        bi.""ListedAt"",
+                        bi.""AvailableQuantity"",
+                        bi.""DiscountPercent"",
+                        bi.""DiscountStart"",
+                        bi.""DiscountEnd"",
+                        bi.""Photo""
+                    FROM ""UserInfos"" u
+                    INNER JOIN ""Bookmark"" b ON u.""UserId"" = b.""UserId""
+                    INNER JOIN ""BookInfos"" bi ON b.""BookId"" = bi.""BookId""
+                ";
+
+                var result = await Database.Database
+                    .SqlQueryRaw<UserBookmarkBookDTO>(query)
+                    .ToListAsync();
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+
+
+        [Authorize(Policy = "RequireMemberRole")]
+        [HttpGet]
+        [Route("getcartuserbooks")]
+        public async Task<IActionResult> GetCartUserBooks()
+        {
+            try
+            {
+                var query = @"
+                    SELECT 
+                        c.""CartId"",
+                        c.""AddedAt"",
+                        c.""Quantity"",
+                        c.""UserId"" AS CartUserId,
+                        c.""BookId"" AS CartBookId,
+                        u.""UserId"",
+                        u.""FirstName"",
+                        u.""LastName"",
+                        u.""Email"",
+                        u.""PhoneNumber"",
+                        u.""Password"",
+                        u.""Role"",
+                        bi.""BookId"",
+                        bi.""BookName"",
+                        bi.""Price"",
+                        bi.""Format"",
+                        bi.""Title"",
+                        bi.""Author"",
+                        bi.""Publisher"",
+                        bi.""PublicationDate"",
+                        bi.""Language"",
+                        bi.""Category"",
+                        bi.""ListedAt"",
+                        bi.""AvailableQuantity"",
+                        bi.""DiscountPercent"",
+                        bi.""DiscountStart"",
+                        bi.""DiscountEnd"",
+                        bi.""Photo""
+                    FROM ""Cart"" c
+                    INNER JOIN ""UserInfos"" u ON c.""UserId"" = u.""UserId""
+                    INNER JOIN ""BookInfos"" bi ON c.""BookId"" = bi.""BookId""
+                ";
+
+                var result = await Database.Database
+                    .SqlQueryRaw<CartUserBookDTO>(query)
+                    .ToListAsync();
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+
+        [Authorize(Policy = "RequireMemberRole")]
+        [HttpGet]
+        [Route("getorderuserbooks")]
+        public async Task<IActionResult> GetOrderUserBooks()
+        {
+            try
+            {
+                var query = @"
+                    SELECT 
+                        o.""OrderId"",
+                        o.""Status"",
+                        o.""BookQuantity"",
+                        o.""ClaimId"",
+                        o.""DiscountAmount"",
+                        o.""TotalPrice"",
+                        o.""ClaimCode"",
+                        o.""OrderDate"",
+                        o.""UserId"" AS OrderUserId,
+                        o.""BookId"" AS OrderBookId,
+                        u.""UserId"",
+                        u.""FirstName"",
+                        u.""LastName"",
+                        u.""Email"",
+                        u.""PhoneNumber"",
+                        u.""Password"",
+                        u.""Role"",
+                        bi.""BookId"",
+                        bi.""BookName"",
+                        bi.""Price"",
+                        bi.""Format"",
+                        bi.""Title"",
+                        bi.""Author"",
+                        bi.""Publisher"",
+                        bi.""PublicationDate"",
+                        bi.""Language"",
+                        bi.""Category"",
+                        bi.""ListedAt"",
+                        bi.""AvailableQuantity"",
+                        bi.""DiscountPercent"",
+                        bi.""DiscountStart"",
+                        bi.""DiscountEnd"",
+                        bi.""Photo""
+                    FROM ""Order"" o
+                    INNER JOIN ""UserInfos"" u ON o.""UserId"" = u.""UserId""
+                    INNER JOIN ""BookInfos"" bi ON o.""BookId"" = bi.""BookId""
+                ";
+
+                var result = await Database.Database
+                    .SqlQueryRaw<OrderUserBookDTO>(query)
+                    .ToListAsync();
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
 
 
 

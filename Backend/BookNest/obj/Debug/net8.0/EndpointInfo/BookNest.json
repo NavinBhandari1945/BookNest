@@ -152,10 +152,300 @@
           }
         }
       }
+    },
+    "/api/Member/getreviewdata": {
+      "get": {
+        "tags": [
+          "Member"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Member/add_reviews": {
+      "post": {
+        "tags": [
+          "Member"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewStringModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewStringModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewStringModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Member/getbookswithreviews": {
+      "get": {
+        "tags": [
+          "Member"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Member/add_bookmark": {
+      "post": {
+        "tags": [
+          "Member"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BookmarkDTOModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BookmarkDTOModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/BookmarkDTOModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Member/add_cart": {
+      "post": {
+        "tags": [
+          "Member"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CartStringModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CartStringModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CartStringModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Member/add_order": {
+      "post": {
+        "tags": [
+          "Member"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrderStringModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrderStringModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrderStringModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Member/getuserbookmarks": {
+      "get": {
+        "tags": [
+          "Member"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Member/getcartuserbooks": {
+      "get": {
+        "tags": [
+          "Member"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Member/getorderuserbooks": {
+      "get": {
+        "tags": [
+          "Member"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
+      "BookInfos": {
+        "required": [
+          "author",
+          "availableQuantity",
+          "bookName",
+          "category",
+          "discountEnd",
+          "discountPercent",
+          "discountStart",
+          "format",
+          "language",
+          "listedAt",
+          "photo",
+          "price",
+          "publicationDate",
+          "publisher",
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "bookId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "bookName": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string"
+          },
+          "price": {
+            "minimum": 0.01,
+            "type": "number",
+            "format": "double"
+          },
+          "format": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string"
+          },
+          "title": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string"
+          },
+          "author": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string"
+          },
+          "publisher": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string"
+          },
+          "publicationDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "language": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string"
+          },
+          "category": {
+            "maxLength": 200,
+            "minLength": 0,
+            "type": "string"
+          },
+          "listedAt": {
+            "type": "string",
+            "format": "date"
+          },
+          "availableQuantity": {
+            "maximum": 2147483647,
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32"
+          },
+          "discountPercent": {
+            "maximum": 100,
+            "minimum": 0,
+            "type": "number",
+            "format": "double"
+          },
+          "discountStart": {
+            "type": "string",
+            "format": "date"
+          },
+          "discountEnd": {
+            "type": "string",
+            "format": "date"
+          },
+          "photo": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "books": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReviewModel"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "BookInfosStringModel": {
         "required": [
           "author",
@@ -255,6 +545,61 @@
         },
         "additionalProperties": false
       },
+      "BookmarkDTOModel": {
+        "required": [
+          "bookId",
+          "email"
+        ],
+        "type": "object",
+        "properties": {
+          "bookmarkId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "email": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "bookId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CartStringModel": {
+        "required": [
+          "addedAt",
+          "bookId",
+          "cartId",
+          "quantity",
+          "userId"
+        ],
+        "type": "object",
+        "properties": {
+          "cartId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "addedAt": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "userId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "bookId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "ChangeUserRoleModel": {
         "required": [
           "email"
@@ -293,6 +638,149 @@
             "maxLength": 200,
             "minLength": 0,
             "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "OrderStringModel": {
+        "required": [
+          "bookId",
+          "bookQuantity",
+          "claimCode",
+          "claimId",
+          "discountAmount",
+          "orderDate",
+          "orderId",
+          "status",
+          "totalPrice",
+          "userId"
+        ],
+        "type": "object",
+        "properties": {
+          "orderId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "status": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string"
+          },
+          "bookQuantity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "claimId": {
+            "maxLength": 500,
+            "minLength": 0,
+            "type": "string"
+          },
+          "discountAmount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPrice": {
+            "type": "number",
+            "format": "double"
+          },
+          "claimCode": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string"
+          },
+          "orderDate": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "userId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "bookId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ReviewModel": {
+        "required": [
+          "bookId",
+          "comment",
+          "rating",
+          "reviewDate",
+          "userId"
+        ],
+        "type": "object",
+        "properties": {
+          "reviewId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "comment": {
+            "maxLength": 500,
+            "minLength": 0,
+            "type": "string"
+          },
+          "rating": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "reviewDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "userId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "bookId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "books": {
+            "$ref": "#/components/schemas/BookInfos"
+          },
+          "users": {
+            "$ref": "#/components/schemas/UserInfosModel"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ReviewStringModel": {
+        "required": [
+          "bookId",
+          "comment",
+          "rating",
+          "reviewDate",
+          "userId"
+        ],
+        "type": "object",
+        "properties": {
+          "reviewId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "comment": {
+            "maxLength": 500,
+            "minLength": 0,
+            "type": "string"
+          },
+          "rating": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "reviewDate": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "userId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "bookId": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -341,6 +829,13 @@
             "maxLength": 50,
             "minLength": 0,
             "type": "string",
+            "nullable": true
+          },
+          "books": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReviewModel"
+            },
             "nullable": true
           }
         },

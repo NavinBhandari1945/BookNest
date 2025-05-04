@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BookNest.Migrations
 {
     [DbContext(typeof(DatabaseController))]
-    [Migration("20250503035708_bookmodel_07")]
-    partial class bookmodel_07
+    [Migration("20250503115621_m1")]
+    partial class m1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -98,6 +98,46 @@ namespace BookNest.Migrations
                     b.ToTable("BookInfos");
                 });
 
+            modelBuilder.Entity("BookNest.Models.ReviewModel", b =>
+                {
+                    b.Property<int>("ReviewId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ReviewId"));
+
+                    b.Property<int>("BookId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("BooksBookId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Comment")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("ReviewDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("UsersUserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("ReviewId");
+
+                    b.HasIndex("BooksBookId");
+
+                    b.HasIndex("UsersUserId");
+
+                    b.ToTable("ReviewInfos");
+                });
+
             modelBuilder.Entity("BookNest.Models.UserInfosModel", b =>
                 {
                     b.Property<int>("UserId")
@@ -138,6 +178,31 @@ namespace BookNest.Migrations
                     b.HasKey("UserId");
 
                     b.ToTable("UserInfos");
+                });
+
+            modelBuilder.Entity("BookNest.Models.ReviewModel", b =>
+                {
+                    b.HasOne("BookNest.Models.BookInfos", "Books")
+                        .WithMany("Books")
+                        .HasForeignKey("BooksBookId");
+
+                    b.HasOne("BookNest.Models.UserInfosModel", "Users")
+                        .WithMany("Books")
+                        .HasForeignKey("UsersUserId");
+
+                    b.Navigation("Books");
+
+                    b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("BookNest.Models.BookInfos", b =>
+                {
+                    b.Navigation("Books");
+                });
+
+            modelBuilder.Entity("BookNest.Models.UserInfosModel", b =>
+                {
+                    b.Navigation("Books");
                 });
 #pragma warning restore 612, 618
         }

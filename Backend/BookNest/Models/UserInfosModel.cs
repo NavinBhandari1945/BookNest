@@ -35,6 +35,8 @@ namespace BookNest.Models
         [StringLength(50)]
         public string Role { get; set; } = "Member";
 
+        public ICollection<ReviewModel> Books { get; set; } = [];
+
         public UserInfosModel(int UserId, string FirstName, string LastName, string Email, string PhoneNumber, string Password, string Role)
         {
             this.UserId = UserId;
