@@ -25,7 +25,7 @@ namespace BookNest.Controllers
 
 
         [Authorize(Policy = "RequireAdminRole")]
-        [HttpPost]
+        [HttpPut]
         [Route("change_user_role")]
         public async Task<IActionResult> Chnage_User_Role([FromBody] ChangeUserRoleModel obj)
         {

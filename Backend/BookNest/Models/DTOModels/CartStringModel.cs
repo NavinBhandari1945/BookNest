@@ -17,7 +17,7 @@ namespace BookNest.Models.DTOModels
         public int Quantity { get; set; }
 
         [Required]
-        public int UserId { get; set; }
+        public string Email { get; set; }
 
         [Required]
         public int BookId { get; set; }

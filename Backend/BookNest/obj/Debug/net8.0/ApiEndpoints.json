@@ -19,7 +19,7 @@
     "ContainingType": "BookNest.Controllers.AdminController",
     "Method": "Chnage_User_Role",
     "RelativePath": "api/Admin/change_user_role",
-    "HttpMethod": "POST",
+    "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
     "Parameters": [
@@ -139,6 +139,38 @@
   },
   {
     "ContainingType": "BookNest.Controllers.MemberController",
+    "Method": "Delete_Cart_Infos",
+    "RelativePath": "api/Member/deletecartitem",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "obj",
+        "Type": "BookNest.Models.DTOModels.CartIdDTOModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookNest.Controllers.MemberController",
+    "Method": "Get_Order_History",
+    "RelativePath": "api/Member/get_order_details",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "obj",
+        "Type": "BookNest.Models.DTOModels.OrderUserIdDTOModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookNest.Controllers.MemberController",
     "Method": "Get_Books_Infos",
     "RelativePath": "api/Member/getbooksinfo",
     "HttpMethod": "GET",
@@ -155,6 +187,22 @@
     "IsController": true,
     "Order": 0,
     "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookNest.Controllers.MemberController",
+    "Method": "Get_Cart_Infos",
+    "RelativePath": "api/Member/getcartdata",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "obj",
+        "Type": "BookNest.Models.DTOModels.GetCartDTOModel",
+        "IsRequired": true
+      }
+    ],
     "ReturnTypes": []
   },
   {
@@ -181,10 +229,16 @@
     "ContainingType": "BookNest.Controllers.MemberController",
     "Method": "Get_Review_Infos",
     "RelativePath": "api/Member/getreviewdata",
-    "HttpMethod": "GET",
+    "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
-    "Parameters": [],
+    "Parameters": [
+      {
+        "Name": "obj",
+        "Type": "BookNest.Models.DTOModels.ReviewBookIdDTOModel",
+        "IsRequired": true
+      }
+    ],
     "ReturnTypes": []
   },
   {

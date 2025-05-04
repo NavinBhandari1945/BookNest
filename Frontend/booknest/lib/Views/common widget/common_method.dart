@@ -90,6 +90,14 @@ Future<void> handleResponse(Map<dynamic, dynamic> responseData) async {
   return;
 }
 
+String getCurrentDateFormatted() {
+  final now = DateTime.now();
+  final year = now.year.toString();
+  final month = now.month.toString().padLeft(2, '0');
+  final day = now.day.toString().padLeft(2, '0');
+  return '$year-$month-$day';
+}
+
 Future<Widget> Check_Jwt_Token_Start_Screen() async {
   final box = await Hive.openBox('userData');
   final jwtToken = await box.get('jwt_token');

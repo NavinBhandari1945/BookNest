@@ -43,24 +43,29 @@ namespace BookNest.Controllers
             }
         }
 
-        [Authorize(Policy = "RequireMemberRole")]
-        [HttpGet]
+        //[Authorize(Policy = "RequireMemberRole")]
+        [HttpPost]
         [Route("getreviewdata")]
-        public async Task<IActionResult> Get_Review_Infos()
+        public async Task<IActionResult> Get_Review_Infos([FromBody] ReviewBookIdDTOModel obj)
         {
 
             try
             {
-                var Review_Data = await Database.ReviewInfos.ToListAsync();
+                var Review_Data = await Database.ReviewInfos.Where(x => x.BookId == obj.BookId).ToListAsync();
                 if (Review_Data.Any())
                 {
                     return Ok(Review_Data);
                 }
-                return StatusCode(500, "Database error while getting books info");
+                return StatusCode(500, "Database error while getting review info");
             }
             catch (Exception ex)
             {
-                return StatusCode(501, ex.Message);
+                return StatusCode(500, new
+                {
+                    error = "An unexpected error occurred.",
+                    message = ex.Message,
+                    stackTrace = ex.StackTrace
+                });
             }
         }
 
@@ -149,8 +154,6 @@ namespace BookNest.Controllers
         }
     
 
-
-
         [Authorize(Policy = "RequireMemberRole")]
         [HttpPost]
         [Route("add_bookmark")]
@@ -206,18 +209,28 @@ namespace BookNest.Controllers
                 {
 
                     var Added_Date = DateTime.Parse(obj.AddedAt).ToUniversalTime();
-                    CartModel cart = new CartModel(
-                               cartId: obj.CartId,
-                               addedAt: Added_Date,
-                               quantity: obj.Quantity,
-                               userId: obj.UserId,
-                               bookId: obj.BookId,
-                               books: null,
-                               users: null
-                           );
-                    await Database.CartInfos.AddAsync(cart);
-                    await Database.SaveChangesAsync();
-                    return Ok();
+
+                    var User_Data = await Database.UserInfos.FirstOrDefaultAsync(x => x.Email == obj.Email);
+                    if (User_Data != null)
+                    {
+                        CartModel cart = new CartModel(
+                                   cartId: obj.CartId,
+                                   addedAt: Added_Date,
+                                   quantity: obj.Quantity,
+                                   userId: User_Data.UserId,
+                                   bookId: obj.BookId,
+                                   books: null,
+                                   users: null
+                               );
+                            await Database.CartInfos.AddAsync(cart);
+                            await Database.SaveChangesAsync();
+                            return Ok();
+
+                    }
+                    else
+                    {
+                        return StatusCode(503, "User doesn't exist.");
+                    }
                 }
                 else
                 {
@@ -226,11 +239,83 @@ namespace BookNest.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Exception caught in login action method.\n{ex.Message}"); // 500 Internal Server Error
+                return StatusCode(500, new
+                {
+                    error = "An unexpected error occurred.",
+                    message = ex.Message,
+                    stackTrace = ex.StackTrace
+                });
             }
         }
 
-        [Authorize(Policy = "RequireMemberRole")]
+        //[Authorize(Policy = "RequireMemberRole")]
+        [HttpPost]
+        [Route("getcartdata")]
+        public async Task<IActionResult> Get_Cart_Infos([FromBody] GetCartDTOModel obj)
+        {
+
+            try
+            {
+                var User_Data = await Database.UserInfos.FirstOrDefaultAsync(x => x.Email == obj.Email);
+                if (User_Data != null)
+                {
+                    var Cart_Data = await Database.CartInfos.Where(x => x.UserId == User_Data.UserId).ToListAsync();
+                    if (Cart_Data.Any())
+                    {
+                        return Ok(Cart_Data);
+                    }
+                    else
+                    {
+                        return StatusCode(503, "Cart data doesn't exist.");
+                    }
+                }
+                else
+                {
+                    return StatusCode(503, "User doesn't exist.");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(501, ex.Message);
+            }
+        }
+
+        //[Authorize(Policy = "RequireMemberRole")]
+        [HttpDelete]
+        [Route("deletecartitem")]
+        public async Task<IActionResult> Delete_Cart_Infos([FromBody]CartIdDTOModel obj)
+        {
+
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var Cart_Data=await Database.CartInfos.FirstOrDefaultAsync(X=>X.CartId==obj.CartId);
+                    if (Cart_Data != null) {
+                        var result = Database.CartInfos.Remove(Cart_Data);
+                        await Database.SaveChangesAsync();
+                        return Ok("Delete user success");
+                    }
+                    else
+                    {
+                        return StatusCode(503,"No cart data match.");
+                    }
+                }
+                else
+                {
+                    return StatusCode(502, "Provide correct format.");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(501, ex.Message);
+            }
+        }
+
+
+        //[Authorize(Policy = "RequireMemberRole")]
         [HttpPost]
         [Route("add_order")]
         public async Task<IActionResult> Add_Order_History([FromBody] OrderStringModel obj)
@@ -271,7 +356,100 @@ namespace BookNest.Controllers
             }
         }
 
-        [Authorize(Policy = "RequireMemberRole")]
+
+        //[Authorize(Policy = "RequireMemberRole")]
+        [HttpPost]
+        [Route("get_order_details")]
+        public async Task<IActionResult> Get_Order_History([FromBody] OrderUserIdDTOModel obj)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+
+                    var Order_Data=await Database.OrderInfos.Where(x=>x.UserId==obj.UserId && x.Status!="Compplete").ToListAsync();
+                    if (Order_Data.Any())
+                    {
+                        return Ok(Order_Data);
+                    }
+                    else
+                    {
+                        return StatusCode(501,"No oredr present for taht user.");
+                    }
+
+                }
+                else
+                {
+                    return StatusCode(502, "Provide correct format.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Exception caught in login action method.\n{ex.Message}"); // 500 Internal Server Error
+            }
+        }
+
+
+
+        //[Authorize(Policy = "RequireMemberRole")]
+        [HttpGet]
+        [Route("getcartuserbooks")]
+        public async Task<IActionResult> GetCartUserBooks()
+        {
+            try
+            {
+                var query = @"
+                    SELECT 
+                        c.""CartId"",
+                        c.""AddedAt"",
+                        c.""Quantity"",
+                        c.""UserId"" AS CartUserId,
+                        c.""BookId"" AS CartBookId,
+                        u.""UserId"",
+                        u.""FirstName"",
+                        u.""LastName"",
+                        u.""Email"",
+                        u.""PhoneNumber"",
+                        u.""Role"",
+                        bi.""BookId"",
+                        bi.""BookName"",
+                        bi.""Price"",
+                        bi.""Format"",
+                        bi.""Title"",
+                        bi.""Author"",
+                        bi.""Publisher"",
+                        bi.""PublicationDate"",
+                        bi.""Language"",
+                        bi.""Category"",
+                        bi.""ListedAt"",
+                        bi.""AvailableQuantity"",
+                        bi.""DiscountPercent"",
+                        bi.""DiscountStart"",
+                        bi.""DiscountEnd"",
+                        bi.""Photo""
+                    FROM ""CartInfos"" c
+                    INNER JOIN ""UserInfos"" u ON c.""UserId"" = u.""UserId""
+                    INNER JOIN ""BookInfos"" bi ON c.""BookId"" = bi.""BookId""
+                ";
+
+                var result = await Database.Database
+                    .SqlQueryRaw<CartUserBookDTO>(query)
+                    .ToListAsync();
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    error = "An unexpected error occurred.",
+                    message = ex.Message,
+                    stackTrace = ex.StackTrace
+                });
+            }
+        }
+
+        //[Authorize(Policy = "RequireMemberRole")]
         [HttpGet]
         [Route("getuserbookmarks")]
         public async Task<IActionResult> GetUserBookmarks()
@@ -285,7 +463,6 @@ namespace BookNest.Controllers
                         u.""LastName"",
                         u.""Email"",
                         u.""PhoneNumber"",
-                        u.""Password"",
                         u.""Role"",
                         b.""BookmarkId"",
                         b.""UserId"" AS BookmarkUserId,
@@ -307,7 +484,7 @@ namespace BookNest.Controllers
                         bi.""DiscountEnd"",
                         bi.""Photo""
                     FROM ""UserInfos"" u
-                    INNER JOIN ""Bookmark"" b ON u.""UserId"" = b.""UserId""
+                    INNER JOIN ""BookmarkInfos"" b ON u.""UserId"" = b.""UserId""
                     INNER JOIN ""BookInfos"" bi ON b.""BookId"" = bi.""BookId""
                 ";
 
@@ -319,68 +496,15 @@ namespace BookNest.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, ex.Message);
+                return StatusCode(500, new
+                {
+                    error = "An unexpected error occurred.",
+                    message = ex.Message,
+                    stackTrace = ex.StackTrace
+                });
             }
         }
 
-
-
-        [Authorize(Policy = "RequireMemberRole")]
-        [HttpGet]
-        [Route("getcartuserbooks")]
-        public async Task<IActionResult> GetCartUserBooks()
-        {
-            try
-            {
-                var query = @"
-                    SELECT 
-                        c.""CartId"",
-                        c.""AddedAt"",
-                        c.""Quantity"",
-                        c.""UserId"" AS CartUserId,
-                        c.""BookId"" AS CartBookId,
-                        u.""UserId"",
-                        u.""FirstName"",
-                        u.""LastName"",
-                        u.""Email"",
-                        u.""PhoneNumber"",
-                        u.""Password"",
-                        u.""Role"",
-                        bi.""BookId"",
-                        bi.""BookName"",
-                        bi.""Price"",
-                        bi.""Format"",
-                        bi.""Title"",
-                        bi.""Author"",
-                        bi.""Publisher"",
-                        bi.""PublicationDate"",
-                        bi.""Language"",
-                        bi.""Category"",
-                        bi.""ListedAt"",
-                        bi.""AvailableQuantity"",
-                        bi.""DiscountPercent"",
-                        bi.""DiscountStart"",
-                        bi.""DiscountEnd"",
-                        bi.""Photo""
-                    FROM ""Cart"" c
-                    INNER JOIN ""UserInfos"" u ON c.""UserId"" = u.""UserId""
-                    INNER JOIN ""BookInfos"" bi ON c.""BookId"" = bi.""BookId""
-                ";
-
-                var result = await Database.Database
-                    .SqlQueryRaw<CartUserBookDTO>(query)
-                    .ToListAsync();
-
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
-        }
-
-
-        [Authorize(Policy = "RequireMemberRole")]
         [HttpGet]
         [Route("getorderuserbooks")]
         public async Task<IActionResult> GetOrderUserBooks()
@@ -404,7 +528,6 @@ namespace BookNest.Controllers
                         u.""LastName"",
                         u.""Email"",
                         u.""PhoneNumber"",
-                        u.""Password"",
                         u.""Role"",
                         bi.""BookId"",
                         bi.""BookName"",
@@ -422,7 +545,7 @@ namespace BookNest.Controllers
                         bi.""DiscountStart"",
                         bi.""DiscountEnd"",
                         bi.""Photo""
-                    FROM ""Order"" o
+                    FROM ""OrderInfos"" o
                     INNER JOIN ""UserInfos"" u ON o.""UserId"" = u.""UserId""
                     INNER JOIN ""BookInfos"" bi ON o.""BookId"" = bi.""BookId""
                 ";
@@ -435,7 +558,12 @@ namespace BookNest.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, ex.Message);
+                return StatusCode(500, new
+                {
+                    error = "An unexpected error occurred.",
+                    message = ex.Message,
+                    stackTrace = ex.StackTrace
+                });
             }
         }
 

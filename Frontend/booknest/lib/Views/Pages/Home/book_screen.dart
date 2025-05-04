@@ -1,17 +1,16 @@
 import 'dart:convert';
-
 import 'package:booknest/Views/Pages/Home/book_details.dart';
 import 'package:booknest/Views/Pages/Home/user_not_login_home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:velocity_x/velocity_x.dart';
-
 import '../../../Models/BookInfosModel.dart';
 import '../../../Models/BookReviewModel.dart';
 import '../../../constant/constant.dart';
 import '../../../constant/styles.dart';
 import '../../common widget/common_method.dart';
 import '../../common widget/toast.dart';
+import 'member_login_page.dart';
 
 class BookScreen extends StatefulWidget {
   final String email;
@@ -143,6 +142,8 @@ class _BookScreenState extends State<BookScreen>  {
     }
   }
 
+
+
   @override
   Widget build(BuildContext context)
   {
@@ -151,7 +152,7 @@ class _BookScreenState extends State<BookScreen>  {
     var heightval = MediaQuery.of(context).size.height;
     return Scaffold(
         appBar: AppBar(
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: true,
         title: const Text(
         "Book Screen",
         style: TextStyle(
@@ -243,6 +244,15 @@ class _BookScreenState extends State<BookScreen>  {
       physics: BouncingScrollPhysics(),
       child: Column(
             children: [
+
+              Container(child: Text("Book screen"),).onTap((){
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => MemberHomePage(jwttoken:widget.jwttoken!, usertype:widget.usertype, email: widget.email,)
+                  ),
+                );
+              }),
 
               TextFormField
                 (

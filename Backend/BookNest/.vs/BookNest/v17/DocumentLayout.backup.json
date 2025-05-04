@@ -3,16 +3,16 @@
   "WorkspaceRootPath": "D:\\College Workplace\\3rdyr\\sem\\app development\\sem2\\cw app\\Flutter_Dotnet\\Backend\\BookNest\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{832EAD3C-1A76-4B72-92D7-58FAE6A7A39E}|BookNest.csproj|d:\\college workplace\\3rdyr\\sem\\app development\\sem2\\cw app\\flutter_dotnet\\backend\\booknest\\models\\ordermodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{832EAD3C-1A76-4B72-92D7-58FAE6A7A39E}|BookNest.csproj|solutionrelative:models\\ordermodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{832EAD3C-1A76-4B72-92D7-58FAE6A7A39E}|BookNest.csproj|d:\\college workplace\\3rdyr\\sem\\app development\\sem2\\cw app\\flutter_dotnet\\backend\\booknest\\controllers\\membercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{832EAD3C-1A76-4B72-92D7-58FAE6A7A39E}|BookNest.csproj|solutionrelative:controllers\\membercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{832EAD3C-1A76-4B72-92D7-58FAE6A7A39E}|BookNest.csproj|d:\\college workplace\\3rdyr\\sem\\app development\\sem2\\cw app\\flutter_dotnet\\backend\\booknest\\models\\dtomodels\\bookmarkdtomodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{832EAD3C-1A76-4B72-92D7-58FAE6A7A39E}|BookNest.csproj|solutionrelative:models\\dtomodels\\bookmarkdtomodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{832EAD3C-1A76-4B72-92D7-58FAE6A7A39E}|BookNest.csproj|d:\\college workplace\\3rdyr\\sem\\app development\\sem2\\cw app\\flutter_dotnet\\backend\\booknest\\models\\bookmarkmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{832EAD3C-1A76-4B72-92D7-58FAE6A7A39E}|BookNest.csproj|solutionrelative:models\\bookmarkmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{832EAD3C-1A76-4B72-92D7-58FAE6A7A39E}|BookNest.csproj|d:\\college workplace\\3rdyr\\sem\\app development\\sem2\\cw app\\flutter_dotnet\\backend\\booknest\\models\\dtomodels\\orderstringmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{832EAD3C-1A76-4B72-92D7-58FAE6A7A39E}|BookNest.csproj|solutionrelative:models\\dtomodels\\orderstringmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -22,48 +22,50 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 3,
           "Children": [
             {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "MemberController.cs",
               "DocumentMoniker": "D:\\College Workplace\\3rdyr\\sem\\app development\\sem2\\cw app\\Flutter_Dotnet\\Backend\\BookNest\\Controllers\\MemberController.cs",
               "RelativeDocumentMoniker": "Controllers\\MemberController.cs",
               "ToolTip": "D:\\College Workplace\\3rdyr\\sem\\app development\\sem2\\cw app\\Flutter_Dotnet\\Backend\\BookNest\\Controllers\\MemberController.cs",
               "RelativeToolTip": "Controllers\\MemberController.cs",
-              "ViewState": "AgIAAK8AAAAAAAAAAADwv5sAAAAcAAAAAAAAAA==",
+              "ViewState": "AgIAAGUBAAAAAAAAAADwv2oBAABZAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-03T16:26:52.452Z",
+              "WhenOpened": "2025-05-04T07:54:16.854Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "BookmarkModel.cs",
-              "DocumentMoniker": "D:\\College Workplace\\3rdyr\\sem\\app development\\sem2\\cw app\\Flutter_Dotnet\\Backend\\BookNest\\Models\\BookmarkModel.cs",
-              "RelativeDocumentMoniker": "Models\\BookmarkModel.cs",
-              "ToolTip": "D:\\College Workplace\\3rdyr\\sem\\app development\\sem2\\cw app\\Flutter_Dotnet\\Backend\\BookNest\\Models\\BookmarkModel.cs",
-              "RelativeToolTip": "Models\\BookmarkModel.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAFAAAAAAAAAA==",
+              "Title": "OrderStringModel.cs",
+              "DocumentMoniker": "D:\\College Workplace\\3rdyr\\sem\\app development\\sem2\\cw app\\Flutter_Dotnet\\Backend\\BookNest\\Models\\DTOModels\\OrderStringModel.cs",
+              "RelativeDocumentMoniker": "Models\\DTOModels\\OrderStringModel.cs",
+              "ToolTip": "D:\\College Workplace\\3rdyr\\sem\\app development\\sem2\\cw app\\Flutter_Dotnet\\Backend\\BookNest\\Models\\DTOModels\\OrderStringModel.cs",
+              "RelativeToolTip": "Models\\DTOModels\\OrderStringModel.cs",
+              "ViewState": "AgIAABYAAAAAAAAAAAA5wCUAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-03T16:25:41.874Z"
+              "WhenOpened": "2025-05-04T07:53:21.079Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "BookmarkDTOModel.cs",
-              "DocumentMoniker": "D:\\College Workplace\\3rdyr\\sem\\app development\\sem2\\cw app\\Flutter_Dotnet\\Backend\\BookNest\\Models\\DTOModels\\BookmarkDTOModel.cs",
-              "RelativeDocumentMoniker": "Models\\DTOModels\\BookmarkDTOModel.cs",
-              "ToolTip": "D:\\College Workplace\\3rdyr\\sem\\app development\\sem2\\cw app\\Flutter_Dotnet\\Backend\\BookNest\\Models\\DTOModels\\BookmarkDTOModel.cs",
-              "RelativeToolTip": "Models\\DTOModels\\BookmarkDTOModel.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAZAAAAAAAAAA==",
+              "DocumentIndex": 0,
+              "Title": "OrderModel.cs",
+              "DocumentMoniker": "D:\\College Workplace\\3rdyr\\sem\\app development\\sem2\\cw app\\Flutter_Dotnet\\Backend\\BookNest\\Models\\OrderModel.cs",
+              "RelativeDocumentMoniker": "Models\\OrderModel.cs",
+              "ToolTip": "D:\\College Workplace\\3rdyr\\sem\\app development\\sem2\\cw app\\Flutter_Dotnet\\Backend\\BookNest\\Models\\OrderModel.cs",
+              "RelativeToolTip": "Models\\OrderModel.cs",
+              "ViewState": "AgIAABIAAAAAAAAAAAAYwBkAAAAvAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-03T16:38:10.678Z"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+              "WhenOpened": "2025-05-04T07:53:18.11Z",
+              "EditorCaption": ""
             }
           ]
         }

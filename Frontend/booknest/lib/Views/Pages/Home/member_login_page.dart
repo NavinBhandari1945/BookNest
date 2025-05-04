@@ -1,4 +1,6 @@
 import 'package:booknest/Views/Pages/Home/book_screen.dart';
+import 'package:booknest/Views/Pages/Home/cart_screen.dart';
+import 'package:booknest/Views/Pages/Home/send_email.dart';
 import 'package:booknest/Views/Pages/Home/user_not_login_home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -73,11 +75,24 @@ class _MemberHomePageState extends State<MemberHomePage> {
         body: Container(
           child: Column(
             children: [
+
+              // Container(child: Text("email screen"),).onTap((){
+              //   Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+              //     return SendEmail();
+              //   },));
+              // }),
+
               Container(child: Text("Book screen"),).onTap((){
                 Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
                   return BookScreen(jwttoken: widget.jwttoken, usertype:widget.usertype, email: widget.email);
                 },));
         }),
+              Container(child: Text("Cart screen"),).onTap((){
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+                  return CartScreen(jwttoken: widget.jwttoken, usertype:widget.usertype, email: widget.email);
+                },));
+              }),
+              10.heightBox,
               Commonbutton("Logout", ()async
               {
                 final Clear_User_Data=await clearUserData();

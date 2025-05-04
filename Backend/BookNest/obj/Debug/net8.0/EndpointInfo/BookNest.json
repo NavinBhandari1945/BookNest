@@ -6,7 +6,7 @@
   },
   "paths": {
     "/api/Admin/change_user_role": {
-      "post": {
+      "put": {
         "tags": [
           "Admin"
         ],
@@ -154,10 +154,29 @@
       }
     },
     "/api/Member/getreviewdata": {
-      "get": {
+      "post": {
         "tags": [
           "Member"
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewBookIdDTOModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewBookIdDTOModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewBookIdDTOModel"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "OK"
@@ -270,6 +289,68 @@
         }
       }
     },
+    "/api/Member/getcartdata": {
+      "post": {
+        "tags": [
+          "Member"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetCartDTOModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetCartDTOModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetCartDTOModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Member/deletecartitem": {
+      "delete": {
+        "tags": [
+          "Member"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CartIdDTOModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CartIdDTOModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CartIdDTOModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Member/add_order": {
       "post": {
         "tags": [
@@ -301,7 +382,38 @@
         }
       }
     },
-    "/api/Member/getuserbookmarks": {
+    "/api/Member/get_order_details": {
+      "post": {
+        "tags": [
+          "Member"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrderUserIdDTOModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrderUserIdDTOModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrderUserIdDTOModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Member/getcartuserbooks": {
       "get": {
         "tags": [
           "Member"
@@ -313,7 +425,7 @@
         }
       }
     },
-    "/api/Member/getcartuserbooks": {
+    "/api/Member/getuserbookmarks": {
       "get": {
         "tags": [
           "Member"
@@ -567,13 +679,26 @@
         },
         "additionalProperties": false
       },
+      "CartIdDTOModel": {
+        "required": [
+          "cartId"
+        ],
+        "type": "object",
+        "properties": {
+          "cartId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "CartStringModel": {
         "required": [
           "addedAt",
           "bookId",
           "cartId",
-          "quantity",
-          "userId"
+          "email",
+          "quantity"
         ],
         "type": "object",
         "properties": {
@@ -589,9 +714,9 @@
             "type": "integer",
             "format": "int32"
           },
-          "userId": {
-            "type": "integer",
-            "format": "int32"
+          "email": {
+            "minLength": 1,
+            "type": "string"
           },
           "bookId": {
             "type": "integer",
@@ -617,6 +742,21 @@
             "minLength": 0,
             "type": "string",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetCartDTOModel": {
+        "required": [
+          "email"
+        ],
+        "type": "object",
+        "properties": {
+          "email": {
+            "maxLength": 200,
+            "minLength": 0,
+            "type": "string",
+            "format": "email"
           }
         },
         "additionalProperties": false
@@ -696,6 +836,32 @@
             "type": "integer",
             "format": "int32"
           },
+          "bookId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "OrderUserIdDTOModel": {
+        "required": [
+          "userId"
+        ],
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ReviewBookIdDTOModel": {
+        "required": [
+          "bookId"
+        ],
+        "type": "object",
+        "properties": {
           "bookId": {
             "type": "integer",
             "format": "int32"
