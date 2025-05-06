@@ -1,4 +1,6 @@
 import 'package:booknest/Views/Pages/Admin/add_book.dart';
+import 'package:booknest/Views/Pages/Admin/update_book.dart';
+import 'package:booknest/Views/Pages/Admin/update_discount.dart';
 import 'package:booknest/Views/common%20widget/commonbutton.dart';
 import 'package:flutter/material.dart';
 
@@ -6,6 +8,8 @@ import '../../../constant/styles.dart';
 import '../../common widget/common_method.dart';
 import '../../common widget/toast.dart';
 import '../Home/user_not_login_home_screen.dart';
+import 'add_anouncement.dart';
+import 'admin_book_details.dart';
 import 'change_user_role.dart';
 
 class AdminHomePage extends StatefulWidget {
@@ -80,6 +84,43 @@ class _AdminHomePageState extends State<AdminHomePage> {
               {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
                   return AddBook(jwttoken: widget.jwttoken, usertype: widget.usertype, email:widget.email,);
+
+                },));
+
+              }, context, Colors.red),
+
+              Commonbutton("Add annoucement", ()
+              {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return AddAnnouncementPage(jwttoken: widget.jwttoken, usertype: widget.usertype, email:widget.email,);
+
+                },));
+
+              }, context, Colors.red),
+
+              Commonbutton("View available books.", ()
+              {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return AdminBookDetails(jwttoken: widget.jwttoken, usertype: widget.usertype, email:widget.email,);
+
+                },));
+
+              }, context, Colors.red),
+
+              Commonbutton("Update book details.", ()
+              {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return UpdateBook(jwttoken: widget.jwttoken, usertype: widget.usertype, email:widget.email,);
+
+                },));
+
+              }, context, Colors.red),
+
+
+              Commonbutton("Update book discount.", ()
+              {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return UpdateDiscount(jwttoken: widget.jwttoken, usertype: widget.usertype, email:widget.email,);
 
                 },));
 

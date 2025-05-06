@@ -1,6 +1,22 @@
 [
   {
     "ContainingType": "BookNest.Controllers.AdminController",
+    "Method": "Add_Announcement",
+    "RelativePath": "api/Admin/add_announcement",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "Obj",
+        "Type": "BookNest.Models.DTOModels.AnnouncementStringModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookNest.Controllers.AdminController",
     "Method": "AddBook",
     "RelativePath": "api/Admin/add_book",
     "HttpMethod": "POST",
@@ -26,6 +42,64 @@
       {
         "Name": "obj",
         "Type": "BookNest.Models.DTOModels.ChangeUserRoleModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookNest.Controllers.AdminController",
+    "Method": "DeleteBook",
+    "RelativePath": "api/Admin/delete_book/{bookId}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "bookId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookNest.Controllers.AdminController",
+    "Method": "Get_Books_Infos",
+    "RelativePath": "api/Admin/get_books_info",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookNest.Controllers.AdminController",
+    "Method": "UpdateBook",
+    "RelativePath": "api/Admin/update_book",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "obj",
+        "Type": "BookNest.Models.DTOModels.UpdateBookDTOModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookNest.Controllers.AdminController",
+    "Method": "UpdateDiscount",
+    "RelativePath": "api/Admin/update_discount",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "obj",
+        "Type": "BookNest.Models.DTOModels.UpdateDiscountDTOModel",
         "IsRequired": true
       }
     ],
@@ -131,7 +205,7 @@
     "Parameters": [
       {
         "Name": "obj",
-        "Type": "BookNest.Models.DTOModels.ReviewStringModel",
+        "Type": "BookNest.Models.DTOModels.ReviewEmailDTOModel",
         "IsRequired": true
       }
     ],
@@ -155,6 +229,32 @@
   },
   {
     "ContainingType": "BookNest.Controllers.MemberController",
+    "Method": "Delete_Order_Infos",
+    "RelativePath": "api/Member/deleteorder",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "obj",
+        "Type": "BookNest.Models.DTOModels.OrderIdDTOModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookNest.Controllers.MemberController",
+    "Method": "Get_Announcement_Infos",
+    "RelativePath": "api/Member/get_announcement_info",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookNest.Controllers.MemberController",
     "Method": "Get_Order_History",
     "RelativePath": "api/Member/get_order_details",
     "HttpMethod": "POST",
@@ -164,6 +264,32 @@
       {
         "Name": "obj",
         "Type": "BookNest.Models.DTOModels.OrderUserIdDTOModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookNest.Controllers.MemberController",
+    "Method": "Get_Success_Order",
+    "RelativePath": "api/Member/get_success_order",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookNest.Controllers.MemberController",
+    "Method": "Get_User_Info",
+    "RelativePath": "api/Member/get_user_details",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "obj",
+        "Type": "BookNest.Models.DTOModels.UserEmailDTOModel",
         "IsRequired": true
       }
     ],
@@ -249,6 +375,38 @@
     "IsController": true,
     "Order": 0,
     "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookNest.Controllers.MemberController",
+    "Method": "UpdateEmail",
+    "RelativePath": "api/Member/update_email",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "obj",
+        "Type": "BookNest.Models.DTOModels.UpdateUserEmailDTOModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookNest.Controllers.StaffController",
+    "Method": "Add_Bookmark",
+    "RelativePath": "api/Staff/claim_code",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "obj",
+        "Type": "BookNest.Models.DTOModels.ClaimCodeDTOModel",
+        "IsRequired": true
+      }
+    ],
     "ReturnTypes": []
   }
 ]

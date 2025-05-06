@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:booknest/Views/Pages/Home/send_email.dart';
+import 'package:booknest/Views/Pages/Home/user_not_login_home_screen.dart';
 import 'package:booknest/Views/common%20widget/commonbutton.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -68,6 +69,35 @@ class CartDetailsScreen extends StatefulWidget {
 }
 
 class _CartDetailsScreenState extends State<CartDetailsScreen> {
+
+  @override
+  void initState() {
+    super.initState();
+    checkJWTExpiationmember();
+  }
+
+  Future<void> checkJWTExpiationmember() async {
+    try {
+      //check jwt called in admin home screen.
+      print("check jwt called in book screen.");
+      int result = await checkJwtToken_initistate_member(
+          widget.email, widget.usertype, widget.jwttoken);
+      if (result == 0)
+      {
+        await clearUserData();
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => UserNotLoginHomeScreen()));
+        Toastget().Toastmsg("Session End. Relogin please.");
+      }
+    } catch (obj) {
+      print("Exception caught while verifying jwt for admin home screen.");
+      print(obj.toString());
+      await clearUserData();
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UserNotLoginHomeScreen()));
+      Toastget().Toastmsg("Error. Relogin please.");
+    }
+  }
+
   // Calculate total price (quantity * price)
   double? get totalPrice {
     if (widget.quantity != null && widget.price != null) {
@@ -243,7 +273,9 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
     var heightval = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      appBar: AppBar(
+      appBar:
+
+      AppBar(
         automaticallyImplyLeading: false,
         title: const Text(
           "Cart Details",
@@ -262,6 +294,7 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
           onPressed: () => Navigator.pop(context),
         ),
       ),
+
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(

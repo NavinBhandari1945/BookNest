@@ -3,24 +3,16 @@
   "WorkspaceRootPath": "D:\\College Workplace\\3rdyr\\sem\\app development\\sem2\\cw app\\Flutter_Dotnet\\Backend\\BookNest\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{832EAD3C-1A76-4B72-92D7-58FAE6A7A39E}|BookNest.csproj|d:\\college workplace\\3rdyr\\sem\\app development\\sem2\\cw app\\flutter_dotnet\\backend\\booknest\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{832EAD3C-1A76-4B72-92D7-58FAE6A7A39E}|BookNest.csproj|solutionrelative:controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{832EAD3C-1A76-4B72-92D7-58FAE6A7A39E}|BookNest.csproj|d:\\college workplace\\3rdyr\\sem\\app development\\sem2\\cw app\\flutter_dotnet\\backend\\booknest\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{832EAD3C-1A76-4B72-92D7-58FAE6A7A39E}|BookNest.csproj|solutionrelative:controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{832EAD3C-1A76-4B72-92D7-58FAE6A7A39E}|BookNest.csproj|d:\\college workplace\\3rdyr\\sem\\app development\\sem2\\cw app\\flutter_dotnet\\backend\\booknest\\models\\ordermodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{832EAD3C-1A76-4B72-92D7-58FAE6A7A39E}|BookNest.csproj|solutionrelative:models\\ordermodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{832EAD3C-1A76-4B72-92D7-58FAE6A7A39E}|BookNest.csproj|d:\\college workplace\\3rdyr\\sem\\app development\\sem2\\cw app\\flutter_dotnet\\backend\\booknest\\controllers\\membercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{832EAD3C-1A76-4B72-92D7-58FAE6A7A39E}|BookNest.csproj|solutionrelative:controllers\\membercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{832EAD3C-1A76-4B72-92D7-58FAE6A7A39E}|BookNest.csproj|d:\\college workplace\\3rdyr\\sem\\app development\\sem2\\cw app\\flutter_dotnet\\backend\\booknest\\models\\dtomodels\\orderstringmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{832EAD3C-1A76-4B72-92D7-58FAE6A7A39E}|BookNest.csproj|solutionrelative:models\\dtomodels\\orderstringmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{832EAD3C-1A76-4B72-92D7-58FAE6A7A39E}|BookNest.csproj|d:\\college workplace\\3rdyr\\sem\\app development\\sem2\\cw app\\flutter_dotnet\\backend\\booknest\\controllers\\commonmethod.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{832EAD3C-1A76-4B72-92D7-58FAE6A7A39E}|BookNest.csproj|solutionrelative:controllers\\commonmethod.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -33,71 +25,47 @@
           "SelectedChildIndex": 1,
           "Children": [
             {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "AuthController.cs",
               "DocumentMoniker": "D:\\College Workplace\\3rdyr\\sem\\app development\\sem2\\cw app\\Flutter_Dotnet\\Backend\\BookNest\\Controllers\\AuthController.cs",
               "RelativeDocumentMoniker": "Controllers\\AuthController.cs",
               "ToolTip": "D:\\College Workplace\\3rdyr\\sem\\app development\\sem2\\cw app\\Flutter_Dotnet\\Backend\\BookNest\\Controllers\\AuthController.cs",
               "RelativeToolTip": "Controllers\\AuthController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAANsAAAAAAAAAAADwv+kAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-04T15:51:42.354Z",
+              "WhenOpened": "2025-05-06T08:02:13.893Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "AdminController.cs",
-              "DocumentMoniker": "D:\\College Workplace\\3rdyr\\sem\\app development\\sem2\\cw app\\Flutter_Dotnet\\Backend\\BookNest\\Controllers\\AdminController.cs",
-              "RelativeDocumentMoniker": "Controllers\\AdminController.cs",
-              "ToolTip": "D:\\College Workplace\\3rdyr\\sem\\app development\\sem2\\cw app\\Flutter_Dotnet\\Backend\\BookNest\\Controllers\\AdminController.cs",
-              "RelativeToolTip": "Controllers\\AdminController.cs",
-              "ViewState": "AgIAAFgAAAAAAAAAAAAkwG8AAAAlAAAAAAAAAA==",
+              "DocumentIndex": 2,
+              "Title": "CommonMethod.cs",
+              "DocumentMoniker": "D:\\College Workplace\\3rdyr\\sem\\app development\\sem2\\cw app\\Flutter_Dotnet\\Backend\\BookNest\\Controllers\\CommonMethod.cs",
+              "RelativeDocumentMoniker": "Controllers\\CommonMethod.cs",
+              "ToolTip": "D:\\College Workplace\\3rdyr\\sem\\app development\\sem2\\cw app\\Flutter_Dotnet\\Backend\\BookNest\\Controllers\\CommonMethod.cs",
+              "RelativeToolTip": "Controllers\\CommonMethod.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAgAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-04T15:51:29.819Z",
+              "WhenOpened": "2025-05-06T08:01:21.609Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 1,
               "Title": "MemberController.cs",
               "DocumentMoniker": "D:\\College Workplace\\3rdyr\\sem\\app development\\sem2\\cw app\\Flutter_Dotnet\\Backend\\BookNest\\Controllers\\MemberController.cs",
               "RelativeDocumentMoniker": "Controllers\\MemberController.cs",
               "ToolTip": "D:\\College Workplace\\3rdyr\\sem\\app development\\sem2\\cw app\\Flutter_Dotnet\\Backend\\BookNest\\Controllers\\MemberController.cs",
               "RelativeToolTip": "Controllers\\MemberController.cs",
-              "ViewState": "AgIAAGUBAAAAAAAAAADwv2oBAABZAAAAAAAAAA==",
+              "ViewState": "AgIAABUAAAAAAAAAAAAuwB0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-04T07:54:16.854Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "OrderStringModel.cs",
-              "DocumentMoniker": "D:\\College Workplace\\3rdyr\\sem\\app development\\sem2\\cw app\\Flutter_Dotnet\\Backend\\BookNest\\Models\\DTOModels\\OrderStringModel.cs",
-              "RelativeDocumentMoniker": "Models\\DTOModels\\OrderStringModel.cs",
-              "ToolTip": "D:\\College Workplace\\3rdyr\\sem\\app development\\sem2\\cw app\\Flutter_Dotnet\\Backend\\BookNest\\Models\\DTOModels\\OrderStringModel.cs",
-              "RelativeToolTip": "Models\\DTOModels\\OrderStringModel.cs",
-              "ViewState": "AgIAABYAAAAAAAAAAAA5wCUAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-04T07:53:21.079Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "OrderModel.cs",
-              "DocumentMoniker": "D:\\College Workplace\\3rdyr\\sem\\app development\\sem2\\cw app\\Flutter_Dotnet\\Backend\\BookNest\\Models\\OrderModel.cs",
-              "RelativeDocumentMoniker": "Models\\OrderModel.cs",
-              "ToolTip": "D:\\College Workplace\\3rdyr\\sem\\app development\\sem2\\cw app\\Flutter_Dotnet\\Backend\\BookNest\\Models\\OrderModel.cs",
-              "RelativeToolTip": "Models\\OrderModel.cs",
-              "ViewState": "AgIAABIAAAAAAAAAAAA1wBkAAAAvAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-04T07:53:18.11Z",
+              "WhenOpened": "2025-05-06T07:39:44.519Z",
               "EditorCaption": ""
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
             }
           ]
         }

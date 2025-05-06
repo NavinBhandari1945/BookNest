@@ -5,6 +5,7 @@ namespace BookNest.Models
 {
     public class ReviewModel
     {
+        private object books;
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -49,7 +50,6 @@ namespace BookNest.Models
             Users = users;
         }
 
-
-
+    
     }
 }

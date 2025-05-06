@@ -118,7 +118,165 @@ namespace BookNest.Controllers
             }
         }
 
-       
+
+        //[Authorize(Policy = "RequireAdminRole")]
+        [HttpPost]
+        [Route("add_announcement")]
+        public async Task<IActionResult> Add_Announcement([FromBody] AnnouncementStringModel Obj)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return StatusCode(501, "Invalid data format.");
+                }
+
+                var Start_Date = DateTime.Parse(Obj.StartDate).ToUniversalTime();
+                var End_Date = DateTime.Parse(Obj.EndDate).ToUniversalTime();
+
+                if (End_Date <= Start_Date)
+                {
+                    return StatusCode(502, "Incorrect discount date: Discount end date must be after start date.");
+                }
+
+                AnoucementModel announcement = new AnoucementModel(
+                    announcementId:Obj.AnnouncementId,
+                    message: Obj.Message,
+                    title: Obj.Title,
+                    photo: Obj.Photo,
+                    startDate:Start_Date,
+                    endDate: End_Date
+                );
+                await Database.AnnouncementInfos.AddAsync(announcement);
+                await Database.SaveChangesAsync();
+                return Ok(new { Message = "Announcement added successfully." });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error while adding Announcement: {Message}", ex.Message);
+                return StatusCode(500, new
+                {
+                    error = "An unexpected error occurred.",
+                    message = ex.Message,
+                    stackTrace = ex.StackTrace
+                });
+            }
+        }
+
+        //[Authorize(Policy = "RequireAdminRole")]
+        [HttpPut]
+        [Route("update_discount")]
+        public async Task<IActionResult> UpdateDiscount([FromBody] UpdateDiscountDTOModel obj)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return StatusCode(501, "Invalid data format.");
+                }
+
+                var book = await Database.BookInfos.FirstOrDefaultAsync(b => b.BookId == obj.BookId);
+
+                if (book == null)
+                {
+                    return StatusCode(502, "Book not found.");
+                }
+
+                // Update only discount-related fields and category
+                book.Category = obj.Category;
+                book.DiscountPercent = obj.DiscountPercent;
+                book.DiscountStart = DateTime.Parse(obj.DiscountStart).ToUniversalTime();
+                book.DiscountEnd = DateTime.Parse(obj.DiscountEnd).ToUniversalTime();
+
+                await Database.SaveChangesAsync();
+                return Ok(new { Message = "Discount updated successfully." });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error while updating discount: {Message}", ex.Message);
+                return StatusCode(500, new
+                {
+                    error = "An unexpected error occurred.",
+                    message = ex.Message
+                });
+            }
+        }
+
+        //[Authorize(Policy = "RequireAdminRole")]
+        [HttpPut]
+        [Route("update_book")]
+        public async Task<IActionResult> UpdateBook([FromBody] UpdateBookDTOModel obj)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return StatusCode(501, "Invalid book data.");
+
+                var book = await Database.BookInfos.FirstOrDefaultAsync(b => b.BookId == obj.BookId);
+                if (book == null)
+                    return NotFound("Book not found.");
+
+                // Update all allowed fields
+                book.BookName = obj.BookName;
+                book.Price = obj.Price;
+                book.Format = obj.Format;
+                book.Title = obj.Title;
+                book.Language = obj.Language;
+                book.AvailableQuantity = obj.AvailableQuantity;
+
+                await Database.SaveChangesAsync();
+                return Ok(new { message = "Book updated successfully." });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error updating book.");
+                return StatusCode(500, new { error = "Internal server error", ex.Message });
+            }
+        }
+
+        //[Authorize(Policy = "RequireAdminRole")]
+        [HttpDelete]
+        [Route("delete_book/{bookId}")]
+        public async Task<IActionResult> DeleteBook(int bookId)
+        {
+            var book = await Database.BookInfos.FindAsync(bookId);
+            if (book == null)
+            {
+                return NotFound("Book not found.");
+            }
+
+            Database.BookInfos.Remove(book);
+            await Database.SaveChangesAsync();
+
+            return Ok(new { message = "Book deleted successfully." });
+        }
+
+
+        //[Authorize(Policy = "RequireAdminRole")]
+        [HttpGet]
+        [Route("get_books_info")]
+        public async Task<IActionResult> Get_Books_Infos()
+        {
+
+            try
+            {
+                var Book_Data = await Database.BookInfos.ToListAsync();
+                if (Book_Data.Any())
+                {
+                    return Ok(Book_Data);
+                }
+                return StatusCode(500, "Database error while getting books info");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(501, ex.Message);
+            }
+        }
+
+
+
+
+
 
 
 

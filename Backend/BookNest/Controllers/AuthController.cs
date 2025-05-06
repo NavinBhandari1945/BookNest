@@ -15,6 +15,7 @@ namespace BookNest.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
+     
 
         public DatabaseController Database { get; set; }
         public TokenServices TokenServices { get; set; }
@@ -23,8 +24,8 @@ namespace BookNest.Controllers
         {
             this.Database = Database;
             this.TokenServices = TokenServices;
+       
         }
-
 
         private string HashPassword(string password)
         {
@@ -33,7 +34,7 @@ namespace BookNest.Controllers
                 // Compute hash for the password
                 var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
                 // Convert the byte array to a hexadecimal string
-                if (hashedBytes!=null)
+                if (hashedBytes != null)
                 {
                     return BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
                 }
@@ -41,9 +42,11 @@ namespace BookNest.Controllers
                 {
                     return "";
                 }
-               
+
             }
+
         }
+
 
         [HttpPost]
         [Route("register")]
@@ -95,7 +98,7 @@ namespace BookNest.Controllers
                       
 
                         }
-                        var Encrypted_Password_Member = HashPassword(obj.Password);
+                        var Encrypted_Password_Member =HashPassword(obj.Password);
                         if (Encrypted_Password_Member != "" && Encrypted_Password_Member != null)
                         {
                             UserInfosModel UserDataMember = new UserInfosModel
@@ -121,7 +124,7 @@ namespace BookNest.Controllers
                     }
                     else
                     {
-                        var Encrypted_Password = HashPassword(obj.Password);
+                        var Encrypted_Password =HashPassword(obj.Password);
                         if (Encrypted_Password!=null && Encrypted_Password!="")
                         {
                             UserInfosModel UserDataAdmin = new UserInfosModel

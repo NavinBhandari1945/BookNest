@@ -30,7 +30,7 @@ namespace BookNest.Models
         public decimal TotalPrice { get; set; }
 
         [Required]
-        [StringLength(50)]
+        [StringLength(500)]
         public string ClaimCode { get; set; }
 
         [Required]

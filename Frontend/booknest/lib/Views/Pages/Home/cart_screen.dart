@@ -1,15 +1,14 @@
 import 'dart:convert';
-
 import 'package:booknest/Views/Pages/Home/cart_details_screen.dart';
 import 'package:booknest/Views/Pages/Home/user_not_login_home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:velocity_x/velocity_x.dart';
-
 import '../../../Models/CartUserBookModel.dart';
 import '../../../constant/constant.dart';
 import '../../../constant/styles.dart';
 import '../../common widget/common_method.dart';
+import '../../common widget/header_footer.dart';
 import '../../common widget/toast.dart';
 import 'member_login_page.dart';
 
@@ -123,14 +122,16 @@ class _CartScreenState extends State<CartScreen> {
         scrollDirection: Axis.vertical,
         child: Column(
           children: [
-            Container(child: Text("Book screen"),).onTap((){
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => MemberHomePage(jwttoken:widget.jwttoken!, usertype:widget.usertype, email: widget.email,)
-                ),
-              );
-            }),
+
+            // Header (Full Width)
+            SizedBox(
+              width: double.infinity,
+              child: HeaderWidget(
+                email: widget.email,
+                usertype: widget.usertype,
+                jwttoken: widget.jwttoken,
+              ),
+            ),
 
 
             FutureBuilder<void> (
@@ -232,9 +233,10 @@ class _CartScreenState extends State<CartScreen> {
                   }
                 }
             ),
-
-
-
+            SizedBox(
+              width: double.infinity,
+              child: FooterWidget(),
+            ),
 
           ],
         ),
