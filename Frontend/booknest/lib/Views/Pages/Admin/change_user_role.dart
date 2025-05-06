@@ -67,7 +67,7 @@ class _ChangeUserRoleState extends State<ChangeUserRole> {
       };
       final body_data=jsonEncode(userData);
 
-      final response = await http.post(Uri.parse(url), headers: headers,body: body_data);
+      final response = await http.put(Uri.parse(url), headers: headers,body: body_data);
       if (response.statusCode == 200)
       {
         Toastget().Toastmsg("Change role success.");

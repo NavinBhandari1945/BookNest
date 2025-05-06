@@ -43,7 +43,7 @@ namespace BookNest.Controllers
             }
         }
 
-        //[Authorize(Policy = "RequireMemberRole")]
+        [Authorize(Policy = "RequireMemberRole")]
         [HttpPost]
         [Route("getreviewdata")]
         public async Task<IActionResult> Get_Review_Infos([FromBody] ReviewBookIdDTOModel obj)
@@ -72,27 +72,43 @@ namespace BookNest.Controllers
         [Authorize(Policy = "RequireMemberRole")]
         [HttpPost]
         [Route("add_reviews")]
-        public async Task<IActionResult> Add_Review([FromBody] ReviewStringModel obj)
+        public async Task<IActionResult> Add_Review([FromBody] ReviewEmailDTOModel obj)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    var Review_Date = DateTime.Parse(obj.ReviewDate).ToUniversalTime();
+                    var User_Data = await Database.UserInfos.FirstOrDefaultAsync(x=>x.Email==obj.Email);
 
-                    ReviewModel review = new ReviewModel(
-                            reviewId: obj.ReviewId,
-                            comment: obj.Comment,
-                            rating: obj.Rating,
-                            reviewDate: Review_Date,
-                            userId: obj.UserId,
-                            bookId: obj.BookId,
-                            books: null,          // Passing null for optional navigation property
-                            users: null           // Passing null for optional navigation property
-                        );
-                    await Database.ReviewInfos.AddAsync(review);
-                    await Database.SaveChangesAsync();
-                    return Ok();
+                    if (User_Data != null)
+                    {
+                        var Review_Date = DateTime.Parse(obj.ReviewDate).ToUniversalTime();
+                        var Order_Data = await Database.OrderInfos.FirstOrDefaultAsync(x=>x.UserId==User_Data.UserId && x.BookId==obj.BookId && x.Status=="Complete");
+                        if (Order_Data!=null)
+                        {
+                            ReviewModel review = new ReviewModel(
+                                  reviewId: obj.ReviewId,
+                                  comment: obj.Comment,
+                                  rating: obj.Rating,
+                                  reviewDate: Review_Date,
+                                  userId: User_Data.UserId,
+                                  bookId: obj.BookId,
+                                  books: null,
+                                  users:null
+                              );
+                            await Database.ReviewInfos.AddAsync(review);
+                            await Database.SaveChangesAsync();
+                            return Ok();
+                        }
+                        else
+                        {
+                            return StatusCode(505, "No order history present.");
+                        }
+                    }
+                    else
+                    {
+                        return StatusCode(501,"No user present.");
+                    }
                 }
                 else
                 {
@@ -101,7 +117,12 @@ namespace BookNest.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Exception caught in login action method.\n{ex.Message}"); // 500 Internal Server Error
+                return StatusCode(500, new
+                {
+                    error = "An unexpected error occurred.",
+                    message = ex.Message,
+                    stackTrace = ex.StackTrace
+                });
             }
         }
 
@@ -505,6 +526,8 @@ namespace BookNest.Controllers
             }
         }
 
+
+        //[Authorize(Policy = "RequireMemberRole")]
         [HttpGet]
         [Route("getorderuserbooks")]
         public async Task<IActionResult> GetOrderUserBooks()
@@ -566,6 +589,110 @@ namespace BookNest.Controllers
                 });
             }
         }
+
+        //[Authorize(Policy = "RequireMemberRole")]
+        [HttpPost]
+        [Route("get_user_details")]
+        public async Task<IActionResult> Get_User_Info([FromBody] UserEmailDTOModel obj)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+
+                    var User_Data = await Database.UserInfos.FirstOrDefaultAsync(x=>x.Email==obj.Email);
+                    if (User_Data!=null)
+                    {
+                        return Ok(User_Data);
+                    }
+                    else
+                    {
+                        return StatusCode(501, "No user present.");
+                    }
+
+                }
+                else
+                {
+                    return StatusCode(502, "Provide correct format.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Exception caught in login action method.\n{ex.Message}"); // 500 Internal Server Error
+            }
+        }
+
+        //[Authorize(Policy = "RequireMemberRole")]
+        [HttpDelete]
+        [Route("deleteorder")]
+        public async Task<IActionResult> Delete_Order_Infos([FromBody] OrderIdDTOModel obj)
+        {
+
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var Order_Data = await Database.OrderInfos.FirstOrDefaultAsync(X => X.OrderId == obj.OrderId);
+                    if (Order_Data != null)
+                    {
+                        var result = Database.OrderInfos.Remove(Order_Data);
+                        await Database.SaveChangesAsync();
+                        return Ok("Delete order success");
+
+                    }
+                    else
+                    {
+                        return StatusCode(502, "Provide correct order data.");
+                    }
+                }
+                else
+                {
+                    return StatusCode(503,"Provide correct format.");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    error = "An unexpected error occurred.",
+                    message = ex.Message,
+                    stackTrace = ex.StackTrace
+                });
+            }
+        }
+
+        //[Authorize(Policy = "RequireMemberRole")]
+        [HttpGet]
+        [Route("get_success_order")]
+        public async Task<IActionResult> Get_Success_Order()
+        {
+
+            try
+            {
+                var Order_Data = await Database.OrderInfos.Where(x => x.Status =="Complete").ToListAsync();
+                if (Order_Data.Any())
+                {
+                    return Ok(Order_Data);
+                }
+                return StatusCode(500, "Database error while getting order info");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    error = "An unexpected error occurred.",
+                    message = ex.Message,
+                    stackTrace = ex.StackTrace
+                });
+            }
+        }
+
+
+
+
+
+
 
 
 

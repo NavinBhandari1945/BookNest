@@ -2919,23 +2919,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\LENOVO\\.nuget\\packages\\": {},
+    "C:\\Users\\ASUS\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\College Workplace\\3rdyr\\sem\\app development\\sem2\\cw app\\Flutter_Dotnet\\Backend\\BookNest\\BookNest.csproj",
+      "projectUniqueName": "C:\\Users\\ASUS\\Downloads\\Flutter_Dotnet\\Flutter_Dotnet\\Backend\\BookNest\\BookNest.csproj",
       "projectName": "BookNest",
-      "projectPath": "D:\\College Workplace\\3rdyr\\sem\\app development\\sem2\\cw app\\Flutter_Dotnet\\Backend\\BookNest\\BookNest.csproj",
-      "packagesPath": "C:\\Users\\LENOVO\\.nuget\\packages\\",
-      "outputPath": "D:\\College Workplace\\3rdyr\\sem\\app development\\sem2\\cw app\\Flutter_Dotnet\\Backend\\BookNest\\obj\\",
+      "projectPath": "C:\\Users\\ASUS\\Downloads\\Flutter_Dotnet\\Flutter_Dotnet\\Backend\\BookNest\\BookNest.csproj",
+      "packagesPath": "C:\\Users\\ASUS\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\ASUS\\Downloads\\Flutter_Dotnet\\Flutter_Dotnet\\Backend\\BookNest\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\LENOVO\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\ASUS\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:http/http.dart' as http;
+import 'package:velocity_x/velocity_x.dart';
 
 
 import '../../../constant/constant.dart';
@@ -203,18 +204,78 @@ class _AddBookState extends State<AddBook> {
             CommonTextField_obs_false("Enter discount start date.", "", false, discountStartController, context),
             CommonTextField_obs_false("Enter discount end date.", "", false, discountEndController, context),
             Commonbutton("Pick photo", ()async{
-
-              final Pick_Photo_Result=await Pick_Photo_Cont.pickImage();
-              print(Pick_Photo_Result.toString());
-
-
-
+              try {
+                final Pick_Photo_Result = await Pick_Photo_Cont.pickImage();
+                print(Pick_Photo_Result.toString());
+              }catch(obj){
+                print(obj.toString());
+                Toastget().Toastmsg("Review details adding failed.Try again.");
+              }
             }, context, Colors.red),
             Commonbutton("Add book", ()async{
               try{
+
+                if (bookNameController.text.toString().isEmptyOrNull ||
+                    priceController.text.toString().isEmptyOrNull ||
+                    formatController.text.toString().isEmptyOrNull ||
+                    titleController.text.toString().isEmptyOrNull ||
+                    authorController.text.toString().isEmptyOrNull ||
+                    publisherController.text.toString().isEmptyOrNull ||
+                    publicationDateController.text.toString().isEmptyOrNull ||
+                    languageController.text.toString().isEmptyOrNull ||
+                    listedAtController.text.toString().isEmptyOrNull ||
+                    availableQuantityController.text.toString().isEmptyOrNull ||
+                    CategoryController.text.toString().isEmptyOrNull ||
+                    discountPercentController.text.toString().isEmptyOrNull ||
+                    discountStartController.text.toString().isEmptyOrNull ||
+                    discountEndController.text.toString().isEmptyOrNull) {
+                  print("Incorrect data format.");
+                  Toastget().Toastmsg("Incorrect data format.");
+                  return;
+                }
+
                 final double_book_price=double.tryParse(priceController.text.toString());
                 final book_quantity=int.tryParse(availableQuantityController.text.toString());
                 final book_discount_percent=double.tryParse(discountPercentController.text.toString());
+
+                if(book_discount_percent! > 0)
+                {
+                  final Current_Date = DateTime.now().toUtc();
+                  final Start_Date = DateTime.tryParse(
+                      discountStartController.text);
+                  final End_Date = DateTime.tryParse(discountEndController.text);
+                  print("start date = ${Start_Date}");
+                  print("current date = ${Current_Date}");
+                  print("end date = ${End_Date}");
+                  if(
+                  Start_Date!.isBefore(End_Date!)==false ||
+                      End_Date.isAfter(Current_Date)==false ||
+                      Start_Date.isAfter(Current_Date)==false
+                    )
+                          {
+                            print("Incorrect date format discount percent greater then 0.");
+                            Toastget().Toastmsg("Incorrect date format.");
+                            return;
+                          }
+                }
+
+                final Current_Date = DateTime.now().toUtc();
+                final Listed_Date = DateTime.tryParse(
+                    listedAtController.text);
+                final Publication_Date = DateTime.tryParse(
+                    publicationDateController.text);
+
+                if(
+                Listed_Date!.isAfter(Current_Date) == true ||
+                Publication_Date!.isBefore(Current_Date) ==false
+                )
+                  {
+                    print("Incorrect listed or publication date date format.");
+                    Toastget().Toastmsg("Incorrect date format.");
+                    return;
+                  }
+
+
                 final Result=await Add_Book(
                     BookName:bookNameController.text.toString(),
                     Price: double_book_price!,

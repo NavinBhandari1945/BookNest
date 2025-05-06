@@ -8,8 +8,11 @@ import '../../../Models/BookInfosModel.dart';
 import '../../../Models/BookReviewModel.dart';
 import '../../../constant/constant.dart';
 import '../../../constant/styles.dart';
+import '../../common widget/circular_progress_ind_yellow.dart';
 import '../../common widget/common_method.dart';
+import '../../common widget/header_footer.dart';
 import '../../common widget/toast.dart';
+import 'Ctegory_Book_Screen.dart';
 import 'member_login_page.dart';
 
 class BookScreen extends StatefulWidget {
@@ -142,6 +145,8 @@ class _BookScreenState extends State<BookScreen>  {
     }
   }
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
 
 
   @override
@@ -151,6 +156,7 @@ class _BookScreenState extends State<BookScreen>  {
     var widthval = MediaQuery.of(context).size.width;
     var heightval = MediaQuery.of(context).size.height;
     return Scaffold(
+      key: _scaffoldKey,
         appBar: AppBar(
         automaticallyImplyLeading: true,
         title: const Text(
@@ -168,6 +174,14 @@ class _BookScreenState extends State<BookScreen>  {
           actions: [
                 Row (
                   children: [
+
+                    IconButton(
+                      onPressed: () {
+                        _scaffoldKey.currentState!.openDrawer();
+                      },
+                      icon: Icon(Icons.book_online_sharp),
+                    ),
+
                     Text(
                       "Sort/Filters",
                       style: TextStyle(fontFamily: semibold, color: Colors.white, fontSize: shortestval * 0.04),
@@ -231,1179 +245,1279 @@ class _BookScreenState extends State<BookScreen>  {
                     ),
                   ],
                 ),
-
-
-
-
           ],
         ),
-      body: Container(
-        child:
-    SingleChildScrollView(
-      scrollDirection: Axis.vertical,
-      physics: BouncingScrollPhysics(),
-      child: Column(
-            children: [
 
-              Container(child: Text("Book screen"),).onTap((){
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => MemberHomePage(jwttoken:widget.jwttoken!, usertype:widget.usertype, email: widget.email,)
-                  ),
+      drawer: Drawer(
+        child:   FutureBuilder  (
+          future: GetBookInfo(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting)
+            {
+              return Circular_pro_indicator_Yellow(context); // While waiting for response
+            }
+            else if (snapshot.hasError)
+            {
+              return Text('Error: ${snapshot.error}'); // If there's an error
+            }
+            else if (snapshot.connectionState == ConnectionState.done)
+            {
+              if (BookInfoList.isNotEmpty || BookInfoList.length>=1)
+              {
+                return ListView.builder(
+                    itemBuilder: (context, index) {
+                      return
+                        Card (
+                          child:
+                          Column(
+                            children: [
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                children:
+                                [
+                                  Expanded(child: Text("Book category name:${BookInfoList[index].category}",style: TextStyle(fontFamily: semibold,fontSize: shortestval*0.05),)),
+                                  Expanded(child: Icon(Icons.category)),
+                                ],
+                              ),
+                              Container(
+                                height: heightval*0.006,
+                                color: Colors.teal,
+                                width: widthval,
+                              ),
+                            ],
+                          ),
+                        ).onTap((){
+
+                          String selectedCategory = BookInfoList[index].category ?? "";
+
+                          // Filter books by selected category
+                          List<BooKInfos> Category_Book_Set = BookInfoList
+                              .where((book) => book.category == selectedCategory)
+                              .toList();
+
+                          Navigator.push(context, MaterialPageRoute(builder: (context) {
+                            return CategoryBookPage(jwttoken:widget.jwttoken!, usertype:widget.usertype, email: widget.email, BookInfo:Category_Book_Set,);
+
+                          },
+                          )
+                          );
+
+                        }) ;
+                    },
+                    itemCount: BookInfoList.length
                 );
-              }),
+              }
+              else
+              {
+                return Center(child: Text('No friend info.Please close and reopen app or add friend.')); // If no user data
+              }
+            }
+            else
+            {
+              return Center(child: Text('Error.Relogin.')); // Default loading state
+            }
+          },
 
-              TextFormField
-                (
-                  onChanged: (value)
-                  {
-                    setState(()
-                    {
-                    });
-                  },
-                  controller: Search_Box_Cont,
-                  obscureText: false,
-                  decoration:InputDecoration(
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                          color: Colors.black,
-                          width: shortestval*0.01
-                      ),
-                      borderRadius: BorderRadius.circular(shortestval*0.04),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                          color: Colors.black,
-                          width: shortestval*0.01
-                      ),
-                      borderRadius: BorderRadius.circular(shortestval*0.04),
-                    ),
-                    hintText: "Search by ISBN,tittle or author.",
-                    prefixIcon: Icon(Icons.search),
-                  )
+        ),
+      ),
+
+
+      body: Container(
+        width: widthval,
+        height: heightval,
+        child:
+    Column(
+          children: [
+
+            // Header (Full Width)
+            SizedBox(
+              width: double.infinity,
+              child: HeaderWidget(
+                email: widget.email,
+                usertype: widget.usertype,
+                jwttoken: widget.jwttoken,
               ),
-              SizedBox(
-                height: heightval*0.01,
-              ),
+            ),
 
-              FutureBuilder<void>
-                (
-                  future: Filter_Sort_Value==""?GetBookInfo():GetBookReviewInfos(),
-                  builder: (context, snapshot)
+            TextFormField
+              (
+                onChanged: (value)
+                {
+                  setState(()
                   {
-                    if (snapshot.connectionState == ConnectionState.waiting)
+                  });
+                },
+                controller: Search_Box_Cont,
+                obscureText: false,
+                decoration:InputDecoration(
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                        color: Colors.black,
+                        width: shortestval*0.01
+                    ),
+                    borderRadius: BorderRadius.circular(shortestval*0.04),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                        color: Colors.black,
+                        width: shortestval*0.01
+                    ),
+                    borderRadius: BorderRadius.circular(shortestval*0.04),
+                  ),
+                  hintText: "Search by ISBN,tittle or author.",
+                  prefixIcon: Icon(Icons.search),
+                )
+            ),
+            SizedBox(
+              height: heightval*0.01,
+            ),
+
+            FutureBuilder<void>
+              (
+                future: Filter_Sort_Value==""?GetBookInfo():GetBookReviewInfos(),
+                builder: (context, snapshot)
+                {
+                  if (snapshot.connectionState == ConnectionState.waiting)
+                  {
+                    // Show a loading indicator while the future is executing
+                    return Center(child: CircularProgressIndicator());
+                  }
+                  else if (snapshot.hasError)
+                  {
+                    // Handle any error from the future
+                    return Center(
+                      child: Text(
+                        "Error fetching user data. Please reopen app.",
+                        style: TextStyle(color: Colors.red, fontSize: 16),
+                      ),
+                    );
+                  }
+
+                  else if (snapshot.connectionState == ConnectionState.done)
+                  {
+
+                    if(Search_Box_Cont.text.toString().isNotEmptyAndNotNull && BookInfoList.length>=1 && Filter_Sort_Value=="")
                     {
-                      // Show a loading indicator while the future is executing
-                      return Center(child: CircularProgressIndicator());
-                    }
-                    else if (snapshot.hasError)
-                    {
-                      // Handle any error from the future
-                      return Center(
-                        child: Text(
-                          "Error fetching user data. Please reopen app.",
-                          style: TextStyle(color: Colors.red, fontSize: 16),
-                        ),
-                      );
-                    }
 
-                    else if (snapshot.connectionState == ConnectionState.done)
-                    {
+                      try {
+                        print("Filtere user list add item condition called.");
+                        // Iterate through your CampaignInfoList and check if postId matches the text input.
+                        for (var book_info in BookInfoList) {
+                          if (
+                          book_info.bookId.toString().toLowerCase().trim() ==
+                              Search_Box_Cont.text.toString()
+                                  .toLowerCase()
+                                  .trim() ||
+                              book_info.title.toString()
+                                  .toLowerCase()
+                                  .trim() == Search_Box_Cont.text.toString()
+                                  .toLowerCase()
+                                  .trim() ||
+                              book_info.author.toString()
+                                  .toLowerCase()
+                                  .trim() == Search_Box_Cont.text.toString()
+                                  .toLowerCase()
+                                  .trim()
 
-                      if(Search_Box_Cont.text.toString().isNotEmptyAndNotNull && BookInfoList.length>=1 && Filter_Sort_Value=="")
-                      {
-
-                        try {
-                          print("Filtere user list add item condition called.");
-                          // Iterate through your CampaignInfoList and check if postId matches the text input.
-                          for (var book_info in BookInfoList) {
-                            if (
-                            book_info.bookId.toString().toLowerCase().trim() ==
-                                Search_Box_Cont.text.toString()
-                                    .toLowerCase()
-                                    .trim() ||
-                                book_info.title.toString()
-                                    .toLowerCase()
-                                    .trim() == Search_Box_Cont.text.toString()
-                                    .toLowerCase()
-                                    .trim() ||
-                                book_info.author.toString()
-                                    .toLowerCase()
-                                    .trim() == Search_Box_Cont.text.toString()
-                                    .toLowerCase()
-                                    .trim()
-
-                            ) {
-                              // If the postId matches, add it to the FilteredCampaigns list.
-                              print(
-                                  "Search id,author or tittle of book match and add in filter bookid/tittle info list add start.");
-                              FilteredBookListIdOrTittleOrAuthor.clear();
-                              FilteredBookListIdOrTittleOrAuthor.add(book_info);
-                            }
-                          }
-
-                          if (FilteredBookListIdOrTittleOrAuthor.length <= 0) {
-                            FilteredBookListIdOrTittleOrAuthor.clear();
-                            Toastget().Toastmsg(
-                                "Enter id,author or tittle of book didn't match with available user book information.");
+                          ) {
+                            // If the postId matches, add it to the FilteredCampaigns list.
                             print(
-                                "Enter id,author or tittle of book didn't match with available user book information.");
+                                "Search id,author or tittle of book match and add in filter bookid/tittle info list add start.");
+                            FilteredBookListIdOrTittleOrAuthor.clear();
+                            FilteredBookListIdOrTittleOrAuthor.add(book_info);
                           }
-                        } catch (Obj) {
+                        }
+
+                        if (FilteredBookListIdOrTittleOrAuthor.length <= 0) {
                           FilteredBookListIdOrTittleOrAuthor.clear();
                           Toastget().Toastmsg(
-                              "Enter id or tittle of book didn't match with available user book information.");
+                              "Enter id,author or tittle of book didn't match with available user book information.");
                           print(
-                              "Exception caught while filtering book info list");
-                          print(Obj.toString());
+                              "Enter id,author or tittle of book didn't match with available user book information.");
                         }
-                        return FilteredBookListIdOrTittleOrAuthor.isEmpty
-                            ? const Center(child: Text(
-                            "No book data available."))
-                            :
-                        Builder(builder: (context) => ListView.builder (
-                                   shrinkWrap: true,
-                                  itemBuilder: (context, index) {
-                                    final book = FilteredBookListIdOrTittleOrAuthor[index];
-                                    return
-                                      Card(
-                                        child: Row(
-                                          crossAxisAlignment: CrossAxisAlignment
-                                              .center,
-                                          mainAxisAlignment: MainAxisAlignment
-                                              .spaceAround,
-                                          children:
-                                          [
-                                            Text("Book name:${book.bookName}",
-                                              style: TextStyle(
-                                                  fontFamily: semibold,
-                                                  fontSize: shortestval *
-                                                      0.05),),
-                                            Icon(Icons.book_online_outlined),
-                                          ],
-                                        ).onTap(() {
-                                          Navigator.push(context,
-                                              MaterialPageRoute(
-                                                builder: (context) {
-                                                  return BookDetails(
-                                                      jwttoken: widget.jwttoken,
-                                                      usertype: widget.usertype
-                                                      ,
-                                                      email: widget.email
-                                                      ,
-                                                      BookId: book.bookId
-                                                          .toString()
-                                                      ,
-                                                      BookName: book.bookName
-                                                          .toString()
-                                                      ,
-                                                      Price: book.price
-                                                          .toString()
-                                                      ,
-                                                      Format: book.format
-                                                          .toString()
-                                                      ,
-                                                      Title: book.title
-                                                          .toString()
-                                                      ,
-                                                      Author: book.author
-                                                          .toString()
-                                                      ,
-                                                      Publisher: book.publisher
-                                                          .toString()
-                                                      ,
-                                                      PublicationDate: book
-                                                          .publicationDate
-                                                          .toString()
-                                                      ,
-                                                      Language: book.language
-                                                          .toString()
-                                                      ,
-                                                      Category: book.category
-                                                          .toString()
-                                                      ,
-                                                      ListedAt: book.listedAt
-                                                          .toString()
-                                                      ,
-                                                      AvailableQuantity: book
-                                                          .availableQuantity
-                                                          .toString()
-                                                      ,
-                                                      DiscountPercent: book
-                                                          .discountPercent
-                                                          .toString()
-                                                      ,
-                                                      DiscountStart: book
-                                                          .discountStart
-                                                          .toString()
-                                                      ,
-                                                      DiscountEnd: book
-                                                          .discountEnd
-                                                          .toString()
-                                                      ,
-                                                      Photo: book.photo
-                                                          .toString()
-                                                  );
-                                                },
-                                              )
-                                          );
-                                        }),
-                                      );
-                                  },
-                                  itemCount: FilteredBookListIdOrTittleOrAuthor.length
-                              ),
-                        );
+                      } catch (Obj) {
+                        FilteredBookListIdOrTittleOrAuthor.clear();
+                        Toastget().Toastmsg(
+                            "Enter id or tittle of book didn't match with available user book information.");
+                        print(
+                            "Exception caught while filtering book info list");
+                        print(Obj.toString());
+                      }
+                      return FilteredBookListIdOrTittleOrAuthor.isEmpty
+                          ? const Center(child: Text(
+                          "No book data available."))
+                          :
+                      Builder(builder: (context) => ListView.builder (
+                                 shrinkWrap: true,
+                                itemBuilder: (context, index) {
+                                  final book = FilteredBookListIdOrTittleOrAuthor[index];
+                                  return
+                                    Card(
+                                      child: Row(
+                                        crossAxisAlignment: CrossAxisAlignment
+                                            .center,
+                                        mainAxisAlignment: MainAxisAlignment
+                                            .spaceAround,
+                                        children:
+                                        [
+                                          Text("Book name:${book.bookName}",
+                                            style: TextStyle(
+                                                fontFamily: semibold,
+                                                fontSize: shortestval *
+                                                    0.05),),
+                                          Icon(Icons.book_online_outlined),
+                                        ],
+                                      ).onTap(() {
+                                        Navigator.push(context,
+                                            MaterialPageRoute(
+                                              builder: (context) {
+                                                return BookDetails(
+                                                    jwttoken: widget.jwttoken,
+                                                    usertype: widget.usertype
+                                                    ,
+                                                    email: widget.email
+                                                    ,
+                                                    BookId: book.bookId
+                                                        .toString()
+                                                    ,
+                                                    BookName: book.bookName
+                                                        .toString()
+                                                    ,
+                                                    Price: book.price
+                                                        .toString()
+                                                    ,
+                                                    Format: book.format
+                                                        .toString()
+                                                    ,
+                                                    Title: book.title
+                                                        .toString()
+                                                    ,
+                                                    Author: book.author
+                                                        .toString()
+                                                    ,
+                                                    Publisher: book.publisher
+                                                        .toString()
+                                                    ,
+                                                    PublicationDate: book
+                                                        .publicationDate
+                                                        .toString()
+                                                    ,
+                                                    Language: book.language
+                                                        .toString()
+                                                    ,
+                                                    Category: book.category
+                                                        .toString()
+                                                    ,
+                                                    ListedAt: book.listedAt
+                                                        .toString()
+                                                    ,
+                                                    AvailableQuantity: book
+                                                        .availableQuantity
+                                                        .toString()
+                                                    ,
+                                                    DiscountPercent: book
+                                                        .discountPercent
+                                                        .toString()
+                                                    ,
+                                                    DiscountStart: book
+                                                        .discountStart
+                                                        .toString()
+                                                    ,
+                                                    DiscountEnd: book
+                                                        .discountEnd
+                                                        .toString()
+                                                    ,
+                                                    Photo: book.photo
+                                                        .toString()
+                                                );
+                                              },
+                                            )
+                                        );
+                                      }),
+                                    );
+                                },
+                                itemCount: FilteredBookListIdOrTittleOrAuthor.length
+                            ),
+                      );
 
-                      }//condition for filter
+                    }//condition for filter
 
-                      else if(BookInfoList.length>=1 && Search_Box_Cont.text.isEmptyOrNull && Filter_Sort_Value.isNotEmptyAndNotNull && Filter_Sort_Value=="Date aescending")
-                      {
+                    else if(BookInfoList.length>=1 && Search_Box_Cont.text.isEmptyOrNull && Filter_Sort_Value.isNotEmptyAndNotNull && Filter_Sort_Value=="Date aescending")
+                    {
 
-                        try {
-                          print("Filtere book list add item condition called.");
-                          // Iterate through your CampaignInfoList and check if postId matches the text input.
-                          final sort_result=sortBooksByPublicationDateAsc(BookInfoList);
-                          if (FilteredBookListDateAesc.length <= 0)
-                          {
-                            FilteredBookListDateAesc.clear();
-                            Toastget().Toastmsg(
-                                "Not available  book information.");
-                            print(
-                                "Not available  book information.");
-                          }
-                        } catch (Obj) {
+                      try {
+                        print("Filtere book list add item condition called.");
+                        // Iterate through your CampaignInfoList and check if postId matches the text input.
+                        final sort_result=sortBooksByPublicationDateAsc(BookInfoList);
+                        if (FilteredBookListDateAesc.length <= 0)
+                        {
                           FilteredBookListDateAesc.clear();
                           Toastget().Toastmsg(
                               "Not available  book information.");
                           print(
                               "Not available  book information.");
-                          print(Obj.toString());
                         }
-                        return FilteredBookListDateAesc.isEmpty
-                            ? const Center(child: Text(
-                            "No book data available."))
-                            :
-                        Builder(builder: (context) => ListView.builder (
-                            shrinkWrap: true,
-                            itemBuilder: (context, index) {
-                              final book = FilteredBookListDateAesc[index];
-                              return
-                                Card(
-                                  child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment
-                                        .center,
-                                    mainAxisAlignment: MainAxisAlignment
-                                        .spaceAround,
-                                    children:
-                                    [
-                                      Text("Book name:${book.bookName}",
-                                        style: TextStyle(
-                                            fontFamily: semibold,
-                                            fontSize: shortestval *
-                                                0.05),),
-                                      Icon(Icons.book_outlined),
-                                      Text("${book.publicationDate}")
-                                    ],
-                                  ).onTap(() {
-                                    Navigator.push(context,
-                                        MaterialPageRoute(
-                                          builder: (context) {
-                                            return BookDetails(
-                                                jwttoken: widget.jwttoken,
-                                                usertype: widget.usertype
-                                                ,
-                                                email: widget.email
-                                                ,
-                                                BookId: book.bookId
-                                                    .toString()
-                                                ,
-                                                BookName: book.bookName
-                                                    .toString()
-                                                ,
-                                                Price: book.price
-                                                    .toString()
-                                                ,
-                                                Format: book.format
-                                                    .toString()
-                                                ,
-                                                Title: book.title
-                                                    .toString()
-                                                ,
-                                                Author: book.author
-                                                    .toString()
-                                                ,
-                                                Publisher: book.publisher
-                                                    .toString()
-                                                ,
-                                                PublicationDate: book
-                                                    .publicationDate
-                                                    .toString()
-                                                ,
-                                                Language: book.language
-                                                    .toString()
-                                                ,
-                                                Category: book.category
-                                                    .toString()
-                                                ,
-                                                ListedAt: book.listedAt
-                                                    .toString()
-                                                ,
-                                                AvailableQuantity: book
-                                                    .availableQuantity
-                                                    .toString()
-                                                ,
-                                                DiscountPercent: book
-                                                    .discountPercent
-                                                    .toString()
-                                                ,
-                                                DiscountStart: book
-                                                    .discountStart
-                                                    .toString()
-                                                ,
-                                                DiscountEnd: book
-                                                    .discountEnd
-                                                    .toString()
-                                                ,
-                                                Photo: book.photo
-                                                    .toString()
-                                            );
-                                          },
-                                        )
-                                    );
-                                  }),
-                                );
-                            },
-                            itemCount: FilteredBookListDateAesc.length
-                        ),
-                        );
+                      } catch (Obj) {
+                        FilteredBookListDateAesc.clear();
+                        Toastget().Toastmsg(
+                            "Not available  book information.");
+                        print(
+                            "Not available  book information.");
+                        print(Obj.toString());
                       }
-                      else if(BookInfoList.length>=1 && Search_Box_Cont.text.isEmptyOrNull && Filter_Sort_Value.isNotEmptyAndNotNull && Filter_Sort_Value=="Date descending")
-                      {
+                      return FilteredBookListDateAesc.isEmpty
+                          ? const Center(child: Text(
+                          "No book data available."))
+                          :
+                      Builder(builder: (context) => ListView.builder (
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            final book = FilteredBookListDateAesc[index];
+                            return
+                              Card(
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment
+                                      .center,
+                                  mainAxisAlignment: MainAxisAlignment
+                                      .spaceAround,
+                                  children:
+                                  [
+                                    Text("Book name:${book.bookName}",
+                                      style: TextStyle(
+                                          fontFamily: semibold,
+                                          fontSize: shortestval *
+                                              0.05),),
+                                    Icon(Icons.book_outlined),
+                                    Text("${book.publicationDate}")
+                                  ],
+                                ).onTap(() {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(
+                                        builder: (context) {
+                                          return BookDetails(
+                                              jwttoken: widget.jwttoken,
+                                              usertype: widget.usertype
+                                              ,
+                                              email: widget.email
+                                              ,
+                                              BookId: book.bookId
+                                                  .toString()
+                                              ,
+                                              BookName: book.bookName
+                                                  .toString()
+                                              ,
+                                              Price: book.price
+                                                  .toString()
+                                              ,
+                                              Format: book.format
+                                                  .toString()
+                                              ,
+                                              Title: book.title
+                                                  .toString()
+                                              ,
+                                              Author: book.author
+                                                  .toString()
+                                              ,
+                                              Publisher: book.publisher
+                                                  .toString()
+                                              ,
+                                              PublicationDate: book
+                                                  .publicationDate
+                                                  .toString()
+                                              ,
+                                              Language: book.language
+                                                  .toString()
+                                              ,
+                                              Category: book.category
+                                                  .toString()
+                                              ,
+                                              ListedAt: book.listedAt
+                                                  .toString()
+                                              ,
+                                              AvailableQuantity: book
+                                                  .availableQuantity
+                                                  .toString()
+                                              ,
+                                              DiscountPercent: book
+                                                  .discountPercent
+                                                  .toString()
+                                              ,
+                                              DiscountStart: book
+                                                  .discountStart
+                                                  .toString()
+                                              ,
+                                              DiscountEnd: book
+                                                  .discountEnd
+                                                  .toString()
+                                              ,
+                                              Photo: book.photo
+                                                  .toString()
+                                          );
+                                        },
+                                      )
+                                  );
+                                }),
+                              );
+                          },
+                          itemCount: FilteredBookListDateAesc.length
+                      ),
+                      );
+                    }
+                    else if(BookInfoList.length>=1 && Search_Box_Cont.text.isEmptyOrNull && Filter_Sort_Value.isNotEmptyAndNotNull && Filter_Sort_Value=="Date descending")
+                    {
 
-                        try {
-                          print("Filtere book list add item condition called.");
-                          // Iterate through your CampaignInfoList and check if postId matches the text input.
-                          final sort_result=sortBooksByPublicationDateDesc(BookInfoList);
-                          if (FilteredBookListDateDesc.length <= 0)
-                          {
-                            FilteredBookListDateDesc.clear();
-                            Toastget().Toastmsg(
-                                "Not available  book information.");
-                            print(
-                                "Not available  book information.");
-                          }
-                        } catch (Obj) {
+                      try {
+                        print("Filtere book list add item condition called.");
+                        // Iterate through your CampaignInfoList and check if postId matches the text input.
+                        final sort_result=sortBooksByPublicationDateDesc(BookInfoList);
+                        if (FilteredBookListDateDesc.length <= 0)
+                        {
                           FilteredBookListDateDesc.clear();
                           Toastget().Toastmsg(
                               "Not available  book information.");
                           print(
                               "Not available  book information.");
-                          print(Obj.toString());
                         }
-                        return FilteredBookListDateDesc.isEmpty
-                            ? const Center(child: Text(
-                            "No book data available."))
-                            :
-                        Builder(builder: (context) => ListView.builder (
-                            shrinkWrap: true,
-                            itemBuilder: (context, index) {
-                              final book = FilteredBookListDateDesc[index];
-                              return
-                                Card(
-                                  child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment
-                                        .center,
-                                    mainAxisAlignment: MainAxisAlignment
-                                        .spaceAround,
-                                    children:
-                                    [
-                                      Text("Book name:${book.bookName}",
-                                        style: TextStyle(
-                                            fontFamily: semibold,
-                                            fontSize: shortestval *
-                                                0.05),),
-                                      Icon(Icons.book_outlined),
-                                      Text("${book.publicationDate}")
-                                    ],
-                                  ).onTap(() {
-                                    Navigator.push(context,
-                                        MaterialPageRoute(
-                                          builder: (context) {
-                                            return BookDetails(
-                                                jwttoken: widget.jwttoken,
-                                                usertype: widget.usertype
-                                                ,
-                                                email: widget.email
-                                                ,
-                                                BookId: book.bookId
-                                                    .toString()
-                                                ,
-                                                BookName: book.bookName
-                                                    .toString()
-                                                ,
-                                                Price: book.price
-                                                    .toString()
-                                                ,
-                                                Format: book.format
-                                                    .toString()
-                                                ,
-                                                Title: book.title
-                                                    .toString()
-                                                ,
-                                                Author: book.author
-                                                    .toString()
-                                                ,
-                                                Publisher: book.publisher
-                                                    .toString()
-                                                ,
-                                                PublicationDate: book
-                                                    .publicationDate
-                                                    .toString()
-                                                ,
-                                                Language: book.language
-                                                    .toString()
-                                                ,
-                                                Category: book.category
-                                                    .toString()
-                                                ,
-                                                ListedAt: book.listedAt
-                                                    .toString()
-                                                ,
-                                                AvailableQuantity: book
-                                                    .availableQuantity
-                                                    .toString()
-                                                ,
-                                                DiscountPercent: book
-                                                    .discountPercent
-                                                    .toString()
-                                                ,
-                                                DiscountStart: book
-                                                    .discountStart
-                                                    .toString()
-                                                ,
-                                                DiscountEnd: book
-                                                    .discountEnd
-                                                    .toString()
-                                                ,
-                                                Photo: book.photo
-                                                    .toString()
-                                            );
-                                          },
-                                        )
-                                    );
-                                  }),
-                                );
-                            },
-                            itemCount: FilteredBookListDateDesc.length
-                        ),
-                        );
+                      } catch (Obj) {
+                        FilteredBookListDateDesc.clear();
+                        Toastget().Toastmsg(
+                            "Not available  book information.");
+                        print(
+                            "Not available  book information.");
+                        print(Obj.toString());
                       }
-                      else if(BookInfoList.length>=1 && Search_Box_Cont.text.isEmptyOrNull && Filter_Sort_Value.isNotEmptyAndNotNull && Filter_Sort_Value=="Price descending")
-                      {
+                      return FilteredBookListDateDesc.isEmpty
+                          ? const Center(child: Text(
+                          "No book data available."))
+                          :
+                      Builder(builder: (context) => ListView.builder (
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            final book = FilteredBookListDateDesc[index];
+                            return
+                              Card(
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment
+                                      .center,
+                                  mainAxisAlignment: MainAxisAlignment
+                                      .spaceAround,
+                                  children:
+                                  [
+                                    Text("Book name:${book.bookName}",
+                                      style: TextStyle(
+                                          fontFamily: semibold,
+                                          fontSize: shortestval *
+                                              0.05),),
+                                    Icon(Icons.book_outlined),
+                                    Text("${book.publicationDate}")
+                                  ],
+                                ).onTap(() {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(
+                                        builder: (context) {
+                                          return BookDetails(
+                                              jwttoken: widget.jwttoken,
+                                              usertype: widget.usertype
+                                              ,
+                                              email: widget.email
+                                              ,
+                                              BookId: book.bookId
+                                                  .toString()
+                                              ,
+                                              BookName: book.bookName
+                                                  .toString()
+                                              ,
+                                              Price: book.price
+                                                  .toString()
+                                              ,
+                                              Format: book.format
+                                                  .toString()
+                                              ,
+                                              Title: book.title
+                                                  .toString()
+                                              ,
+                                              Author: book.author
+                                                  .toString()
+                                              ,
+                                              Publisher: book.publisher
+                                                  .toString()
+                                              ,
+                                              PublicationDate: book
+                                                  .publicationDate
+                                                  .toString()
+                                              ,
+                                              Language: book.language
+                                                  .toString()
+                                              ,
+                                              Category: book.category
+                                                  .toString()
+                                              ,
+                                              ListedAt: book.listedAt
+                                                  .toString()
+                                              ,
+                                              AvailableQuantity: book
+                                                  .availableQuantity
+                                                  .toString()
+                                              ,
+                                              DiscountPercent: book
+                                                  .discountPercent
+                                                  .toString()
+                                              ,
+                                              DiscountStart: book
+                                                  .discountStart
+                                                  .toString()
+                                              ,
+                                              DiscountEnd: book
+                                                  .discountEnd
+                                                  .toString()
+                                              ,
+                                              Photo: book.photo
+                                                  .toString()
+                                          );
+                                        },
+                                      )
+                                  );
+                                }),
+                              );
+                          },
+                          itemCount: FilteredBookListDateDesc.length
+                      ),
+                      );
+                    }
+                    else if(BookInfoList.length>=1 && Search_Box_Cont.text.isEmptyOrNull && Filter_Sort_Value.isNotEmptyAndNotNull && Filter_Sort_Value=="Price descending")
+                    {
 
-                        try {
-                          print("Filtere book list add item condition called.");
-                          // Iterate through your CampaignInfoList and check if postId matches the text input.
-                          final sort_result=sortBooksByPriceDesc(BookInfoList);
-                          if (FilteredBookListPriceDesc.length <= 0)
-                          {
-                            FilteredBookListPriceDesc.clear();
-                            Toastget().Toastmsg(
-                                "Not available  book information.");
-                            print(
-                                "Not available  book information.");
-                          }
-                        } catch (Obj) {
+                      try {
+                        print("Filtere book list add item condition called.");
+                        // Iterate through your CampaignInfoList and check if postId matches the text input.
+                        final sort_result=sortBooksByPriceDesc(BookInfoList);
+                        if (FilteredBookListPriceDesc.length <= 0)
+                        {
                           FilteredBookListPriceDesc.clear();
                           Toastget().Toastmsg(
                               "Not available  book information.");
                           print(
                               "Not available  book information.");
-                          print(Obj.toString());
                         }
-                        return FilteredBookListPriceDesc.isEmpty
-                            ? const Center(child: Text(
-                            "No book data available."))
-                            :
-                        Builder(builder: (context) => ListView.builder (
-                            shrinkWrap: true,
-                            itemBuilder: (context, index) {
-                              final book = FilteredBookListPriceDesc[index];
-                              return
-                                Card(
-                                  child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment
-                                        .center,
-                                    mainAxisAlignment: MainAxisAlignment
-                                        .spaceAround,
-                                    children:
-                                    [
-                                      Text("Book name:${book.bookName}",
-                                        style: TextStyle(
-                                            fontFamily: semibold,
-                                            fontSize: shortestval *
-                                                0.05),),
-                                      Icon(Icons.book_outlined),
-                                      Text("${book.price}")
-                                    ],
-                                  ).onTap(() {
-                                    Navigator.push(context,
-                                        MaterialPageRoute(
-                                          builder: (context) {
-                                            return BookDetails(
-                                                jwttoken: widget.jwttoken,
-                                                usertype: widget.usertype
-                                                ,
-                                                email: widget.email
-                                                ,
-                                                BookId: book.bookId
-                                                    .toString()
-                                                ,
-                                                BookName: book.bookName
-                                                    .toString()
-                                                ,
-                                                Price: book.price
-                                                    .toString()
-                                                ,
-                                                Format: book.format
-                                                    .toString()
-                                                ,
-                                                Title: book.title
-                                                    .toString()
-                                                ,
-                                                Author: book.author
-                                                    .toString()
-                                                ,
-                                                Publisher: book.publisher
-                                                    .toString()
-                                                ,
-                                                PublicationDate: book
-                                                    .publicationDate
-                                                    .toString()
-                                                ,
-                                                Language: book.language
-                                                    .toString()
-                                                ,
-                                                Category: book.category
-                                                    .toString()
-                                                ,
-                                                ListedAt: book.listedAt
-                                                    .toString()
-                                                ,
-                                                AvailableQuantity: book
-                                                    .availableQuantity
-                                                    .toString()
-                                                ,
-                                                DiscountPercent: book
-                                                    .discountPercent
-                                                    .toString()
-                                                ,
-                                                DiscountStart: book
-                                                    .discountStart
-                                                    .toString()
-                                                ,
-                                                DiscountEnd: book
-                                                    .discountEnd
-                                                    .toString()
-                                                ,
-                                                Photo: book.photo
-                                                    .toString()
-                                            );
-                                          },
-                                        )
-                                    );
-                                  }),
-                                );
-                            },
-                            itemCount: FilteredBookListPriceDesc.length
-                        ),
-                        );
+                      } catch (Obj) {
+                        FilteredBookListPriceDesc.clear();
+                        Toastget().Toastmsg(
+                            "Not available  book information.");
+                        print(
+                            "Not available  book information.");
+                        print(Obj.toString());
                       }
-                      else if(BookInfoList.length>=1 && Search_Box_Cont.text.isEmptyOrNull && Filter_Sort_Value.isNotEmptyAndNotNull && Filter_Sort_Value=="Price aescending")
-                      {
+                      return FilteredBookListPriceDesc.isEmpty
+                          ? const Center(child: Text(
+                          "No book data available."))
+                          :
+                      Builder(builder: (context) => ListView.builder (
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            final book = FilteredBookListPriceDesc[index];
+                            return
+                              Card(
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment
+                                      .center,
+                                  mainAxisAlignment: MainAxisAlignment
+                                      .spaceAround,
+                                  children:
+                                  [
+                                    Text("Book name:${book.bookName}",
+                                      style: TextStyle(
+                                          fontFamily: semibold,
+                                          fontSize: shortestval *
+                                              0.05),),
+                                    Icon(Icons.book_outlined),
+                                    Text("${book.price}")
+                                  ],
+                                ).onTap(() {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(
+                                        builder: (context) {
+                                          return BookDetails(
+                                              jwttoken: widget.jwttoken,
+                                              usertype: widget.usertype
+                                              ,
+                                              email: widget.email
+                                              ,
+                                              BookId: book.bookId
+                                                  .toString()
+                                              ,
+                                              BookName: book.bookName
+                                                  .toString()
+                                              ,
+                                              Price: book.price
+                                                  .toString()
+                                              ,
+                                              Format: book.format
+                                                  .toString()
+                                              ,
+                                              Title: book.title
+                                                  .toString()
+                                              ,
+                                              Author: book.author
+                                                  .toString()
+                                              ,
+                                              Publisher: book.publisher
+                                                  .toString()
+                                              ,
+                                              PublicationDate: book
+                                                  .publicationDate
+                                                  .toString()
+                                              ,
+                                              Language: book.language
+                                                  .toString()
+                                              ,
+                                              Category: book.category
+                                                  .toString()
+                                              ,
+                                              ListedAt: book.listedAt
+                                                  .toString()
+                                              ,
+                                              AvailableQuantity: book
+                                                  .availableQuantity
+                                                  .toString()
+                                              ,
+                                              DiscountPercent: book
+                                                  .discountPercent
+                                                  .toString()
+                                              ,
+                                              DiscountStart: book
+                                                  .discountStart
+                                                  .toString()
+                                              ,
+                                              DiscountEnd: book
+                                                  .discountEnd
+                                                  .toString()
+                                              ,
+                                              Photo: book.photo
+                                                  .toString()
+                                          );
+                                        },
+                                      )
+                                  );
+                                }),
+                              );
+                          },
+                          itemCount: FilteredBookListPriceDesc.length
+                      ),
+                      );
+                    }
+                    else if(BookInfoList.length>=1 && Search_Box_Cont.text.isEmptyOrNull && Filter_Sort_Value.isNotEmptyAndNotNull && Filter_Sort_Value=="Price aescending")
+                    {
 
-                        try {
-                          print("Filtere book list add item condition called.");
-                          // Iterate through your CampaignInfoList and check if postId matches the text input.
-                          final sort_result=sortBooksByPriceAsc(BookInfoList);
-                          if (FilteredBookListPriceAesc.length <= 0)
-                          {
-                            FilteredBookListPriceAesc.clear();
-                            Toastget().Toastmsg(
-                                "Not available  book information.");
-                            print(
-                                "Not available  book information.");
-                          }
-                        } catch (Obj) {
+                      try {
+                        print("Filtere book list add item condition called.");
+                        // Iterate through your CampaignInfoList and check if postId matches the text input.
+                        final sort_result=sortBooksByPriceAsc(BookInfoList);
+                        if (FilteredBookListPriceAesc.length <= 0)
+                        {
                           FilteredBookListPriceAesc.clear();
                           Toastget().Toastmsg(
                               "Not available  book information.");
                           print(
                               "Not available  book information.");
-                          print(Obj.toString());
                         }
-                        return FilteredBookListPriceAesc.isEmpty
-                            ? const Center(child: Text(
-                            "No book data available."))
-                            :
-                        Builder(builder: (context) => ListView.builder (
-                            shrinkWrap: true,
-                            itemBuilder: (context, index) {
-                              final book = FilteredBookListPriceAesc[index];
-                              return
-                                Card(
-                                  child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment
-                                        .center,
-                                    mainAxisAlignment: MainAxisAlignment
-                                        .spaceAround,
-                                    children:
-                                    [
-                                      Text("Book name:${book.bookName}",
-                                        style: TextStyle(
-                                            fontFamily: semibold,
-                                            fontSize: shortestval *
-                                                0.05),),
-                                      Icon(Icons.book_outlined),
-                                      Text("${book.price}")
-                                    ],
-                                  ).onTap(() {
-                                    Navigator.push(context,
-                                        MaterialPageRoute(
-                                          builder: (context) {
-                                            return BookDetails(
-                                                jwttoken: widget.jwttoken,
-                                                usertype: widget.usertype
-                                                ,
-                                                email: widget.email
-                                                ,
-                                                BookId: book.bookId
-                                                    .toString()
-                                                ,
-                                                BookName: book.bookName
-                                                    .toString()
-                                                ,
-                                                Price: book.price
-                                                    .toString()
-                                                ,
-                                                Format: book.format
-                                                    .toString()
-                                                ,
-                                                Title: book.title
-                                                    .toString()
-                                                ,
-                                                Author: book.author
-                                                    .toString()
-                                                ,
-                                                Publisher: book.publisher
-                                                    .toString()
-                                                ,
-                                                PublicationDate: book
-                                                    .publicationDate
-                                                    .toString()
-                                                ,
-                                                Language: book.language
-                                                    .toString()
-                                                ,
-                                                Category: book.category
-                                                    .toString()
-                                                ,
-                                                ListedAt: book.listedAt
-                                                    .toString()
-                                                ,
-                                                AvailableQuantity: book
-                                                    .availableQuantity
-                                                    .toString()
-                                                ,
-                                                DiscountPercent: book
-                                                    .discountPercent
-                                                    .toString()
-                                                ,
-                                                DiscountStart: book
-                                                    .discountStart
-                                                    .toString()
-                                                ,
-                                                DiscountEnd: book
-                                                    .discountEnd
-                                                    .toString()
-                                                ,
-                                                Photo: book.photo
-                                                    .toString()
-                                            );
-                                          },
-                                        )
-                                    );
-                                  }),
-                                );
-                            },
-                            itemCount: FilteredBookListPriceAesc.length
-                        ),
-                        );
+                      } catch (Obj) {
+                        FilteredBookListPriceAesc.clear();
+                        Toastget().Toastmsg(
+                            "Not available  book information.");
+                        print(
+                            "Not available  book information.");
+                        print(Obj.toString());
                       }
-                     else if(BookReviewInfoList.length>=1 && Search_Box_Cont.text.isEmptyOrNull && Filter_Sort_Value.isNotEmptyAndNotNull && Filter_Sort_Value=="Ratings aescending")
-                      {
+                      return FilteredBookListPriceAesc.isEmpty
+                          ? const Center(child: Text(
+                          "No book data available."))
+                          :
+                      Builder(builder: (context) => ListView.builder (
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            final book = FilteredBookListPriceAesc[index];
+                            return
+                              Card(
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment
+                                      .center,
+                                  mainAxisAlignment: MainAxisAlignment
+                                      .spaceAround,
+                                  children:
+                                  [
+                                    Text("Book name:${book.bookName}",
+                                      style: TextStyle(
+                                          fontFamily: semibold,
+                                          fontSize: shortestval *
+                                              0.05),),
+                                    Icon(Icons.book_outlined),
+                                    Text("${book.price}")
+                                  ],
+                                ).onTap(() {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(
+                                        builder: (context) {
+                                          return BookDetails(
+                                              jwttoken: widget.jwttoken,
+                                              usertype: widget.usertype
+                                              ,
+                                              email: widget.email
+                                              ,
+                                              BookId: book.bookId
+                                                  .toString()
+                                              ,
+                                              BookName: book.bookName
+                                                  .toString()
+                                              ,
+                                              Price: book.price
+                                                  .toString()
+                                              ,
+                                              Format: book.format
+                                                  .toString()
+                                              ,
+                                              Title: book.title
+                                                  .toString()
+                                              ,
+                                              Author: book.author
+                                                  .toString()
+                                              ,
+                                              Publisher: book.publisher
+                                                  .toString()
+                                              ,
+                                              PublicationDate: book
+                                                  .publicationDate
+                                                  .toString()
+                                              ,
+                                              Language: book.language
+                                                  .toString()
+                                              ,
+                                              Category: book.category
+                                                  .toString()
+                                              ,
+                                              ListedAt: book.listedAt
+                                                  .toString()
+                                              ,
+                                              AvailableQuantity: book
+                                                  .availableQuantity
+                                                  .toString()
+                                              ,
+                                              DiscountPercent: book
+                                                  .discountPercent
+                                                  .toString()
+                                              ,
+                                              DiscountStart: book
+                                                  .discountStart
+                                                  .toString()
+                                              ,
+                                              DiscountEnd: book
+                                                  .discountEnd
+                                                  .toString()
+                                              ,
+                                              Photo: book.photo
+                                                  .toString()
+                                          );
+                                        },
+                                      )
+                                  );
+                                }),
+                              );
+                          },
+                          itemCount: FilteredBookListPriceAesc.length
+                      ),
+                      );
+                    }
+                   else if(BookReviewInfoList.length>=1 && Search_Box_Cont.text.isEmptyOrNull && Filter_Sort_Value.isNotEmptyAndNotNull && Filter_Sort_Value=="Ratings aescending")
+                    {
 
-                        try {
-                          print("Filtere user list add item condition called.");
+                      try {
+                        print("Filtere user list add item condition called.");
 
-                          final Sort_Result=sortBooksByRatingAsc(BookReviewInfoList);
-                          if (FilteredBookListRatingsAesc.length <= 0) {
-                            FilteredBookListRatingsAesc.clear();
-                            Toastget().Toastmsg(
-                                "No book data available.");
-                            print(
-                                "No book data available.");
-                          }
-                        } catch (Obj) {
+                        final Sort_Result=sortBooksByRatingAsc(BookReviewInfoList);
+                        if (FilteredBookListRatingsAesc.length <= 0) {
                           FilteredBookListRatingsAesc.clear();
                           Toastget().Toastmsg(
                               "No book data available.");
                           print(
-                              "Exception caught while filtering book info list");
-                          print(Obj.toString());
+                              "No book data available.");
                         }
-                        return FilteredBookListRatingsAesc.isEmpty
-                            ? const Center(child: Text(
-                            "No book data available."))
-                            :
-                        Builder(builder: (context) => ListView.builder (
-                            shrinkWrap: true,
-                            itemBuilder: (context, index) {
-                              final book = FilteredBookListRatingsAesc[index];
-                              return
-                                Card(
-                                  child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment
-                                        .center,
-                                    mainAxisAlignment: MainAxisAlignment
-                                        .spaceAround,
-                                    children:
-                                    [
-                                      Text("Book name:${book.bookName}",
-                                        style: TextStyle(
-                                            fontFamily: semibold,
-                                            fontSize: shortestval *
-                                                0.05),),
-                                      Icon(Icons.book_online_outlined),
-                                      Text("${book.rating}")
-                                    ],
-                                  ).onTap(() {
-                                    Navigator.push(context,
-                                        MaterialPageRoute(
-                                          builder: (context) {
-                                            return BookDetails(
-                                                jwttoken: widget.jwttoken,
-                                                usertype: widget.usertype
-                                                ,
-                                                email: widget.email
-                                                ,
-                                                BookId: book.bookId
-                                                    .toString()
-                                                ,
-                                                BookName: book.bookName
-                                                    .toString()
-                                                ,
-                                                Price: book.price
-                                                    .toString()
-                                                ,
-                                                Format: book.format
-                                                    .toString()
-                                                ,
-                                                Title: book.title
-                                                    .toString()
-                                                ,
-                                                Author: book.author
-                                                    .toString()
-                                                ,
-                                                Publisher: book.publisher
-                                                    .toString()
-                                                ,
-                                                PublicationDate: book
-                                                    .publicationDate
-                                                    .toString()
-                                                ,
-                                                Language: book.language
-                                                    .toString()
-                                                ,
-                                                Category: book.category
-                                                    .toString()
-                                                ,
-                                                ListedAt: book.listedAt
-                                                    .toString()
-                                                ,
-                                                AvailableQuantity: book
-                                                    .availableQuantity
-                                                    .toString()
-                                                ,
-                                                DiscountPercent: book
-                                                    .discountPercent
-                                                    .toString()
-                                                ,
-                                                DiscountStart: book
-                                                    .discountStart
-                                                    .toString()
-                                                ,
-                                                DiscountEnd: book
-                                                    .discountEnd
-                                                    .toString()
-                                                ,
-                                                Photo: book.photo
-                                                    .toString()
-                                            );
-                                          },
-                                        )
-                                    );
-                                  }),
-                                );
-                            },
-                            itemCount: FilteredBookListRatingsAesc.length
-                        ),
-                        );
+                      } catch (Obj) {
+                        FilteredBookListRatingsAesc.clear();
+                        Toastget().Toastmsg(
+                            "No book data available.");
+                        print(
+                            "Exception caught while filtering book info list");
+                        print(Obj.toString());
+                      }
+                      return FilteredBookListRatingsAesc.isEmpty
+                          ? const Center(child: Text(
+                          "No book data available."))
+                          :
+                      Builder(builder: (context) => ListView.builder (
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            final book = FilteredBookListRatingsAesc[index];
+                            return
+                              Card(
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment
+                                      .center,
+                                  mainAxisAlignment: MainAxisAlignment
+                                      .spaceAround,
+                                  children:
+                                  [
+                                    Text("Book name:${book.bookName}",
+                                      style: TextStyle(
+                                          fontFamily: semibold,
+                                          fontSize: shortestval *
+                                              0.05),),
+                                    Icon(Icons.book_online_outlined),
+                                    Text("${book.rating}")
+                                  ],
+                                ).onTap(() {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(
+                                        builder: (context) {
+                                          return BookDetails(
+                                              jwttoken: widget.jwttoken,
+                                              usertype: widget.usertype
+                                              ,
+                                              email: widget.email
+                                              ,
+                                              BookId: book.bookId
+                                                  .toString()
+                                              ,
+                                              BookName: book.bookName
+                                                  .toString()
+                                              ,
+                                              Price: book.price
+                                                  .toString()
+                                              ,
+                                              Format: book.format
+                                                  .toString()
+                                              ,
+                                              Title: book.title
+                                                  .toString()
+                                              ,
+                                              Author: book.author
+                                                  .toString()
+                                              ,
+                                              Publisher: book.publisher
+                                                  .toString()
+                                              ,
+                                              PublicationDate: book
+                                                  .publicationDate
+                                                  .toString()
+                                              ,
+                                              Language: book.language
+                                                  .toString()
+                                              ,
+                                              Category: book.category
+                                                  .toString()
+                                              ,
+                                              ListedAt: book.listedAt
+                                                  .toString()
+                                              ,
+                                              AvailableQuantity: book
+                                                  .availableQuantity
+                                                  .toString()
+                                              ,
+                                              DiscountPercent: book
+                                                  .discountPercent
+                                                  .toString()
+                                              ,
+                                              DiscountStart: book
+                                                  .discountStart
+                                                  .toString()
+                                              ,
+                                              DiscountEnd: book
+                                                  .discountEnd
+                                                  .toString()
+                                              ,
+                                              Photo: book.photo
+                                                  .toString()
+                                          );
+                                        },
+                                      )
+                                  );
+                                }),
+                              );
+                          },
+                          itemCount: FilteredBookListRatingsAesc.length
+                      ),
+                      );
 
-                      }//condition for filter
-                      else if(BookReviewInfoList.length>=1 && Search_Box_Cont.text.isEmptyOrNull && Filter_Sort_Value.isNotEmptyAndNotNull && Filter_Sort_Value=="Ratings descending")
-                      {
+                    }//condition for filter
+                    else if(BookReviewInfoList.length>=1 && Search_Box_Cont.text.isEmptyOrNull && Filter_Sort_Value.isNotEmptyAndNotNull && Filter_Sort_Value=="Ratings descending")
+                    {
 
-                        try {
-                          print("Filtere user list add item condition called.");
+                      try {
+                        print("Filtere user list add item condition called.");
 
-                          final Sort_Result=sortBooksByRatingDesc(BookReviewInfoList);
-                          print("Filter rating result");
-                          print(Sort_Result);
-                          if (FilteredBookListRatingsDesc.length <= 0) {
-                            FilteredBookListRatingsDesc.clear();
-                            Toastget().Toastmsg(
-                                "No book data available.");
-                            print(
-                                "No book data available.");
-                          }
-                        } catch (Obj) {
+                        final Sort_Result=sortBooksByRatingDesc(BookReviewInfoList);
+                        print("Filter rating result");
+                        print(Sort_Result);
+                        if (FilteredBookListRatingsDesc.length <= 0) {
                           FilteredBookListRatingsDesc.clear();
                           Toastget().Toastmsg(
                               "No book data available.");
                           print(
-                              "Exception caught while filtering book info list");
-                          print(Obj.toString());
+                              "No book data available.");
                         }
-
-                        return FilteredBookListRatingsDesc.isEmpty
-                            ? const Center(child: Text(
-                            "No book data available."))
-                            :
-                        Builder(builder: (context) => ListView.builder (
-                            shrinkWrap: true,
-                            itemBuilder: (context, index) {
-                              final book = FilteredBookListRatingsDesc[index];
-                              return
-                                Card(
-                                  child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment
-                                        .center,
-                                    mainAxisAlignment: MainAxisAlignment
-                                        .spaceAround,
-                                    children:
-                                    [
-                                      Text("Book name:${book.bookName}",
-                                        style: TextStyle(
-                                            fontFamily: semibold,
-                                            fontSize: shortestval *
-                                                0.05),),
-                                      Icon(Icons.book_online_outlined),
-                                      Text("${book.rating}")
-                                    ],
-                                  ).onTap(() {
-                                    Navigator.push(context,
-                                        MaterialPageRoute(
-                                          builder: (context) {
-                                            return BookDetails(
-                                                jwttoken: widget.jwttoken,
-                                                usertype: widget.usertype
-                                                ,
-                                                email: widget.email
-                                                ,
-                                                BookId: book.bookId
-                                                    .toString()
-                                                ,
-                                                BookName: book.bookName
-                                                    .toString()
-                                                ,
-                                                Price: book.price
-                                                    .toString()
-                                                ,
-                                                Format: book.format
-                                                    .toString()
-                                                ,
-                                                Title: book.title
-                                                    .toString()
-                                                ,
-                                                Author: book.author
-                                                    .toString()
-                                                ,
-                                                Publisher: book.publisher
-                                                    .toString()
-                                                ,
-                                                PublicationDate: book
-                                                    .publicationDate
-                                                    .toString()
-                                                ,
-                                                Language: book.language
-                                                    .toString()
-                                                ,
-                                                Category: book.category
-                                                    .toString()
-                                                ,
-                                                ListedAt: book.listedAt
-                                                    .toString()
-                                                ,
-                                                AvailableQuantity: book
-                                                    .availableQuantity
-                                                    .toString()
-                                                ,
-                                                DiscountPercent: book
-                                                    .discountPercent
-                                                    .toString()
-                                                ,
-                                                DiscountStart: book
-                                                    .discountStart
-                                                    .toString()
-                                                ,
-                                                DiscountEnd: book
-                                                    .discountEnd
-                                                    .toString()
-                                                ,
-                                                Photo: book.photo
-                                                    .toString()
-                                            );
-                                          },
-                                        )
-                                    );
-                                  }),
-                                );
-                            },
-                            itemCount: FilteredBookListRatingsDesc.length
-                        ),
-                        );
-                      }//condition for filtering
-
-                      else if(BookInfoList.length>=1 && Search_Box_Cont.text.isEmptyOrNull && Filter_Sort_Value.isEmptyOrNull)
-                      {
-                        return
-                        Builder(builder: (context) => ListView.builder (
-                            shrinkWrap: true,
-                            itemBuilder: (context, index)
-                            {
-                              final book = BookInfoList[index];
-                              return
-                                Card(
-                                  child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment
-                                        .center,
-                                    mainAxisAlignment: MainAxisAlignment
-                                        .spaceAround,
-                                    children:
-                                    [
-                                      Text("Book name:${book.bookName}",
-                                        style: TextStyle(
-                                            fontFamily: semibold,
-                                            fontSize: shortestval *
-                                                0.05),),
-                                      Icon(Icons.book_online_outlined),
-                                    ],
-                                  ).onTap(() {
-                                    Navigator.push(context,
-                                        MaterialPageRoute(
-                                          builder: (context) {
-                                            return BookDetails(
-                                                jwttoken: widget.jwttoken,
-                                                usertype: widget.usertype
-                                                ,
-                                                email: widget.email
-                                                ,
-                                                BookId: book.bookId
-                                                    .toString()
-                                                ,
-                                                BookName: book.bookName
-                                                    .toString()
-                                                ,
-                                                Price: book.price
-                                                    .toString()
-                                                ,
-                                                Format: book.format
-                                                    .toString()
-                                                ,
-                                                Title: book.title
-                                                    .toString()
-                                                ,
-                                                Author: book.author
-                                                    .toString()
-                                                ,
-                                                Publisher: book.publisher
-                                                    .toString()
-                                                ,
-                                                PublicationDate: book
-                                                    .publicationDate
-                                                    .toString()
-                                                ,
-                                                Language: book.language
-                                                    .toString()
-                                                ,
-                                                Category: book.category
-                                                    .toString()
-                                                ,
-                                                ListedAt: book.listedAt
-                                                    .toString()
-                                                ,
-                                                AvailableQuantity: book
-                                                    .availableQuantity
-                                                    .toString()
-                                                ,
-                                                DiscountPercent: book
-                                                    .discountPercent
-                                                    .toString()
-                                                ,
-                                                DiscountStart: book
-                                                    .discountStart
-                                                    .toString()
-                                                ,
-                                                DiscountEnd: book
-                                                    .discountEnd
-                                                    .toString()
-                                                ,
-                                                Photo: book.photo
-                                                    .toString()
-                                            );
-                                          },
-                                        )
-                                    );
-                                  }),
-                                );
-                            },
-                            itemCount: BookInfoList.length
-                        ),
-                        );
+                      } catch (Obj) {
+                        FilteredBookListRatingsDesc.clear();
+                        Toastget().Toastmsg(
+                            "No book data available.");
+                        print(
+                            "Exception caught while filtering book info list");
+                        print(Obj.toString());
                       }
 
-                      else
-                      {
-                        return BookInfoList.isEmpty
-                            ? const Center(child: Text(
-                            "No book data available."))
-                            :
-                        Builder(builder: (context) => ListView.builder (
-                            shrinkWrap: true,
-                            itemBuilder: (context, index)
-                            {
-                              final book = BookInfoList[index];
-                              return
-                                Card(
-                                  child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment
-                                        .center,
-                                    mainAxisAlignment: MainAxisAlignment
-                                        .spaceAround,
-                                    children:
-                                    [
-                                      Text("Book name:${book.bookName}",
-                                        style: TextStyle(
-                                            fontFamily: semibold,
-                                            fontSize: shortestval *
-                                                0.05),),
-                                      Icon(Icons.book_online_outlined),
-                                    ],
-                                  ).onTap(() {
-                                    Navigator.push(context,
-                                        MaterialPageRoute(
-                                          builder: (context) {
-                                            return BookDetails(
-                                                jwttoken: widget.jwttoken,
-                                                usertype: widget.usertype
-                                                ,
-                                                email: widget.email
-                                                ,
-                                                BookId: book.bookId
-                                                    .toString()
-                                                ,
-                                                BookName: book.bookName
-                                                    .toString()
-                                                ,
-                                                Price: book.price
-                                                    .toString()
-                                                ,
-                                                Format: book.format
-                                                    .toString()
-                                                ,
-                                                Title: book.title
-                                                    .toString()
-                                                ,
-                                                Author: book.author
-                                                    .toString()
-                                                ,
-                                                Publisher: book.publisher
-                                                    .toString()
-                                                ,
-                                                PublicationDate: book
-                                                    .publicationDate
-                                                    .toString()
-                                                ,
-                                                Language: book.language
-                                                    .toString()
-                                                ,
-                                                Category: book.category
-                                                    .toString()
-                                                ,
-                                                ListedAt: book.listedAt
-                                                    .toString()
-                                                ,
-                                                AvailableQuantity: book
-                                                    .availableQuantity
-                                                    .toString()
-                                                ,
-                                                DiscountPercent: book
-                                                    .discountPercent
-                                                    .toString()
-                                                ,
-                                                DiscountStart: book
-                                                    .discountStart
-                                                    .toString()
-                                                ,
-                                                DiscountEnd: book
-                                                    .discountEnd
-                                                    .toString()
-                                                ,
-                                                Photo: book.photo
-                                                    .toString()
-                                            );
-                                          },
-                                        )
-                                    );
-                                  }),
-                                );
-                            },
-                            itemCount: BookInfoList.length
-                        ),
-                        );
-                      }
+                      return FilteredBookListRatingsDesc.isEmpty
+                          ? const Center(child: Text(
+                          "No book data available."))
+                          :
+                      Builder(builder: (context) => ListView.builder (
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            final book = FilteredBookListRatingsDesc[index];
+                            return
+                              Card(
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment
+                                      .center,
+                                  mainAxisAlignment: MainAxisAlignment
+                                      .spaceAround,
+                                  children:
+                                  [
+                                    Text("Book name:${book.bookName}",
+                                      style: TextStyle(
+                                          fontFamily: semibold,
+                                          fontSize: shortestval *
+                                              0.05),),
+                                    Icon(Icons.book_online_outlined),
+                                    Text("${book.rating}")
+                                  ],
+                                ).onTap(() {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(
+                                        builder: (context) {
+                                          return BookDetails(
+                                              jwttoken: widget.jwttoken,
+                                              usertype: widget.usertype
+                                              ,
+                                              email: widget.email
+                                              ,
+                                              BookId: book.bookId
+                                                  .toString()
+                                              ,
+                                              BookName: book.bookName
+                                                  .toString()
+                                              ,
+                                              Price: book.price
+                                                  .toString()
+                                              ,
+                                              Format: book.format
+                                                  .toString()
+                                              ,
+                                              Title: book.title
+                                                  .toString()
+                                              ,
+                                              Author: book.author
+                                                  .toString()
+                                              ,
+                                              Publisher: book.publisher
+                                                  .toString()
+                                              ,
+                                              PublicationDate: book
+                                                  .publicationDate
+                                                  .toString()
+                                              ,
+                                              Language: book.language
+                                                  .toString()
+                                              ,
+                                              Category: book.category
+                                                  .toString()
+                                              ,
+                                              ListedAt: book.listedAt
+                                                  .toString()
+                                              ,
+                                              AvailableQuantity: book
+                                                  .availableQuantity
+                                                  .toString()
+                                              ,
+                                              DiscountPercent: book
+                                                  .discountPercent
+                                                  .toString()
+                                              ,
+                                              DiscountStart: book
+                                                  .discountStart
+                                                  .toString()
+                                              ,
+                                              DiscountEnd: book
+                                                  .discountEnd
+                                                  .toString()
+                                              ,
+                                              Photo: book.photo
+                                                  .toString()
+                                          );
+                                        },
+                                      )
+                                  );
+                                }),
+                              );
+                          },
+                          itemCount: FilteredBookListRatingsDesc.length
+                      ),
+                      );
+                    }//condition for filtering
 
-                    }//conection state waiting
-                    else
+                    else if(BookInfoList.length>=1 && Search_Box_Cont.text.isEmptyOrNull && Filter_Sort_Value.isEmptyOrNull)
                     {
                       return
-                        Center(
-                          child: Text(
-                            "Please reopen app.",
-                            style: TextStyle(color: Colors.red, fontSize: 16),
+                      Builder(builder: (context) => Column(
+                        children: [
+                          Text(
+                              "All book data."),
+
+                          ListView.builder (
+                              shrinkWrap: true,
+                              itemBuilder: (context, index)
+                              {
+                                final book = BookInfoList[index];
+                                return
+                                  Card(
+                                    child: Row(
+                                      crossAxisAlignment: CrossAxisAlignment
+                                          .center,
+                                      mainAxisAlignment: MainAxisAlignment
+                                          .spaceAround,
+                                      children:
+                                      [
+                                        Text("Book name:${book.bookName}",
+                                          style: TextStyle(
+                                              fontFamily: semibold,
+                                              fontSize: shortestval *
+                                                  0.05),),
+                                        Icon(Icons.book_online_outlined),
+                                      ],
+                                    ).onTap(() {
+                                      Navigator.push(context,
+                                          MaterialPageRoute(
+                                            builder: (context) {
+                                              return BookDetails(
+                                                  jwttoken: widget.jwttoken,
+                                                  usertype: widget.usertype
+                                                  ,
+                                                  email: widget.email
+                                                  ,
+                                                  BookId: book.bookId
+                                                      .toString()
+                                                  ,
+                                                  BookName: book.bookName
+                                                      .toString()
+                                                  ,
+                                                  Price: book.price
+                                                      .toString()
+                                                  ,
+                                                  Format: book.format
+                                                      .toString()
+                                                  ,
+                                                  Title: book.title
+                                                      .toString()
+                                                  ,
+                                                  Author: book.author
+                                                      .toString()
+                                                  ,
+                                                  Publisher: book.publisher
+                                                      .toString()
+                                                  ,
+                                                  PublicationDate: book
+                                                      .publicationDate
+                                                      .toString()
+                                                  ,
+                                                  Language: book.language
+                                                      .toString()
+                                                  ,
+                                                  Category: book.category
+                                                      .toString()
+                                                  ,
+                                                  ListedAt: book.listedAt
+                                                      .toString()
+                                                  ,
+                                                  AvailableQuantity: book
+                                                      .availableQuantity
+                                                      .toString()
+                                                  ,
+                                                  DiscountPercent: book
+                                                      .discountPercent
+                                                      .toString()
+                                                  ,
+                                                  DiscountStart: book
+                                                      .discountStart
+                                                      .toString()
+                                                  ,
+                                                  DiscountEnd: book
+                                                      .discountEnd
+                                                      .toString()
+                                                  ,
+                                                  Photo: book.photo
+                                                      .toString()
+                                              );
+                                            },
+                                          )
+                                      );
+                                    }),
+                                  );
+                              },
+                              itemCount: BookInfoList.length
                           ),
-                        );
+                        ],
+                      ),
+                      );
                     }
 
+                    else
+                    {
+                      return BookInfoList.isEmpty
+                          ? const Center(child:
+                      Column(
+                        children: [
+                          Text(
+                              "All book data."),
+                          Text(
+                              "No book data available."),
+                        ],
+                      ))
+                          :
+                      Builder(builder: (context) =>
+                          Column(
+                            children: [
+                              Text(
+                                  "All book data."),
+                              ListView.builder (
+                              shrinkWrap: true,
+                              itemBuilder: (context, index)
+                              {
+                                final book = BookInfoList[index];
+                                return
+                                  Card(
+                                    child: Row(
+                                      crossAxisAlignment: CrossAxisAlignment
+                                          .center,
+                                      mainAxisAlignment: MainAxisAlignment
+                                          .spaceAround,
+                                      children:
+                                      [
+                                        Text("Book name:${book.bookName}",
+                                          style: TextStyle(
+                                              fontFamily: semibold,
+                                              fontSize: shortestval *
+                                                  0.05),),
+                                        Icon(Icons.book_online_outlined),
+                                      ],
+                                    ).onTap(() {
+                                      Navigator.push(context,
+                                          MaterialPageRoute(
+                                            builder: (context) {
+                                              return BookDetails(
+                                                  jwttoken: widget.jwttoken,
+                                                  usertype: widget.usertype
+                                                  ,
+                                                  email: widget.email
+                                                  ,
+                                                  BookId: book.bookId
+                                                      .toString()
+                                                  ,
+                                                  BookName: book.bookName
+                                                      .toString()
+                                                  ,
+                                                  Price: book.price
+                                                      .toString()
+                                                  ,
+                                                  Format: book.format
+                                                      .toString()
+                                                  ,
+                                                  Title: book.title
+                                                      .toString()
+                                                  ,
+                                                  Author: book.author
+                                                      .toString()
+                                                  ,
+                                                  Publisher: book.publisher
+                                                      .toString()
+                                                  ,
+                                                  PublicationDate: book
+                                                      .publicationDate
+                                                      .toString()
+                                                  ,
+                                                  Language: book.language
+                                                      .toString()
+                                                  ,
+                                                  Category: book.category
+                                                      .toString()
+                                                  ,
+                                                  ListedAt: book.listedAt
+                                                      .toString()
+                                                  ,
+                                                  AvailableQuantity: book
+                                                      .availableQuantity
+                                                      .toString()
+                                                  ,
+                                                  DiscountPercent: book
+                                                      .discountPercent
+                                                      .toString()
+                                                  ,
+                                                  DiscountStart: book
+                                                      .discountStart
+                                                      .toString()
+                                                  ,
+                                                  DiscountEnd: book
+                                                      .discountEnd
+                                                      .toString()
+                                                  ,
+                                                  Photo: book.photo
+                                                      .toString()
+                                              );
+                                            },
+                                          )
+                                      );
+                                    }),
+                                  );
+                              },
+                              itemCount: BookInfoList.length
+                                                      ),
+                            ],
+                          ),
+                      );
+                    }
+
+                  }//conection state waiting
+                  else
+                  {
+                    return
+                      Center(
+                        child: Text(
+                          "Please reopen app.",
+                          style: TextStyle(color: Colors.red, fontSize: 16),
+                        ),
+                      );
                   }
-              ),
+
+                }
+            ),
+
+      Expanded(child: Container()),
+
+            SizedBox(
+              width: double.infinity,
+              child: FooterWidget(),
+            ),
 
 
-            ],
-          ),
-    )
+
+          ],
+        )
       ),
     );
   }

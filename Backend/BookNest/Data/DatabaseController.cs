@@ -24,13 +24,7 @@ namespace BookNest.Data
 
         public DbSet<OrderModel> OrderInfos { get; set; }
 
-
-
-
-
-
-
-
+        public DbSet<AnoucementModel> AnnouncementInfos { get; set; }
 
     }
 

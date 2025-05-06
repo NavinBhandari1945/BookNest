@@ -193,17 +193,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ReviewStringModel"
+                "$ref": "#/components/schemas/ReviewEmailDTOModel"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/ReviewStringModel"
+                "$ref": "#/components/schemas/ReviewEmailDTOModel"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/ReviewStringModel"
+                "$ref": "#/components/schemas/ReviewEmailDTOModel"
               }
             }
           }
@@ -442,6 +442,111 @@
         "tags": [
           "Member"
         ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Member/get_user_details": {
+      "post": {
+        "tags": [
+          "Member"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserEmailDTOModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserEmailDTOModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserEmailDTOModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Member/deleteorder": {
+      "delete": {
+        "tags": [
+          "Member"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrderIdDTOModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrderIdDTOModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrderIdDTOModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Member/get_success_order": {
+      "get": {
+        "tags": [
+          "Member"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Staff/claim_code": {
+      "post": {
+        "tags": [
+          "Staff"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClaimCodeDTOModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClaimCodeDTOModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClaimCodeDTOModel"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "OK"
@@ -746,6 +851,31 @@
         },
         "additionalProperties": false
       },
+      "ClaimCodeDTOModel": {
+        "required": [
+          "claimCode",
+          "claimId",
+          "orderId"
+        ],
+        "type": "object",
+        "properties": {
+          "orderId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "claimCode": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string"
+          },
+          "claimId": {
+            "maxLength": 500,
+            "minLength": 0,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
       "GetCartDTOModel": {
         "required": [
           "email"
@@ -778,6 +908,19 @@
             "maxLength": 200,
             "minLength": 0,
             "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "OrderIdDTOModel": {
+        "required": [
+          "orderId"
+        ],
+        "type": "object",
+        "properties": {
+          "orderId": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -869,6 +1012,45 @@
         },
         "additionalProperties": false
       },
+      "ReviewEmailDTOModel": {
+        "required": [
+          "bookId",
+          "comment",
+          "email",
+          "rating",
+          "reviewDate",
+          "reviewId"
+        ],
+        "type": "object",
+        "properties": {
+          "reviewId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "comment": {
+            "maxLength": 500,
+            "minLength": 0,
+            "type": "string"
+          },
+          "rating": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "reviewDate": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "email": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "bookId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "ReviewModel": {
         "required": [
           "bookId",
@@ -913,40 +1095,17 @@
         },
         "additionalProperties": false
       },
-      "ReviewStringModel": {
+      "UserEmailDTOModel": {
         "required": [
-          "bookId",
-          "comment",
-          "rating",
-          "reviewDate",
-          "userId"
+          "email"
         ],
         "type": "object",
         "properties": {
-          "reviewId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "comment": {
-            "maxLength": 500,
+          "email": {
+            "maxLength": 200,
             "minLength": 0,
-            "type": "string"
-          },
-          "rating": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "reviewDate": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "userId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "bookId": {
-            "type": "integer",
-            "format": "int32"
+            "type": "string",
+            "format": "email"
           }
         },
         "additionalProperties": false

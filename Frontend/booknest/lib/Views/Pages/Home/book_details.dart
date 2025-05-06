@@ -58,8 +58,11 @@ class BookDetails extends StatefulWidget {
   State<BookDetails> createState() => _BookDetailsState();
 }
 
-class _BookDetailsState extends State<BookDetails> with SingleTickerProviderStateMixin {
-  final TextEditingController _quantityController = TextEditingController(text: '1');
+class _BookDetailsState extends State<BookDetails>
+    with SingleTickerProviderStateMixin {
+  final TextEditingController _quantityController = TextEditingController(
+    text: '1',
+  );
   bool _isImageLoaded = false;
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
@@ -93,12 +96,17 @@ class _BookDetailsState extends State<BookDetails> with SingleTickerProviderStat
     try {
       print("Checking JWT in book details screen.");
       int result = await checkJwtToken_initistate_member(
-          widget.email, widget.usertype, widget.jwttoken);
+        widget.email,
+        widget.usertype,
+        widget.jwttoken,
+      );
       if (result == 0) {
         await clearUserData();
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const UserNotLoginHomeScreen()),
+          MaterialPageRoute(
+            builder: (context) => const UserNotLoginHomeScreen(),
+          ),
         );
         Toastget().Toastmsg("Session ended. Please relogin.");
       }
@@ -131,26 +139,29 @@ class _BookDetailsState extends State<BookDetails> with SingleTickerProviderStat
       const String url = Backend_Server_Url + "api/Member/add_bookmark";
       final response = await http.post(
         Uri.parse(url),
-        headers: {"Content-Type": "application/json", 'Authorization': 'Bearer ${widget.jwttoken}'},
+        headers: {
+          "Content-Type": "application/json",
+          'Authorization': 'Bearer ${widget.jwttoken}',
+        },
         body: json.encode(BookmarkData),
       );
-      if (response.statusCode == 200)
-      {
+      if (response.statusCode == 200) {
         Toastget().Toastmsg("Adding bookmark success.");
         return 1;
-      }
-      else if (response.statusCode == 503)
-      {
+      } else if (response.statusCode == 503) {
         Toastget().Toastmsg("Session end.Relogin please.");
         await clearUserData();
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const UserNotLoginHomeScreen()),
+          MaterialPageRoute(
+            builder: (context) => const UserNotLoginHomeScreen(),
+          ),
         );
         return 11; // jwt error
-      }
-      else if (response.statusCode == 502) {
-        Toastget().Toastmsg("Adding bookmark failed.Incorrect bookmark data format.Try again.");
+      } else if (response.statusCode == 502) {
+        Toastget().Toastmsg(
+          "Adding bookmark failed.Incorrect bookmark data format.Try again.",
+        );
         return 11; // jwt error
       } else {
         print("Error.other status code.");
@@ -165,47 +176,61 @@ class _BookDetailsState extends State<BookDetails> with SingleTickerProviderStat
     }
   }
 
-  Future<int> Add_Cart({required int Quantity,required String DateAdded}) async {
+  Future<int> Add_Cart({
+    required int Quantity,
+    required String DateAdded,
+  }) async {
     try {
       print("Adding cart start");
       // Construct the JSON payload
       Map<String, dynamic> CartData = {
         "CartId": 0,
         "AddedAt": DateAdded,
-        "Quantity":Quantity ,
+        "Quantity": Quantity,
         "Email": widget.email,
         "BookId": widget.BookId,
       };
       const String url = Backend_Server_Url + "api/Member/add_cart";
       final response = await http.post(
         Uri.parse(url),
-        headers: {"Content-Type": "application/json", 'Authorization': 'Bearer ${widget.jwttoken}'},
+        headers: {
+          "Content-Type": "application/json",
+          'Authorization': 'Bearer ${widget.jwttoken}',
+        },
         body: json.encode(CartData),
       );
-      if (response.statusCode == 200)
-      {
+      if (response.statusCode == 200) {
         Toastget().Toastmsg("Adding cart success.");
         return 1;
-      }
-      else if (response.statusCode == 503)
-      {
+      } else if (response.statusCode == 503) {
         Toastget().Toastmsg("Session end.Relogin please.");
         await clearUserData();
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const UserNotLoginHomeScreen()),
+          MaterialPageRoute(
+            builder: (context) => const UserNotLoginHomeScreen(),
+          ),
+        );
+        return 11; // jwt error
+      } else if (response.statusCode == 502) {
+        Toastget().Toastmsg(
+          "Adding cart failed.Incorrect cart data format.Try again.",
         );
         return 11; // jwt error
       }
-      else if (response.statusCode == 502) {
-        Toastget().Toastmsg("Adding cart failed.Incorrect cart data format.Try again.");
-        return 11; // jwt error
-      } else {
+      else if (response.statusCode == 500) {
         print("Error.other status code.");
         print("Response body: ${response.body}");
         final decoded = json.decode(response.body);
         print("Error message: ${decoded['message']}");
         print("Stack trace: ${decoded['stackTrace']}");
+        Toastget().Toastmsg(
+          "Exception caught in backend.Try again.",
+        );
+        return 5;
+      }
+      else {
+        print("Error.other status code = ${response.statusCode}");
         Toastget().Toastmsg("Adding cart failed.");
         return 4;
       }
@@ -217,18 +242,19 @@ class _BookDetailsState extends State<BookDetails> with SingleTickerProviderStat
     }
   }
 
-  List<ReviewModel> ReviewInfoList=[];
+  List<ReviewModel> ReviewInfoList = [];
   Future<int> Get_Review_Info() async {
     try {
       print("Getting review start");
       // Construct the JSON payload
-      Map<String, dynamic> BookData = {
-        "BookId": widget.BookId,
-      };
+      Map<String, dynamic> BookData = {"BookId": widget.BookId};
       const String url = Backend_Server_Url + "api/Member/getreviewdata";
       final response = await http.post(
         Uri.parse(url),
-        headers: {"Content-Type": "application/json", 'Authorization': 'Bearer ${widget.jwttoken}'},
+        headers: {
+          "Content-Type": "application/json",
+          'Authorization': 'Bearer ${widget.jwttoken}',
+        },
         body: json.encode(BookData),
       );
       if (response.statusCode == 200) {
@@ -236,17 +262,19 @@ class _BookDetailsState extends State<BookDetails> with SingleTickerProviderStat
         print("response body");
         print(responseData);
         ReviewInfoList.clear();
-        ReviewInfoList.addAll(responseData.map((data) => ReviewModel.fromJson(data)).toList());
+        ReviewInfoList.addAll(
+          responseData.map((data) => ReviewModel.fromJson(data)).toList(),
+        );
         print("ReviewInfoList  count value");
         print(ReviewInfoList.length);
         print(ReviewInfoList[0].bookId);
         return 1;
-      }
-      else if (response.statusCode == 500) {
-        Toastget().Toastmsg("Adding ReviewInfoList failed.Incorrect ReviewInfoList data format.Try again.");
+      } else if (response.statusCode == 500) {
+        Toastget().Toastmsg(
+          "Adding ReviewInfoList failed.Incorrect ReviewInfoList data format.Try again.",
+        );
         return 11; // jwt error
-      }
-      else {
+      } else {
         ReviewInfoList.clear();
         print("Error.other status code.");
         print("Response body: ${response.body}");
@@ -258,12 +286,13 @@ class _BookDetailsState extends State<BookDetails> with SingleTickerProviderStat
       }
     } catch (obj) {
       ReviewInfoList.clear();
-      print("Exception caught while fetching ReviewInfoList data in http method");
+      print(
+        "Exception caught while fetching ReviewInfoList data in http method",
+      );
       print(obj.toString());
       return 3;
     }
   }
-
 
 
 
@@ -293,6 +322,7 @@ class _BookDetailsState extends State<BookDetails> with SingleTickerProviderStat
           onPressed: () => Navigator.pop(context),
         ),
       ),
+
       body: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: SingleChildScrollView(
@@ -324,31 +354,35 @@ class _BookDetailsState extends State<BookDetails> with SingleTickerProviderStat
                           ],
                         ),
                         child: ClipOval(
-                          child: widget.Photo.isNotEmpty
-                              ? Image.memory(
-                            base64Decode(widget.Photo),
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) =>
-                            const Icon(
-                              Icons.broken_image,
-                              size: 100,
-                              color: Colors.grey,
-                            ),
-                          )
-                              : const Icon(
-                            Icons.book,
-                            size: 100,
-                            color: Colors.grey,
-                          ),
+                          child:
+                              widget.Photo.isNotEmpty
+                                  ? Image.memory(
+                                    base64Decode(widget.Photo),
+                                    fit: BoxFit.cover,
+                                    errorBuilder:
+                                        (context, error, stackTrace) =>
+                                            const Icon(
+                                              Icons.broken_image,
+                                              size: 100,
+                                              color: Colors.grey,
+                                            ),
+                                  )
+                                  : const Icon(
+                                    Icons.book,
+                                    size: 100,
+                                    color: Colors.grey,
+                                  ),
                         ),
                       ),
                     ),
                   ),
                 ),
+
                 SizedBox(height: heightVal * 0.03),
 
                 // Book Title
-                Text("Book tittle:${widget.Title}",
+                Text(
+                  "Book tittle:${widget.Title}",
                   style: TextStyle(
                     fontFamily: bold,
                     fontSize: shortestVal * 0.08,
@@ -389,15 +423,47 @@ class _BookDetailsState extends State<BookDetails> with SingleTickerProviderStat
                           shortestVal,
                         ),
                         _buildDetailRow("Format", widget.Format, shortestVal),
-                        _buildDetailRow("Publisher", widget.Publisher, shortestVal),
-                        _buildDetailRow("Publication Date", widget.PublicationDate, shortestVal),
-                        _buildDetailRow("Language", widget.Language, shortestVal),
-                        _buildDetailRow("Category", widget.Category, shortestVal),
-                        _buildDetailRow("Listed At", widget.ListedAt, shortestVal),
-                        _buildDetailRow("Available Quantity", widget.AvailableQuantity, shortestVal),
+                        _buildDetailRow(
+                          "Publisher",
+                          widget.Publisher,
+                          shortestVal,
+                        ),
+                        _buildDetailRow(
+                          "Publication Date",
+                          widget.PublicationDate,
+                          shortestVal,
+                        ),
+                        _buildDetailRow(
+                          "Language",
+                          widget.Language,
+                          shortestVal,
+                        ),
+                        _buildDetailRow(
+                          "Category",
+                          widget.Category,
+                          shortestVal,
+                        ),
+                        _buildDetailRow(
+                          "Listed At",
+                          widget.ListedAt,
+                          shortestVal,
+                        ),
+                        _buildDetailRow(
+                          "Available Quantity",
+                          widget.AvailableQuantity,
+                          shortestVal,
+                        ),
                         if (widget.DiscountPercent != "0") ...[
-                          _buildDetailRow("Discount", "${widget.DiscountPercent}%", shortestVal),
-                          _buildDetailRow("Discount Period", "${widget.DiscountStart} to ${widget.DiscountEnd}", shortestVal),
+                          _buildDetailRow(
+                            "Discount",
+                            "${widget.DiscountPercent}%",
+                            shortestVal,
+                          ),
+                          _buildDetailRow(
+                            "Discount Period",
+                            "${widget.DiscountStart} to ${widget.DiscountEnd}",
+                            shortestVal,
+                          ),
                         ],
                       ],
                     ),
@@ -412,7 +478,9 @@ class _BookDetailsState extends State<BookDetails> with SingleTickerProviderStat
                       child: TextField(
                         controller: _quantityController,
                         keyboardType: TextInputType.number,
-                        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                        ],
                         decoration: InputDecoration(
                           labelText: "Quantity",
                           labelStyle: TextStyle(
@@ -430,7 +498,10 @@ class _BookDetailsState extends State<BookDetails> with SingleTickerProviderStat
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(color: Colors.green[700]!, width: 2),
+                            borderSide: BorderSide(
+                              color: Colors.green[700]!,
+                              width: 2,
+                            ),
                           ),
                           contentPadding: EdgeInsets.symmetric(
                             horizontal: shortestVal * 0.04,
@@ -458,66 +529,69 @@ class _BookDetailsState extends State<BookDetails> with SingleTickerProviderStat
 
                 Center(child: Text("Review information ")),
 
-                FutureBuilder<void> (
-                    future: Get_Review_Info(),
-                    builder: (context, snapshot)
-                    {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        // Show a loading indicator while the future is executing
-                        return Center(child: CircularProgressIndicator());
-                      }
-                      else if (snapshot.hasError) {
-                        // Handle any error from the future
-                        return Center(
-                          child: Text(
-                            "Error fetching campaigns data. Please reopen app.",
-                            style: TextStyle(color: Colors.red, fontSize: 16),
-                          ),
-                        );
-                      }
-                      else if (snapshot.connectionState == ConnectionState.done)
-                      {
-                        return ReviewInfoList.isEmpty
-                            ? const Center(child: Text("No review data available."))
-                            :
-                        Container(
-                          color: Colors.grey,
-                          width: widthVal,
-                          height: 200,
-                          child:
-                          Builder(builder: (context)
-                          {
-                            return
-                              ListView.builder(
-                                  itemBuilder: (context, index)
-                                  {
+                FutureBuilder<void>(
+                  future: Get_Review_Info(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      // Show a loading indicator while the future is executing
+                      return Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      // Handle any error from the future
+                      return Center(
+                        child: Text(
+                          "Error fetching campaigns data. Please reopen app.",
+                          style: TextStyle(color: Colors.red, fontSize: 16),
+                        ),
+                      );
+                    } else if (snapshot.connectionState ==
+                        ConnectionState.done) {
+                      return ReviewInfoList.isEmpty
+                          ? const Center(
+                            child: Text("No review data available."),
+                          )
+                          : Container(
+                            color: Colors.grey,
+                            width: widthVal,
+                            height: 200,
+                            child: Builder(
+                              builder: (context) {
+                                return ListView.builder(
+                                  itemBuilder: (context, index) {
                                     final review = ReviewInfoList[index];
                                     return Card(
                                       child: ListTile(
-                                          leading: Text("Comment"+review.comment!,style: TextStyle(fontFamily: semibold,fontSize: shortestVal*0.05)),
-                                          title: Text("Rating : ${review.rating!}",style: TextStyle(fontFamily: semibold,fontSize: shortestVal*0.05)),
-
+                                        leading: Text(
+                                          "Comment" + review.comment!,
+                                          style: TextStyle(
+                                            fontFamily: semibold,
+                                            fontSize: shortestVal * 0.05,
+                                          ),
+                                        ),
+                                        title: Text(
+                                          "Rating : ${review.rating!}",
+                                          style: TextStyle(
+                                            fontFamily: semibold,
+                                            fontSize: shortestVal * 0.05,
+                                          ),
+                                        ),
                                       ),
                                     );
                                   },
-                                  itemCount: ReviewInfoList.length
-                              );
-                          },
-                          ),
-                        );
-
-                      }//connection sattae wdone
-                      else
-                      {
-                        return
-                          Center(
-                            child: Text(
-                              "Please reopen app.",
-                              style: TextStyle(color: Colors.red, fontSize: 16),
+                                  itemCount: ReviewInfoList.length,
+                                );
+                              },
                             ),
                           );
-                      }
+                    } //connection sattae wdone
+                    else {
+                      return Center(
+                        child: Text(
+                          "Please reopen app.",
+                          style: TextStyle(color: Colors.red, fontSize: 16),
+                        ),
+                      );
                     }
+                  },
                 ),
                 10.heightBox,
 
@@ -528,26 +602,36 @@ class _BookDetailsState extends State<BookDetails> with SingleTickerProviderStat
                     _buildActionButton(
                       label: "Add to Cart",
                       icon: Icons.shopping_cart,
-                      onPressed: ()async{
+                      onPressed: () async {
                         try {
-
                           final Quantity = int.tryParse(
-                              _quantityController.text.toString());
-                          final Available_Quantity=int.tryParse(widget.AvailableQuantity);
-                          if(Available_Quantity!<Quantity!)
-                          {
-                            Toastget().Toastmsg("Insufficient quantity of book.");
+                            _quantityController.text.toString(),
+                          );
+                          if(Quantity! <= 0 ){
+                            Toastget().Toastmsg(
+                              "Add atleast 1 quantity of book.",
+                            );
+                            return;
+                          }
+                          final Available_Quantity = int.tryParse(
+                            widget.AvailableQuantity,
+                          );
+                          if (Available_Quantity! < Quantity!) {
+                            Toastget().Toastmsg(
+                              "Insufficient quantity of book.",
+                            );
                             return;
                           }
                           final AddedDate = getCurrentDateFormatted();
                           print(AddedDate);
                           final Cart_Result = await Add_Cart(
-                            Quantity: Quantity!, DateAdded: AddedDate,);
-                        }catch(Obj){
+                            Quantity: Quantity!,
+                            DateAdded: AddedDate,
+                          );
+                        } catch (Obj) {
                           print(Obj.toString());
                           Toastget().Toastmsg("Add to cart failed try again.");
                         }
-
                       },
                       shortestVal: shortestVal,
                       animation: _scaleAnimation,
@@ -556,19 +640,20 @@ class _BookDetailsState extends State<BookDetails> with SingleTickerProviderStat
                     _buildActionButton(
                       label: "Bookmark",
                       icon: Icons.bookmark,
-                      onPressed: ()async{
-                        try{
-                        final Add_BookMark_Result=await Add_Bookmark();
-                        print(Add_BookMark_Result);
-                          }catch(Obj){
+                      onPressed: () async {
+                        try {
+                          final Add_BookMark_Result = await Add_Bookmark();
+                          print(Add_BookMark_Result);
+                        } catch (Obj) {
                           print(Obj.toString());
-                          Toastget().Toastmsg("Add to bookmark failed try again.");
-                          }
-                                            },
+                          Toastget().Toastmsg(
+                            "Add to bookmark failed try again.",
+                          );
+                        }
+                      },
                       shortestVal: shortestVal,
                       animation: _scaleAnimation,
-                    )
-
+                    ),
                   ],
                 ),
                 SizedBox(height: heightVal * 0.04),
@@ -674,10 +759,4 @@ class _BookDetailsState extends State<BookDetails> with SingleTickerProviderStat
       },
     );
   }
-
-
-
 }
-
-
-

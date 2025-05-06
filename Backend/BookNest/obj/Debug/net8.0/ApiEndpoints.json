@@ -131,7 +131,7 @@
     "Parameters": [
       {
         "Name": "obj",
-        "Type": "BookNest.Models.DTOModels.ReviewStringModel",
+        "Type": "BookNest.Models.DTOModels.ReviewEmailDTOModel",
         "IsRequired": true
       }
     ],
@@ -155,6 +155,22 @@
   },
   {
     "ContainingType": "BookNest.Controllers.MemberController",
+    "Method": "Delete_Order_Infos",
+    "RelativePath": "api/Member/deleteorder",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "obj",
+        "Type": "BookNest.Models.DTOModels.OrderIdDTOModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookNest.Controllers.MemberController",
     "Method": "Get_Order_History",
     "RelativePath": "api/Member/get_order_details",
     "HttpMethod": "POST",
@@ -164,6 +180,32 @@
       {
         "Name": "obj",
         "Type": "BookNest.Models.DTOModels.OrderUserIdDTOModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookNest.Controllers.MemberController",
+    "Method": "Get_Success_Order",
+    "RelativePath": "api/Member/get_success_order",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookNest.Controllers.MemberController",
+    "Method": "Get_User_Info",
+    "RelativePath": "api/Member/get_user_details",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "obj",
+        "Type": "BookNest.Models.DTOModels.UserEmailDTOModel",
         "IsRequired": true
       }
     ],
@@ -249,6 +291,22 @@
     "IsController": true,
     "Order": 0,
     "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookNest.Controllers.StaffController",
+    "Method": "Add_Bookmark",
+    "RelativePath": "api/Staff/claim_code",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "obj",
+        "Type": "BookNest.Models.DTOModels.ClaimCodeDTOModel",
+        "IsRequired": true
+      }
+    ],
     "ReturnTypes": []
   }
 ]
