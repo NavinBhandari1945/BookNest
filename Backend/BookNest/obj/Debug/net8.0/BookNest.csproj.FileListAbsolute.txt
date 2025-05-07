@@ -6,6 +6,7 @@ D:\College Workplace\3rdyr\sem\app development\sem2\cw app\Flutter_Dotnet\Backen
 D:\College Workplace\3rdyr\sem\app development\sem2\cw app\Flutter_Dotnet\Backend\BookNest\bin\Debug\net8.0\BookNest.runtimeconfig.json
 D:\College Workplace\3rdyr\sem\app development\sem2\cw app\Flutter_Dotnet\Backend\BookNest\bin\Debug\net8.0\BookNest.dll
 D:\College Workplace\3rdyr\sem\app development\sem2\cw app\Flutter_Dotnet\Backend\BookNest\bin\Debug\net8.0\BookNest.pdb
+<<<<<<< HEAD
 D:\College Workplace\3rdyr\sem\app development\sem2\cw app\Flutter_Dotnet\Backend\BookNest\bin\Debug\net8.0\BCrypt.Net.dll
 D:\College Workplace\3rdyr\sem\app development\sem2\cw app\Flutter_Dotnet\Backend\BookNest\bin\Debug\net8.0\Humanizer.dll
 D:\College Workplace\3rdyr\sem\app development\sem2\cw app\Flutter_Dotnet\Backend\BookNest\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
@@ -97,6 +98,12 @@ D:\College Workplace\3rdyr\sem\app development\sem2\cw app\Flutter_Dotnet\Backen
 D:\College Workplace\3rdyr\sem\app development\sem2\cw app\Flutter_Dotnet\Backend\BookNest\bin\Debug\net8.0\tr\Microsoft.CodeAnalysis.Workspaces.resources.dll
 D:\College Workplace\3rdyr\sem\app development\sem2\cw app\Flutter_Dotnet\Backend\BookNest\bin\Debug\net8.0\zh-Hans\Microsoft.CodeAnalysis.Workspaces.resources.dll
 D:\College Workplace\3rdyr\sem\app development\sem2\cw app\Flutter_Dotnet\Backend\BookNest\bin\Debug\net8.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.resources.dll
+=======
+D:\College Workplace\3rdyr\sem\app development\sem2\cw app\Flutter_Dotnet\Backend\BookNest\bin\Debug\net8.0\Microsoft.OpenApi.dll
+D:\College Workplace\3rdyr\sem\app development\sem2\cw app\Flutter_Dotnet\Backend\BookNest\bin\Debug\net8.0\Swashbuckle.AspNetCore.Swagger.dll
+D:\College Workplace\3rdyr\sem\app development\sem2\cw app\Flutter_Dotnet\Backend\BookNest\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+D:\College Workplace\3rdyr\sem\app development\sem2\cw app\Flutter_Dotnet\Backend\BookNest\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+>>>>>>> 8ee29e5cdf66bb274459d9443bea56e30e4ac34a
 D:\College Workplace\3rdyr\sem\app development\sem2\cw app\Flutter_Dotnet\Backend\BookNest\obj\Debug\net8.0\BookNest.csproj.AssemblyReference.cache
 D:\College Workplace\3rdyr\sem\app development\sem2\cw app\Flutter_Dotnet\Backend\BookNest\obj\Debug\net8.0\BookNest.GeneratedMSBuildEditorConfig.editorconfig
 D:\College Workplace\3rdyr\sem\app development\sem2\cw app\Flutter_Dotnet\Backend\BookNest\obj\Debug\net8.0\BookNest.AssemblyInfoInputs.cache
@@ -115,10 +122,17 @@ D:\College Workplace\3rdyr\sem\app development\sem2\cw app\Flutter_Dotnet\Backen
 D:\College Workplace\3rdyr\sem\app development\sem2\cw app\Flutter_Dotnet\Backend\BookNest\obj\Debug\net8.0\staticwebassets\msbuild.buildMultiTargeting.BookNest.props
 D:\College Workplace\3rdyr\sem\app development\sem2\cw app\Flutter_Dotnet\Backend\BookNest\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.BookNest.props
 D:\College Workplace\3rdyr\sem\app development\sem2\cw app\Flutter_Dotnet\Backend\BookNest\obj\Debug\net8.0\staticwebassets.pack.json
+<<<<<<< HEAD
+=======
+D:\College Workplace\3rdyr\sem\app development\sem2\cw app\Flutter_Dotnet\Backend\BookNest\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
+>>>>>>> 8ee29e5cdf66bb274459d9443bea56e30e4ac34a
 D:\College Workplace\3rdyr\sem\app development\sem2\cw app\Flutter_Dotnet\Backend\BookNest\obj\Debug\net8.0\BookNest.csproj.Up2Date
 D:\College Workplace\3rdyr\sem\app development\sem2\cw app\Flutter_Dotnet\Backend\BookNest\obj\Debug\net8.0\BookNest.dll
 D:\College Workplace\3rdyr\sem\app development\sem2\cw app\Flutter_Dotnet\Backend\BookNest\obj\Debug\net8.0\refint\BookNest.dll
 D:\College Workplace\3rdyr\sem\app development\sem2\cw app\Flutter_Dotnet\Backend\BookNest\obj\Debug\net8.0\BookNest.pdb
 D:\College Workplace\3rdyr\sem\app development\sem2\cw app\Flutter_Dotnet\Backend\BookNest\obj\Debug\net8.0\BookNest.genruntimeconfig.cache
 D:\College Workplace\3rdyr\sem\app development\sem2\cw app\Flutter_Dotnet\Backend\BookNest\obj\Debug\net8.0\ref\BookNest.dll
+<<<<<<< HEAD
 D:\College Workplace\3rdyr\sem\app development\sem2\cw app\Flutter_Dotnet\Backend\BookNest\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
+=======
+>>>>>>> 8ee29e5cdf66bb274459d9443bea56e30e4ac34a

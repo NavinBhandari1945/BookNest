@@ -37,23 +37,30 @@ class _AdminBookDetailsState extends State<AdminBookDetails> {
       //check jwt called in admin home screen.
       print("check jwt called in admin home screen.");
       int result = await checkJwtToken_initistate_admin(
-          widget.email, widget.usertype, widget.jwttoken);
-      if (result == 0)
-      {
+        widget.email,
+        widget.usertype,
+        widget.jwttoken,
+      );
+      if (result == 0) {
         await clearUserData();
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => UserNotLoginHomeScreen()));
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => UserNotLoginHomeScreen()),
+        );
         Toastget().Toastmsg("Session End. Relogin please.");
       }
     } catch (obj) {
       print("Exception caught while verifying jwt for admin home screen.");
       print(obj.toString());
       await clearUserData();
-      Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (context) => UserNotLoginHomeScreen()));
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => UserNotLoginHomeScreen()),
+      );
       Toastget().Toastmsg("Error. Relogin please.");
     }
   }
+
   List<BooKInfos> BookInfoList = [];
 
   Future<void> GetBookInfo() async {
@@ -67,7 +74,9 @@ class _AdminBookDetailsState extends State<AdminBookDetails> {
       if (response.statusCode == 200) {
         List<dynamic> responseData = jsonDecode(response.body);
         BookInfoList.clear();
-        BookInfoList.addAll(responseData.map((data) => BooKInfos.fromJson(data)).toList());
+        BookInfoList.addAll(
+          responseData.map((data) => BooKInfos.fromJson(data)).toList(),
+        );
       } else {
         BookInfoList.clear();
       }
@@ -80,30 +89,31 @@ class _AdminBookDetailsState extends State<AdminBookDetails> {
   Future<void> _confirmDelete(int bookId) async {
     final confirm = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("Delete Book"),
-        content: const Text("Are you sure you want to delete this book?"),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text("Cancel"),
+      builder:
+          (context) => AlertDialog(
+            title: const Text("Delete Book"),
+            content: const Text("Are you sure you want to delete this book?"),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const Text("Cancel"),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: const Text("Yes, Delete"),
+              ),
+            ],
           ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: const Text("Yes, Delete"),
-          ),
-        ],
-      ),
     );
 
     if (confirm == true) {
       try {
-        final url = Uri.parse(Backend_Server_Url + "api/Admin/delete_book/$bookId");
+        final url = Uri.parse(
+          Backend_Server_Url + "api/Admin/delete_book/$bookId",
+        );
         final response = await http.delete(
           url,
-          headers: {
-            'Authorization': 'Bearer ${widget.jwttoken}',
-          },
+          headers: {'Authorization': 'Bearer ${widget.jwttoken}'},
         );
 
         if (response.statusCode == 200) {
@@ -163,66 +173,83 @@ class _AdminBookDetailsState extends State<AdminBookDetails> {
             return BookInfoList.isEmpty
                 ? const Center(child: Text("No books available."))
                 : ListView.builder(
-              itemCount: BookInfoList.length,
-              itemBuilder: (context, index) {
-                final book = BookInfoList[index];
-                return Card(
-                  margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  elevation: 3,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
+                  itemCount: BookInfoList.length,
+                  itemBuilder: (context, index) {
+                    final book = BookInfoList[index];
+                    return Card(
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
+                      elevation: 3,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            if (book.photo != null)
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(8),
-                                child: Image.memory(
-                                  base64Decode(book.photo!),
-                                  height: 100,
-                                  width: 80,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            const SizedBox(width: 10),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    book.bookName ?? "Unknown Book",
-                                    style: TextStyle(
-                                      fontFamily: semibold,
-                                      fontSize: 16,
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                if (book.photo != null)
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(8),
+                                    child: Image.memory(
+                                      base64Decode(book.photo!),
+                                      height: 100,
+                                      width: 80,
+                                      fit: BoxFit.cover,
                                     ),
                                   ),
-                                  const SizedBox(height: 4),
-                                  _infoRow("Author", book.author),
-                                  _infoRow("Price", book.price?.toStringAsFixed(2)),
-                                  _infoRow("Qty", book.availableQuantity?.toString()),
-                                  if (book.discountPercent != null && book.discountPercent! > 0)
-                                    _infoRow("Discount", "${book.discountPercent}%"),
-                                ],
-                              ),
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.delete, color: Colors.red),
-                              onPressed: () => _confirmDelete(book.bookId!),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        book.bookName ?? "Unknown Book",
+                                        style: TextStyle(
+                                          fontFamily: semibold,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      _infoRow("Author", book.author),
+                                      _infoRow(
+                                        "Price",
+                                        book.price?.toStringAsFixed(2),
+                                      ),
+                                      _infoRow(
+                                        "Qty",
+                                        book.availableQuantity?.toString(),
+                                      ),
+                                      if (book.discountPercent != null &&
+                                          book.discountPercent! > 0)
+                                        _infoRow(
+                                          "Discount",
+                                          "${book.discountPercent}%",
+                                        ),
+                                    ],
+                                  ),
+                                ),
+                                IconButton(
+                                  icon: const Icon(
+                                    Icons.delete,
+                                    color: Colors.red,
+                                  ),
+                                  onPressed: () => _confirmDelete(book.bookId!),
+                                ),
+                              ],
                             ),
                           ],
                         ),
-                      ],
-                    ),
-                  ),
+                      ),
+                    );
+                  },
                 );
-              },
-            );
           } else {
             return const Center(child: Text("Please reopen app."));
           }
@@ -234,23 +261,23 @@ class _AdminBookDetailsState extends State<AdminBookDetails> {
   Widget _infoRow(String label, String? value) {
     return value != null
         ? Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "$label: ",
-            style: TextStyle(fontWeight: FontWeight.bold, fontFamily: semibold),
+          padding: const EdgeInsets.symmetric(vertical: 2),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "$label: ",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontFamily: semibold,
+                ),
+              ),
+              Expanded(
+                child: Text(value, style: TextStyle(fontFamily: regular)),
+              ),
+            ],
           ),
-          Expanded(
-            child: Text(
-              value,
-              style: TextStyle(fontFamily: regular),
-            ),
-          ),
-        ],
-      ),
-    )
+        )
         : const SizedBox.shrink();
   }
 }

@@ -27,7 +27,6 @@ class UpdateDiscount extends StatefulWidget {
 }
 
 class _UpdateDiscountState extends State<UpdateDiscount> {
-
   @override
   void initState() {
     super.initState();
@@ -39,27 +38,35 @@ class _UpdateDiscountState extends State<UpdateDiscount> {
       //check jwt called in admin home screen.
       print("check jwt called in admin home screen.");
       int result = await checkJwtToken_initistate_admin(
-          widget.email, widget.usertype, widget.jwttoken);
-      if (result == 0)
-      {
+        widget.email,
+        widget.usertype,
+        widget.jwttoken,
+      );
+      if (result == 0) {
         await clearUserData();
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => UserNotLoginHomeScreen()));
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => UserNotLoginHomeScreen()),
+        );
         Toastget().Toastmsg("Session End. Relogin please.");
       }
     } catch (obj) {
       print("Exception caught while verifying jwt for admin home screen.");
       print(obj.toString());
       await clearUserData();
-      Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (context) => UserNotLoginHomeScreen()));
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => UserNotLoginHomeScreen()),
+      );
       Toastget().Toastmsg("Error. Relogin please.");
     }
   }
+
   // TextEditingControllers
   final TextEditingController BookIdController = TextEditingController();
   final TextEditingController CategoryController = TextEditingController();
-  final TextEditingController discountPercentController = TextEditingController();
+  final TextEditingController discountPercentController =
+      TextEditingController();
   final TextEditingController discountStartController = TextEditingController();
   final TextEditingController discountEndController = TextEditingController();
 
@@ -85,7 +92,7 @@ class _UpdateDiscountState extends State<UpdateDiscount> {
         Uri.parse(url),
         headers: {
           "Content-Type": "application/json",
-          'Authorization': 'Bearer ${widget.jwttoken}'
+          'Authorization': 'Bearer ${widget.jwttoken}',
         },
         body: json.encode(bookData),
       );
@@ -94,7 +101,9 @@ class _UpdateDiscountState extends State<UpdateDiscount> {
         Toastget().Toastmsg("Update Discount success.");
         return 1;
       } else if (response.statusCode == 501) {
-        Toastget().Toastmsg("Updating book failed. Incorrect book data format. Try again.");
+        Toastget().Toastmsg(
+          "Updating book failed. Incorrect book data format. Try again.",
+        );
         return 11;
       } else {
         print("Error. Other status code.");
@@ -137,73 +146,120 @@ class _UpdateDiscountState extends State<UpdateDiscount> {
           physics: BouncingScrollPhysics(),
           child: Column(
             children: [
-              CommonTextField_obs_false("Enter Book ID", "", false, BookIdController, context),
-              CommonTextField_obs_false("Enter the book category", "", false, CategoryController, context),
-              CommonTextField_obs_false("Enter discount percent", "", false, discountPercentController, context),
-              CommonTextField_obs_false("Enter discount start date", "", false, discountStartController, context),
-              CommonTextField_obs_false("Enter discount end date", "", false, discountEndController, context),
+              CommonTextField_obs_false(
+                "Enter Book ID",
+                "",
+                false,
+                BookIdController,
+                context,
+              ),
+              CommonTextField_obs_false(
+                "Enter the book category",
+                "",
+                false,
+                CategoryController,
+                context,
+              ),
+              CommonTextField_obs_false(
+                "Enter discount percent",
+                "",
+                false,
+                discountPercentController,
+                context,
+              ),
+              CommonTextField_obs_false(
+                "Enter discount start date",
+                "",
+                false,
+                discountStartController,
+                context,
+              ),
+              CommonTextField_obs_false(
+                "Enter discount end date",
+                "",
+                false,
+                discountEndController,
+                context,
+              ),
 
-              Commonbutton("Update Discount", () async {
-                try {
-                  if (
-                  BookIdController.text.toString().isEmptyOrNull ||
-                      CategoryController.text.toString().isEmptyOrNull ||
-                      discountPercentController.text.toString().isEmptyOrNull ||
-                      discountStartController.text.toString().isEmptyOrNull ||
-                      discountEndController.text.toString().isEmptyOrNull
-                  ) {
-                    Toastget().Toastmsg("All fields are required");
-                    return;
+              Commonbutton(
+                "Update Discount",
+                () async {
+                  try {
+                    if (BookIdController.text.toString().isEmptyOrNull ||
+                        CategoryController.text.toString().isEmptyOrNull ||
+                        discountPercentController.text
+                            .toString()
+                            .isEmptyOrNull ||
+                        discountStartController.text.toString().isEmptyOrNull ||
+                        discountEndController.text.toString().isEmptyOrNull) {
+                      Toastget().Toastmsg("All fields are required");
+                      return;
+                    }
+
+                    final bookId = int.tryParse(BookIdController.text);
+                    if (bookId == null) {
+                      Toastget().Toastmsg("Invalid Book ID format");
+                      return;
+                    }
+
+                    final bookDiscountPercent = double.tryParse(
+                      discountPercentController.text,
+                    );
+                    if (bookDiscountPercent == null ||
+                        bookDiscountPercent <= 0) {
+                      Toastget().Toastmsg(
+                        "Discount percent must be a number greater than 0",
+                      );
+                      return;
+                    }
+
+                    final discountStart = DateTime.tryParse(
+                      discountStartController.text,
+                    );
+                    final discountEnd = DateTime.tryParse(
+                      discountEndController.text,
+                    );
+                    final currentDate = DateTime.now().toUtc();
+
+                    if (discountStart == null || discountEnd == null) {
+                      Toastget().Toastmsg("Invalid date format");
+                      return;
+                    }
+
+                    if (discountStart.isBefore(currentDate) == true) {
+                      Toastget().Toastmsg(
+                        "Start date cannot be before current date",
+                      );
+                      return;
+                    }
+
+                    if (discountEnd.isBefore(discountStart)) {
+                      Toastget().Toastmsg(
+                        "End date cannot be before start date",
+                      );
+                      return;
+                    }
+
+                    final result = await UpdateDiscount(
+                      BookId: bookId,
+                      Category: CategoryController.text,
+                      Discount_Percent: bookDiscountPercent,
+                      Discount_Start: discountStartController.text,
+                      Discount_End: discountEndController.text,
+                    );
+
+                    print("Update result: $result");
+                  } catch (e) {
+                    print(e.toString());
+                    Toastget().Toastmsg(
+                      "Error occurred during validation or submission.",
+                    );
                   }
-
-                  final bookId = int.tryParse(BookIdController.text);
-                  if (bookId == null) {
-                    Toastget().Toastmsg("Invalid Book ID format");
-                    return;
-                  }
-
-                  final bookDiscountPercent = double.tryParse(discountPercentController.text);
-                  if (bookDiscountPercent == null || bookDiscountPercent <= 0) {
-                    Toastget().Toastmsg("Discount percent must be a number greater than 0");
-                    return;
-                  }
-
-                  final discountStart = DateTime.tryParse(discountStartController.text);
-                  final discountEnd = DateTime.tryParse(discountEndController.text);
-                  final currentDate = DateTime.now().toUtc();
-
-                  if (discountStart == null || discountEnd == null) {
-                    Toastget().Toastmsg("Invalid date format");
-                    return;
-                  }
-
-                  if(discountStart.isBefore(currentDate)==true)
-                  {
-                    Toastget().Toastmsg("Start date cannot be before current date");
-                    return;
-                  }
-
-
-                  if (discountEnd.isBefore(discountStart))
-                  {
-                    Toastget().Toastmsg("End date cannot be before start date");
-                    return;
-                  }
-
-                  final result = await UpdateDiscount(
-                    BookId: bookId,
-                    Category: CategoryController.text,
-                    Discount_Percent: bookDiscountPercent,
-                    Discount_Start: discountStartController.text,
-                    Discount_End: discountEndController.text,
-                  );
-
-                  print("Update result: $result");
-                } catch (e) {
-                  print(e.toString());
-                  Toastget().Toastmsg("Error occurred during validation or submission.");
-                }
-              }, context, Colors.red)
+                },
+                context,
+                Colors.red,
+              ),
             ],
           ),
         ),

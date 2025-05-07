@@ -164,10 +164,8 @@ class _BookmarkPageState extends State<BookmarkPage> {
                         height: heightval * 0.90,
                         child: ListView.builder(
                           itemBuilder: (context, index) {
-
                             final bookmark = CurrentUserBookmarkInfoList[index];
-                            return
-                              Card (
+                            return Card(
                               child: Container(
                                 child: Row(
                                   mainAxisAlignment:
@@ -178,21 +176,23 @@ class _BookmarkPageState extends State<BookmarkPage> {
                                     Text("${bookmark.publicationDate}"),
                                   ],
                                 ),
-                              )
-                            ).onTap((){
-
+                              ),
+                            ).onTap(() {
                               print("test1");
 
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => BookmarkDetails(
-                                jwttoken: widget.jwttoken,
-                                usertype: widget.usertype,
-                                email: widget.email,
-                                  BookmarkInfoList: bookmark,
-
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder:
+                                      (context) => BookmarkDetails(
+                                        jwttoken: widget.jwttoken,
+                                        usertype: widget.usertype,
+                                        email: widget.email,
+                                        BookmarkInfoList: bookmark,
+                                      ),
                                 ),
-                                ));
-
-                              });
+                              );
+                            });
                           },
                           itemCount: CurrentUserBookmarkInfoList.length,
                         ),

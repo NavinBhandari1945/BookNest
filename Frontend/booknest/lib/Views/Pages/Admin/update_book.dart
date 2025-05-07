@@ -11,7 +11,6 @@ import '../../common widget/commontextfield_obs_false.dart';
 import '../../common widget/toast.dart';
 import '../Home/user_not_login_home_screen.dart';
 
-
 class UpdateBook extends StatefulWidget {
   final String email;
   final String usertype;
@@ -29,7 +28,6 @@ class UpdateBook extends StatefulWidget {
 }
 
 class _UpdateBookState extends State<UpdateBook> {
-
   @override
   void initState() {
     super.initState();
@@ -41,20 +39,26 @@ class _UpdateBookState extends State<UpdateBook> {
       //check jwt called in admin home screen.
       print("check jwt called in admin home screen.");
       int result = await checkJwtToken_initistate_admin(
-          widget.email, widget.usertype, widget.jwttoken);
-      if (result == 0)
-      {
+        widget.email,
+        widget.usertype,
+        widget.jwttoken,
+      );
+      if (result == 0) {
         await clearUserData();
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => UserNotLoginHomeScreen()));
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => UserNotLoginHomeScreen()),
+        );
         Toastget().Toastmsg("Session End. Relogin please.");
       }
     } catch (obj) {
       print("Exception caught while verifying jwt for admin home screen.");
       print(obj.toString());
       await clearUserData();
-      Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (context) => UserNotLoginHomeScreen()));
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => UserNotLoginHomeScreen()),
+      );
       Toastget().Toastmsg("Error. Relogin please.");
     }
   }
@@ -65,7 +69,8 @@ class _UpdateBookState extends State<UpdateBook> {
   final TextEditingController formatController = TextEditingController();
   final TextEditingController titleController = TextEditingController();
   final TextEditingController languageController = TextEditingController();
-  final TextEditingController availableQuantityController = TextEditingController();
+  final TextEditingController availableQuantityController =
+      TextEditingController();
 
   Future<int> updateBook({
     required int bookId,
@@ -93,7 +98,7 @@ class _UpdateBookState extends State<UpdateBook> {
         Uri.parse(url),
         headers: {
           "Content-Type": "application/json",
-          'Authorization': 'Bearer ${widget.jwttoken}'
+          'Authorization': 'Bearer ${widget.jwttoken}',
         },
         body: json.encode(bookData),
       );
@@ -119,73 +124,125 @@ class _UpdateBookState extends State<UpdateBook> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Update Book", style: TextStyle(fontFamily: bold, fontSize: 24, color: Colors.white)),
+        title: Text(
+          "Update Book",
+          style: TextStyle(fontFamily: bold, fontSize: 24, color: Colors.white),
+        ),
         backgroundColor: Colors.green[700],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            CommonTextField_obs_false("Book ID", "", false, bookIdController, context),
-            CommonTextField_obs_false("Book Name", "", false, bookNameController, context),
-            CommonTextField_obs_false("Price", "", false, priceController, context),
-            CommonTextField_obs_false("Format", "", false, formatController, context),
-            CommonTextField_obs_false("Title", "", false, titleController, context),
-            CommonTextField_obs_false("Language", "", false, languageController, context),
-            CommonTextField_obs_false("Available Quantity", "", false, availableQuantityController, context),
-            Commonbutton("Update Book", () async {
-              try {
-                if (bookIdController.text.isEmptyOrNull ||
-                    bookNameController.text.isEmptyOrNull ||
-                    priceController.text.isEmptyOrNull ||
-                    formatController.text.isEmptyOrNull ||
-                    titleController.text.isEmptyOrNull ||
-                    languageController.text.isEmptyOrNull ||
-                    availableQuantityController.text.isEmptyOrNull) {
-                  Toastget().Toastmsg("All fields are required.");
-                  return;
-                }
+            CommonTextField_obs_false(
+              "Book ID",
+              "",
+              false,
+              bookIdController,
+              context,
+            ),
+            CommonTextField_obs_false(
+              "Book Name",
+              "",
+              false,
+              bookNameController,
+              context,
+            ),
+            CommonTextField_obs_false(
+              "Price",
+              "",
+              false,
+              priceController,
+              context,
+            ),
+            CommonTextField_obs_false(
+              "Format",
+              "",
+              false,
+              formatController,
+              context,
+            ),
+            CommonTextField_obs_false(
+              "Title",
+              "",
+              false,
+              titleController,
+              context,
+            ),
+            CommonTextField_obs_false(
+              "Language",
+              "",
+              false,
+              languageController,
+              context,
+            ),
+            CommonTextField_obs_false(
+              "Available Quantity",
+              "",
+              false,
+              availableQuantityController,
+              context,
+            ),
+            Commonbutton(
+              "Update Book",
+              () async {
+                try {
+                  if (bookIdController.text.isEmptyOrNull ||
+                      bookNameController.text.isEmptyOrNull ||
+                      priceController.text.isEmptyOrNull ||
+                      formatController.text.isEmptyOrNull ||
+                      titleController.text.isEmptyOrNull ||
+                      languageController.text.isEmptyOrNull ||
+                      availableQuantityController.text.isEmptyOrNull) {
+                    Toastget().Toastmsg("All fields are required.");
+                    return;
+                  }
 
-                final bookId = int.tryParse(bookIdController.text);
-                if (bookId == null || bookId <= 0) {
-                  Toastget().Toastmsg("Invalid Book ID.");
-                  return;
-                }
+                  final bookId = int.tryParse(bookIdController.text);
+                  if (bookId == null || bookId <= 0) {
+                    Toastget().Toastmsg("Invalid Book ID.");
+                    return;
+                  }
 
-                final price = double.tryParse(priceController.text);
-                if (price == null || price <= 0) {
-                  Toastget().Toastmsg("Price must be greater than 0.");
-                  return;
-                }
+                  final price = double.tryParse(priceController.text);
+                  if (price == null || price <= 0) {
+                    Toastget().Toastmsg("Price must be greater than 0.");
+                    return;
+                  }
 
-                final quantity = int.tryParse(availableQuantityController.text);
-                if (quantity == null || quantity < 0) {
-                  Toastget().Toastmsg("Quantity must be 0 or more.");
-                  return;
-                }
+                  final quantity = int.tryParse(
+                    availableQuantityController.text,
+                  );
+                  if (quantity == null || quantity < 0) {
+                    Toastget().Toastmsg("Quantity must be 0 or more.");
+                    return;
+                  }
 
-                if (bookNameController.text.length > 50 ||
-                    formatController.text.length > 50 ||
-                    titleController.text.length > 50 ||
-                    languageController.text.length > 50) {
-                  Toastget().Toastmsg("Fields cannot exceed 50 characters.");
-                  return;
-                }
+                  if (bookNameController.text.length > 50 ||
+                      formatController.text.length > 50 ||
+                      titleController.text.length > 50 ||
+                      languageController.text.length > 50) {
+                    Toastget().Toastmsg("Fields cannot exceed 50 characters.");
+                    return;
+                  }
 
-                await updateBook(
-                  bookId: bookId,
-                  bookName: bookNameController.text.trim(),
-                  price: price,
-                  format: formatController.text.trim(),
-                  title: titleController.text.trim(),
-                  language: languageController.text.trim(),
-                  quantity: quantity,
-                );
-              } catch (e) {
-                print("Error: $e");
-                Toastget().Toastmsg("Validation or update failed.");
-              }
-            }, context, Colors.red)
+                  await updateBook(
+                    bookId: bookId,
+                    bookName: bookNameController.text.trim(),
+                    price: price,
+                    format: formatController.text.trim(),
+                    title: titleController.text.trim(),
+                    language: languageController.text.trim(),
+                    quantity: quantity,
+                  );
+                } catch (e) {
+                  print("Error: $e");
+                  Toastget().Toastmsg("Validation or update failed.");
+                }
+              },
+              context,
+              Colors.red,
+            ),
           ],
         ),
       ),

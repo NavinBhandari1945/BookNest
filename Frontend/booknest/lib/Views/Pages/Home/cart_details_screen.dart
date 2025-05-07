@@ -69,7 +69,6 @@ class CartDetailsScreen extends StatefulWidget {
 }
 
 class _CartDetailsScreenState extends State<CartDetailsScreen> {
-
   @override
   void initState() {
     super.initState();
@@ -81,19 +80,26 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
       //check jwt called in admin home screen.
       print("check jwt called in book screen.");
       int result = await checkJwtToken_initistate_member(
-          widget.email, widget.usertype, widget.jwttoken);
-      if (result == 0)
-      {
+        widget.email,
+        widget.usertype,
+        widget.jwttoken,
+      );
+      if (result == 0) {
         await clearUserData();
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => UserNotLoginHomeScreen()));
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => UserNotLoginHomeScreen()),
+        );
         Toastget().Toastmsg("Session End. Relogin please.");
       }
     } catch (obj) {
       print("Exception caught while verifying jwt for admin home screen.");
       print(obj.toString());
       await clearUserData();
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UserNotLoginHomeScreen()));
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => UserNotLoginHomeScreen()),
+      );
       Toastget().Toastmsg("Error. Relogin please.");
     }
   }
@@ -106,11 +112,9 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
     return null;
   }
 
-  int? GetTotalPrice()
-  {
-    if (widget.quantity != null && widget.price != null)
-    {
-      int? IntPrice=int.tryParse(widget.price.toString());
+  int? GetTotalPrice() {
+    if (widget.quantity != null && widget.price != null) {
+      int? IntPrice = int.tryParse(widget.price.toString());
       return widget.quantity! * IntPrice!;
     }
     return null;
@@ -184,7 +188,7 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
       final response = await http.post(
         Uri.parse(url),
         headers: headers,
-        body:json.encode(BodyData),
+        body: json.encode(BodyData),
       );
       if (response.statusCode == 200) {
         List<dynamic> responseData = await jsonDecode(response.body);
@@ -273,9 +277,7 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
     var heightval = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      appBar:
-
-      AppBar(
+      appBar: AppBar(
         automaticallyImplyLeading: false,
         title: const Text(
           "Cart Details",
@@ -456,16 +458,16 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
                 ElevatedButton(
                   onPressed: () async {
                     try {
-
                       int TotalDiscountPercent = 0;
 
-                      print("Discount percent from datbase = ${widget.discountPercent}");
+                      print(
+                        "Discount percent from datbase = ${widget.discountPercent}",
+                      );
 
                       if (widget.discountPercent != null &&
                           widget.discountPercent! > 0 &&
                           widget.discountStart != null &&
-                          widget.discountEnd != null)
-                      {
+                          widget.discountEnd != null) {
                         final currentDate = DateTime.now().toUtc();
                         final startDate = DateTime.tryParse(
                           widget.discountStart!,
@@ -478,65 +480,76 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
                             endDate != null &&
                             currentDate.isAfter(startDate) &&
                             currentDate.isBefore(endDate)) {
-                          print("Yes Book discount from databse discount percent added");
+                          print(
+                            "Yes Book discount from databse discount percent added",
+                          );
 
-                          int? DiscountFromdatabse=int.tryParse(widget.discountPercent.toString());
+                          int? DiscountFromdatabse = int.tryParse(
+                            widget.discountPercent.toString(),
+                          );
                           print("Discountfromdatabse=${DiscountFromdatabse}");
                           TotalDiscountPercent =
                               TotalDiscountPercent + DiscountFromdatabse!;
                         }
                       }
 
-                      if(TotalDiscountPercent==0)
-                      {
-                        print("No Book discount from databse discount percent added fail.Invalid discount status.");
+                      if (TotalDiscountPercent == 0) {
+                        print(
+                          "No Book discount from databse discount percent added fail.Invalid discount status.",
+                        );
                       }
 
                       print("Book order quantity = ${widget.quantity}");
 
-                      if (widget.quantity! >= 5)
-                      {
+                      if (widget.quantity! >= 5) {
                         print("Order quantity=${widget.quantity}");
-                        print("Yes Book discount aaded for more than or equal to 5 books order");
+                        print(
+                          "Yes Book discount aaded for more than or equal to 5 books order",
+                        );
                         TotalDiscountPercent = TotalDiscountPercent + 5;
                       }
 
-                      if(widget.quantity!<5)
-                      {
+                      if (widget.quantity! < 5) {
                         print("Order quantity=${widget.quantity}");
-                        print("No Book discount aaded for more than or equal to 5 books order");
+                        print(
+                          "No Book discount aaded for more than or equal to 5 books order",
+                        );
                       }
-
 
                       final Order_History_Result = await GetOrderInfo();
 
                       print("Order_History_Result = ${Order_History_Result}");
 
-                      if (Order_History_Result == 1)
-                      {
-
-                        if (OrderInfoList.length > 10)
-                        {
-                          print("Yes Book discount added for more than 10 successful book order.");
+                      if (Order_History_Result == 1) {
+                        if (OrderInfoList.length > 10) {
+                          print(
+                            "Yes Book discount added for more than 10 successful book order.",
+                          );
                           TotalDiscountPercent = TotalDiscountPercent + 10;
                         }
 
-                        if(OrderInfoList.length < 10){
-                          print("No Book discount added for more than 10 successful book order.");
-
+                        if (OrderInfoList.length < 10) {
+                          print(
+                            "No Book discount added for more than 10 successful book order.",
+                          );
                         }
 
-                        int? IntTotal_Price=GetTotalPrice();
-                        int IntTotalDiscountPercent=TotalDiscountPercent;
+                        int? IntTotal_Price = GetTotalPrice();
+                        int IntTotalDiscountPercent = TotalDiscountPercent;
 
-                        int discountAmount = ((IntTotal_Price! * IntTotalDiscountPercent) / 100).toInt();
+                        int discountAmount =
+                            ((IntTotal_Price! * IntTotalDiscountPercent) / 100)
+                                .toInt();
 
-                        double? DoubleTotalPrice=double.tryParse(IntTotal_Price.toString());
-                        double? DoubleDiscountAmount=double.tryParse(discountAmount.toString());
+                        double? DoubleTotalPrice = double.tryParse(
+                          IntTotal_Price.toString(),
+                        );
+                        double? DoubleDiscountAmount = double.tryParse(
+                          discountAmount.toString(),
+                        );
 
-
-                        double Total_Amount = DoubleTotalPrice! - DoubleDiscountAmount!;
-
+                        double Total_Amount =
+                            DoubleTotalPrice! - DoubleDiscountAmount!;
 
                         print("Total Discount: $TotalDiscountPercent%");
                         print("Discount Amount: $discountAmount");
@@ -556,8 +569,7 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
                         );
 
                         print("Add_Order_Result= ${Add_Order_Result}");
-                        if (Add_Order_Result != 1)
-                        {
+                        if (Add_Order_Result != 1) {
                           print("Failed to save order data in databse");
                           Toastget().Toastmsg(
                             "Failed to save order data in databse",
@@ -590,20 +602,24 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
                         final SendEmailResult = await sendEmail(
                           name: "BookNest",
                           email: widget.email,
-                          subject: "BookNest book order Bill and payment details.",
+                          subject:
+                              "BookNest book order Bill and payment details.",
                           message: message,
                         );
 
                         print("Send Email Result: $SendEmailResult");
 
-                        if(SendEmailResult!=1)
-                        {
+                        if (SendEmailResult != 1) {
                           print("Failed to send email");
-                          Toastget().Toastmsg("Failed to senfd email of order details");
+                          Toastget().Toastmsg(
+                            "Failed to senfd email of order details",
+                          );
                           return;
                         }
                         print("Success to send email");
-                        Toastget().Toastmsg("Success to send email of order details");
+                        Toastget().Toastmsg(
+                          "Success to send email of order details",
+                        );
                         return;
                       } else {
                         Toastget().Toastmsg(
@@ -634,8 +650,6 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
                     style: TextStyle(fontFamily: bold, fontSize: 16),
                   ),
                 ),
-
-
               ],
             ),
           ],
@@ -683,12 +697,11 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
       const serviceId = "service_wn7e1b7";
       const userId = "55pnpAt50ARjpcT9f";
       const templateId = "template_larap3m";
-      const privateKey = "kNdcuy4zAUFmCzDYG9iZ2"; // Replace with your EmailJS private key
+      const privateKey =
+          "kNdcuy4zAUFmCzDYG9iZ2"; // Replace with your EmailJS private key
       final url = Uri.parse("https://api.emailjs.com/api/v1.0/email/send");
 
-      final headers = {
-        'Content-Type': 'application/json',
-      };
+      final headers = {'Content-Type': 'application/json'};
 
       final body = jsonEncode({
         "service_id": serviceId,
@@ -703,11 +716,7 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
         },
       });
 
-      final response = await http.post(
-        url,
-        headers: headers,
-        body: body,
-      );
+      final response = await http.post(url, headers: headers, body: body);
 
       print("EmailJS response: ${response.body}");
       print("Status code: ${response.statusCode}");
@@ -717,5 +726,4 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
       return 0;
     }
   }
-
 }

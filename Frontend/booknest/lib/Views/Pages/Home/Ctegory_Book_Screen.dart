@@ -8,7 +8,13 @@ class CategoryBookPage extends StatefulWidget {
   final String usertype;
   final String jwttoken;
   final List<BooKInfos> BookInfo;
-  const CategoryBookPage({super.key, required this.jwttoken, required this.usertype, required this.email, required this.BookInfo});
+  const CategoryBookPage({
+    super.key,
+    required this.jwttoken,
+    required this.usertype,
+    required this.email,
+    required this.BookInfo,
+  });
 
   @override
   State<CategoryBookPage> createState() => _CategoryBookPageState();
@@ -49,10 +55,7 @@ class _CategoryBookPageState extends State<CategoryBookPage> {
         ),
         child: Center(
           child: ConstrainedBox(
-            constraints: const BoxConstraints(
-              maxWidth: 800,
-              minWidth: 300,
-            ),
+            constraints: const BoxConstraints(maxWidth: 800, minWidth: 300),
             child: SingleChildScrollView(
               scrollDirection: Axis.vertical,
               physics: const BouncingScrollPhysics(),
@@ -78,16 +81,17 @@ class _CategoryBookPageState extends State<CategoryBookPage> {
                   // Book List
                   LayoutBuilder(
                     builder: (context, constraints) {
-                      double fontScale = constraints.maxWidth < 400 ? 0.9 : 1.0; // Smaller fonts on narrow screens
+                      double fontScale =
+                          constraints.maxWidth < 400
+                              ? 0.9
+                              : 1.0; // Smaller fonts on narrow screens
                       return ListView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         itemCount: widget.BookInfo.length,
                         itemBuilder: (context, index) {
                           final book = widget.BookInfo[index];
-                          return
-
-                            Card (
+                          return Card(
                             elevation: 4,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
@@ -106,24 +110,33 @@ class _CategoryBookPageState extends State<CategoryBookPage> {
                                     child: SizedBox(
                                       width: widthval * 0.3,
                                       child: AspectRatio(
-                                        aspectRatio: 2 / 3, // Standard book cover ratio
+                                        aspectRatio:
+                                            2 / 3, // Standard book cover ratio
                                         child: ClipRRect(
-                                          borderRadius: BorderRadius.circular(8),
-                                          child: book.photo != null
-                                              ? Image.memory(
-                                            base64Decode(book.photo!),
-                                            fit: BoxFit.cover,
-                                            errorBuilder: (context, error, stackTrace) => const Icon(
-                                              Icons.broken_image,
-                                              size: 50,
-                                              color: Colors.grey,
-                                            ),
-                                          )
-                                              : const Icon(
-                                            Icons.broken_image,
-                                            size: 50,
-                                            color: Colors.grey,
+                                          borderRadius: BorderRadius.circular(
+                                            8,
                                           ),
+                                          child:
+                                              book.photo != null
+                                                  ? Image.memory(
+                                                    base64Decode(book.photo!),
+                                                    fit: BoxFit.cover,
+                                                    errorBuilder:
+                                                        (
+                                                          context,
+                                                          error,
+                                                          stackTrace,
+                                                        ) => const Icon(
+                                                          Icons.broken_image,
+                                                          size: 50,
+                                                          color: Colors.grey,
+                                                        ),
+                                                  )
+                                                  : const Icon(
+                                                    Icons.broken_image,
+                                                    size: 50,
+                                                    color: Colors.grey,
+                                                  ),
                                         ),
                                       ),
                                     ),
@@ -131,38 +144,125 @@ class _CategoryBookPageState extends State<CategoryBookPage> {
                                   SizedBox(height: heightval * 0.015),
                                   // Book Details
                                   Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      _buildInfoRow('Title', book.title ?? 'N/A', widthval, heightval, fontScale, isBold: true),
-                                      _buildInfoRow('Book Name', book.bookName ?? 'N/A', widthval, heightval, fontScale),
-                                      _buildInfoRow('Author', book.author ?? 'N/A', widthval, heightval, fontScale, isItalic: true),
-                                      _buildInfoRow('Price', book.price?.toStringAsFixed(2) ?? 'N/A', widthval, heightval, fontScale, color: Colors.green[700]),
-                                      _buildInfoRow('Format', book.format ?? 'N/A', widthval, heightval, fontScale),
-                                      _buildInfoRow('Publisher', book.publisher ?? 'N/A', widthval, heightval, fontScale),
-                                      _buildInfoRow('Publication Date', book.publicationDate ?? 'N/A', widthval, heightval, fontScale),
-                                      _buildInfoRow('Language', book.language ?? 'N/A', widthval, heightval, fontScale),
-                                      _buildInfoRow('Category', book.category ?? 'N/A', widthval, heightval, fontScale),
-                                      _buildInfoRow('Listed At', book.listedAt ?? 'N/A', widthval, heightval, fontScale),
                                       _buildInfoRow(
-                                        'Available Quantity',
-                                        book.availableQuantity?.toString() ?? 'N/A',
+                                        'Title',
+                                        book.title ?? 'N/A',
                                         widthval,
                                         heightval,
                                         fontScale,
-                                        color: book.availableQuantity != null && book.availableQuantity! > 0
-                                            ? Colors.green[600]
-                                            : Colors.red[600],
+                                        isBold: true,
+                                      ),
+                                      _buildInfoRow(
+                                        'Book Name',
+                                        book.bookName ?? 'N/A',
+                                        widthval,
+                                        heightval,
+                                        fontScale,
+                                      ),
+                                      _buildInfoRow(
+                                        'Author',
+                                        book.author ?? 'N/A',
+                                        widthval,
+                                        heightval,
+                                        fontScale,
+                                        isItalic: true,
+                                      ),
+                                      _buildInfoRow(
+                                        'Price',
+                                        book.price?.toStringAsFixed(2) ?? 'N/A',
+                                        widthval,
+                                        heightval,
+                                        fontScale,
+                                        color: Colors.green[700],
+                                      ),
+                                      _buildInfoRow(
+                                        'Format',
+                                        book.format ?? 'N/A',
+                                        widthval,
+                                        heightval,
+                                        fontScale,
+                                      ),
+                                      _buildInfoRow(
+                                        'Publisher',
+                                        book.publisher ?? 'N/A',
+                                        widthval,
+                                        heightval,
+                                        fontScale,
+                                      ),
+                                      _buildInfoRow(
+                                        'Publication Date',
+                                        book.publicationDate ?? 'N/A',
+                                        widthval,
+                                        heightval,
+                                        fontScale,
+                                      ),
+                                      _buildInfoRow(
+                                        'Language',
+                                        book.language ?? 'N/A',
+                                        widthval,
+                                        heightval,
+                                        fontScale,
+                                      ),
+                                      _buildInfoRow(
+                                        'Category',
+                                        book.category ?? 'N/A',
+                                        widthval,
+                                        heightval,
+                                        fontScale,
+                                      ),
+                                      _buildInfoRow(
+                                        'Listed At',
+                                        book.listedAt ?? 'N/A',
+                                        widthval,
+                                        heightval,
+                                        fontScale,
+                                      ),
+                                      _buildInfoRow(
+                                        'Available Quantity',
+                                        book.availableQuantity?.toString() ??
+                                            'N/A',
+                                        widthval,
+                                        heightval,
+                                        fontScale,
+                                        color:
+                                            book.availableQuantity != null &&
+                                                    book.availableQuantity! > 0
+                                                ? Colors.green[600]
+                                                : Colors.red[600],
                                       ),
                                       _buildInfoRow(
                                         'Discount Percent',
-                                        book.discountPercent != null ? '${book.discountPercent}%' : 'N/A',
+                                        book.discountPercent != null
+                                            ? '${book.discountPercent}%'
+                                            : 'N/A',
                                         widthval,
                                         heightval,
                                         fontScale,
                                       ),
-                                      _buildInfoRow('Discount Start', book.discountStart ?? 'N/A', widthval, heightval, fontScale),
-                                      _buildInfoRow('Discount End', book.discountEnd ?? 'N/A', widthval, heightval, fontScale),
-                                      _buildInfoRow('Book ID', book.bookId?.toString() ?? 'N/A', widthval, heightval, fontScale),
+                                      _buildInfoRow(
+                                        'Discount Start',
+                                        book.discountStart ?? 'N/A',
+                                        widthval,
+                                        heightval,
+                                        fontScale,
+                                      ),
+                                      _buildInfoRow(
+                                        'Discount End',
+                                        book.discountEnd ?? 'N/A',
+                                        widthval,
+                                        heightval,
+                                        fontScale,
+                                      ),
+                                      _buildInfoRow(
+                                        'Book ID',
+                                        book.bookId?.toString() ?? 'N/A',
+                                        widthval,
+                                        heightval,
+                                        fontScale,
+                                      ),
                                     ],
                                   ),
                                 ],
@@ -185,15 +285,15 @@ class _CategoryBookPageState extends State<CategoryBookPage> {
 
   // Helper method to build info rows
   Widget _buildInfoRow(
-      String label,
-      String value,
-      double widthval,
-      double heightval,
-      double fontScale, {
-        bool isBold = false,
-        bool isItalic = false,
-        Color? color,
-      }) {
+    String label,
+    String value,
+    double widthval,
+    double heightval,
+    double fontScale, {
+    bool isBold = false,
+    bool isItalic = false,
+    Color? color,
+  }) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: heightval * 0.004),
       child: Row(
@@ -228,14 +328,6 @@ class _CategoryBookPageState extends State<CategoryBookPage> {
     );
   }
 }
-
-
-
-
-
-
-
-
 
 // import 'package:flutter/material.dart';
 // import '../../../Models/BookInfosModel.dart';
