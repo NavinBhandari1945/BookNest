@@ -15,20 +15,15 @@ class ChangeUserRole extends StatefulWidget {
   final String email;
   final String usertype;
   final String jwttoken;
-  const ChangeUserRole({
-    super.key,
-    required this.jwttoken,
-    required this.usertype,
-    required this.email,
-  });
+  const ChangeUserRole({super.key,required this.jwttoken,required this.usertype,required this.email});
 
   @override
   State<ChangeUserRole> createState() => _ChangeUserRoleState();
 }
 
 class _ChangeUserRoleState extends State<ChangeUserRole> {
-  final User_Email_Cont = TextEditingController();
-  final User_Role_Cont = TextEditingController();
+  final User_Email_Cont=TextEditingController();
+  final User_Role_Cont=TextEditingController();
   @override
   void initState() {
     super.initState();
@@ -40,52 +35,41 @@ class _ChangeUserRoleState extends State<ChangeUserRole> {
       //check jwt called in admin home screen.
       print("check jwt called in change user role screen.");
       int result = await checkJwtToken_initistate_admin(
-        widget.email,
-        widget.usertype,
-        widget.jwttoken,
-      );
-      if (result == 0) {
+          widget.email, widget.usertype, widget.jwttoken);
+      if (result == 0)
+      {
         await clearUserData();
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => UserNotLoginHomeScreen()),
-        );
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => UserNotLoginHomeScreen()));
         Toastget().Toastmsg("Session End. Relogin please.");
       }
     } catch (obj) {
       print("Exception caught while verifying jwt for admin home screen.");
       print(obj.toString());
       await clearUserData();
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => UserNotLoginHomeScreen()),
-      );
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (context) => UserNotLoginHomeScreen()));
       Toastget().Toastmsg("Error. Relogin please.");
     }
   }
 
-  Future<int> Change_User_Role({
-    required String User_Email,
-    required String User_Role,
-  }) async {
+  Future<int> Change_User_Role(
+      {required String User_Email, required String User_Role}) async {
     try {
       final Map<String, dynamic> userData = {
         "Email": User_Email,
-        "Role": User_Role,
+        "Role": User_Role
       };
       const String url = Backend_Server_Url + "api/Admin/change_user_role";
       final headers = {
         'Authorization': 'Bearer ${widget.jwttoken}',
         'Content-Type': 'application/json',
       };
-      final body_data = jsonEncode(userData);
+      final body_data=jsonEncode(userData);
 
-      final response = await http.post(
-        Uri.parse(url),
-        headers: headers,
-        body: body_data,
-      );
-      if (response.statusCode == 200) {
+      final response = await http.post(Uri.parse(url), headers: headers,body: body_data);
+      if (response.statusCode == 200)
+      {
         Toastget().Toastmsg("Change role success.");
         return 1;
       } else if (response.statusCode == 501) {
@@ -99,9 +83,7 @@ class _ChangeUserRoleState extends State<ChangeUserRole> {
         return 2;
       }
     } catch (Obj) {
-      Toastget().Toastmsg(
-        "Exception caught in login user method in http method.",
-      );
+      Toastget().Toastmsg("Exception caught in login user method in http method.");
       print("Exception caught in login user method in http method.");
       print(Obj.toString());
       return 0;
@@ -111,68 +93,47 @@ class _ChangeUserRoleState extends State<ChangeUserRole> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Text(
-          "Change user role.",
-          style: TextStyle(
-            fontFamily: bold,
-            fontSize: 24,
-            color: Colors.white,
-            letterSpacing: 1.2,
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          title: Text(
+            "Change user role.",
+            style: TextStyle(fontFamily: bold, fontSize: 24, color: Colors.white, letterSpacing: 1.2),
           ),
+          backgroundColor: Colors.green[700],
+          elevation: 4,
+          shadowColor: Colors.black45,
         ),
-        backgroundColor: Colors.green[700],
-        elevation: 4,
-        shadowColor: Colors.black45,
-      ),
-      body: Container(
-        child: Column(
-          children: [
-            CommonTextField_obs_false(
-              "Enter user email.",
-              "",
-              false,
-              User_Email_Cont,
-              context,
-            ),
-            CommonTextField_obs_false(
-              "Enter user role.",
-              "",
-              false,
-              User_Role_Cont,
-              context,
-            ),
-            Commonbutton(
-              "Change",
-              () async {
-                try {
-                  if (User_Email_Cont.text.isEmptyOrNull ||
-                      User_Role_Cont.text.isEmptyOrNull ||
-                      User_Role_Cont.text.toString() != "Staff") {
+        body:Container
+          (
+          child: Column(
+            children:
+            [
+              CommonTextField_obs_false("Enter user email.", "", false,User_Email_Cont , context),
+              CommonTextField_obs_false("Enter user role.", "", false,User_Role_Cont , context),
+              Commonbutton("Change", ()async{
+
+                try{
+                  if(User_Email_Cont.text.isEmptyOrNull || User_Role_Cont.text.isEmptyOrNull || User_Role_Cont.text.toString()!="Staff"){
                     print("Incorrect data validation.");
                     Toastget().Toastmsg("Incorrect data validation.");
                     return;
-                  } else {
-                    final Result = await Change_User_Role(
-                      User_Email: User_Email_Cont.text.toString(),
-                      User_Role: User_Role_Cont.text.toString(),
-                    );
+                  }
+                  else
+                  {
+                    final Result=await Change_User_Role(User_Email: User_Email_Cont.text.toString(), User_Role: User_Role_Cont.text.toString());
                     print(Result);
                     return;
                   }
-                } catch (Obj) {
+                }catch(Obj){
                   print(Obj.toString());
                   Toastget().Toastmsg("Incorrect data validation.");
                   return;
                 }
-              },
-              context,
-              Colors.red,
-            ),
-          ],
+              }, context, Colors.red)
+            ],
+          ),
+
         ),
-      ),
     );
   }
 }

@@ -80,6 +80,7 @@ class _AddAnnouncementPageState extends State<AddAnnouncementPage> {
     required Imagebytes,
   }) async {
     try {
+
       final String base64Image = base64Encode(Imagebytes as List<int>);
 
       // Construct the JSON payload
@@ -227,13 +228,21 @@ class _AddAnnouncementPageState extends State<AddAnnouncementPage> {
                       return;
                     }
 
-                    final Start_Date = DateTime.tryParse(StartDate_Cont.text);
-                    final End_Date = DateTime.tryParse(EndDate_Cont.text);
+                    final Start_Date = DateTime.tryParse(
+                      StartDate_Cont.text,
+                    );
+                    final End_Date = DateTime.tryParse(
+                      EndDate_Cont.text,
+                    );
 
                     if (Start_Date!.isAfter(End_Date!) == true ||
                         End_Date!.isBefore(Start_Date) == true) {
-                      print("Incorrect start or end date date.");
-                      Toastget().Toastmsg("Incorrect start or end date date.");
+                      print(
+                        "Incorrect start or end date date.",
+                      );
+                      Toastget().Toastmsg(
+                        "Incorrect start or end date date.",
+                      );
                       return;
                     }
 

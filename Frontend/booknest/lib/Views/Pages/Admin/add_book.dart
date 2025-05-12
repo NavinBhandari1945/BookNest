@@ -6,6 +6,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:http/http.dart' as http;
 import 'package:velocity_x/velocity_x.dart';
 
+
 import '../../../constant/constant.dart';
 import '../../../constant/styles.dart';
 import '../../common widget/common_method.dart';
@@ -19,18 +20,13 @@ class AddBook extends StatefulWidget {
   final String email;
   final String usertype;
   final String jwttoken;
-  const AddBook({
-    super.key,
-    required this.jwttoken,
-    required this.usertype,
-    required this.email,
-  });
+  const AddBook({super.key,required this.jwttoken,required this.usertype,required this.email});
   @override
   State<AddBook> createState() => _AddBookState();
 }
 
 class _AddBookState extends State<AddBook> {
-  final Pick_Photo_Cont = Get.put(PickSinglePhotoGetxInt());
+  final Pick_Photo_Cont=Get.put(PickSinglePhotoGetxInt());
   @override
   void initState() {
     super.initState();
@@ -42,26 +38,20 @@ class _AddBookState extends State<AddBook> {
       //check jwt called in admin home screen.
       print("check jwt called in change user role screen.");
       int result = await checkJwtToken_initistate_admin(
-        widget.email,
-        widget.usertype,
-        widget.jwttoken,
-      );
-      if (result == 0) {
+          widget.email, widget.usertype, widget.jwttoken);
+      if (result == 0)
+      {
         await clearUserData();
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => UserNotLoginHomeScreen()),
-        );
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => UserNotLoginHomeScreen()));
         Toastget().Toastmsg("Session End. Relogin please.");
       }
     } catch (obj) {
       print("Exception caught while verifying jwt for admin home screen.");
       print(obj.toString());
       await clearUserData();
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => UserNotLoginHomeScreen()),
-      );
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (context) => UserNotLoginHomeScreen()));
       Toastget().Toastmsg("Error. Relogin please.");
     }
   }
@@ -72,15 +62,12 @@ class _AddBookState extends State<AddBook> {
   final TextEditingController titleController = TextEditingController();
   final TextEditingController authorController = TextEditingController();
   final TextEditingController publisherController = TextEditingController();
-  final TextEditingController publicationDateController =
-      TextEditingController();
+  final TextEditingController publicationDateController = TextEditingController();
   final TextEditingController languageController = TextEditingController();
   final TextEditingController listedAtController = TextEditingController();
   final TextEditingController CategoryController = TextEditingController();
-  final TextEditingController availableQuantityController =
-      TextEditingController();
-  final TextEditingController discountPercentController =
-      TextEditingController();
+  final TextEditingController availableQuantityController = TextEditingController();
+  final TextEditingController discountPercentController = TextEditingController();
   final TextEditingController discountStartController = TextEditingController();
   final TextEditingController discountEndController = TextEditingController();
 
@@ -101,6 +88,7 @@ class _AddBookState extends State<AddBook> {
   //   discountEndController.dispose();
   // }
 
+
   Future<int> Add_Book({
     required String BookName,
     required double Price,
@@ -116,7 +104,8 @@ class _AddBookState extends State<AddBook> {
     required String DiscountStart,
     required String DiscountEnd,
     required String ListedAt,
-    required imagebytes,
+    required imagebytes
+
   }) async {
     try {
       final String base64Image = base64Encode(imagebytes as List<int>);
@@ -137,27 +126,22 @@ class _AddBookState extends State<AddBook> {
         "DiscountPercent": DiscountPercent,
         "DiscountStart": DiscountStart,
         "DiscountEnd": DiscountEnd,
-        "Photo": base64Image,
+        "Photo":base64Image
       };
 
       const String url = Backend_Server_Url + "api/Admin/add_book";
 
       final response = await http.post(
         Uri.parse(url),
-        headers: {
-          "Content-Type": "application/json",
-          'Authorization': 'Bearer ${widget.jwttoken}',
-        },
+        headers: {"Content-Type": "application/json", 'Authorization': 'Bearer ${widget.jwttoken}'},
         body: json.encode(bookData),
       );
 
       if (response.statusCode == 200) {
         Toastget().Toastmsg("Adding book success.");
         return 1;
-      } else if (response.statusCode == 501) {
-        Toastget().Toastmsg(
-          "Adding book failed.Incorrect book data format.Try again.",
-        );
+      }  else if (response.statusCode == 501) {
+        Toastget().Toastmsg("Adding book failed.Incorrect book data format.Try again.");
         return 11; // jwt error
       } else {
         print("Error.other status code.");
@@ -178,258 +162,151 @@ class _AddBookState extends State<AddBook> {
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
     var shortestval = MediaQuery.of(context).size.shortestSide;
     var widthval = MediaQuery.of(context).size.width;
     var heightval = MediaQuery.of(context).size.height;
     return Scaffold(
-      appBar: AppBar(
+        appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text(
-          "Admin",
-          style: TextStyle(
-            fontFamily: bold,
-            fontSize: 24,
-            color: Colors.white,
-            letterSpacing: 1.2,
-          ),
-        ),
-        backgroundColor: Colors.green[700],
-        elevation: 4,
-        shadowColor: Colors.black45,
-      ),
-      body: Container(
-        width: widthval,
-        height: heightval,
-        child: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          scrollDirection: Axis.vertical,
-          child: Column(
-            children: [
-              CommonTextField_obs_false(
-                "Enter book name.",
-                "",
-                false,
-                bookNameController,
-                context,
-              ),
-              CommonTextField_obs_false(
-                "Enter price.",
-                "",
-                false,
-                priceController,
-                context,
-              ),
-              CommonTextField_obs_false(
-                "Enter format.",
-                "",
-                false,
-                formatController,
-                context,
-              ),
-              CommonTextField_obs_false(
-                "Enter title.",
-                "",
-                false,
-                titleController,
-                context,
-              ),
-              CommonTextField_obs_false(
-                "Enter author.",
-                "",
-                false,
-                authorController,
-                context,
-              ),
-              CommonTextField_obs_false(
-                "Enter publisher.",
-                "",
-                false,
-                publisherController,
-                context,
-              ),
-              CommonTextField_obs_false(
-                "Enter publication date.",
-                "",
-                false,
-                publicationDateController,
-                context,
-              ),
-              CommonTextField_obs_false(
-                "Enter language.",
-                "",
-                false,
-                languageController,
-                context,
-              ),
-              CommonTextField_obs_false(
-                "Enter listed at date.",
-                "",
-                false,
-                listedAtController,
-                context,
-              ),
-              CommonTextField_obs_false(
-                "Enter available quantity.",
-                "",
-                false,
-                availableQuantityController,
-                context,
-              ),
-              CommonTextField_obs_false(
-                "Enter the book category.",
-                "",
-                false,
-                CategoryController,
-                context,
-              ),
-              CommonTextField_obs_false(
-                "Enter discount percent.",
-                "",
-                false,
-                discountPercentController,
-                context,
-              ),
-              CommonTextField_obs_false(
-                "Enter discount start date.",
-                "",
-                false,
-                discountStartController,
-                context,
-              ),
-              CommonTextField_obs_false(
-                "Enter discount end date.",
-                "",
-                false,
-                discountEndController,
-                context,
-              ),
-              Commonbutton(
-                "Pick photo",
-                () async {
-                  try {
-                    final Pick_Photo_Result = await Pick_Photo_Cont.pickImage();
-                    print(Pick_Photo_Result.toString());
-                  } catch (obj) {
-                    print(obj.toString());
-                    Toastget().Toastmsg(
-                      "Review details adding failed.Try again.",
-                    );
-                  }
-                },
-                context,
-                Colors.red,
-              ),
-              Commonbutton(
-                "Add book",
-                () async {
-                  try {
-                    if (bookNameController.text.toString().isEmptyOrNull ||
-                        priceController.text.toString().isEmptyOrNull ||
-                        formatController.text.toString().isEmptyOrNull ||
-                        titleController.text.toString().isEmptyOrNull ||
-                        authorController.text.toString().isEmptyOrNull ||
-                        publisherController.text.toString().isEmptyOrNull ||
-                        publicationDateController.text
-                            .toString()
-                            .isEmptyOrNull ||
-                        languageController.text.toString().isEmptyOrNull ||
-                        listedAtController.text.toString().isEmptyOrNull ||
-                        availableQuantityController.text
-                            .toString()
-                            .isEmptyOrNull ||
-                        CategoryController.text.toString().isEmptyOrNull ||
-                        discountPercentController.text
-                            .toString()
-                            .isEmptyOrNull ||
-                        discountStartController.text.toString().isEmptyOrNull ||
-                        discountEndController.text.toString().isEmptyOrNull) {
-                      print("Incorrect data format.");
-                      Toastget().Toastmsg("Incorrect data format.");
-                      return;
-                    }
+        "Admin",
+        style: TextStyle(fontFamily: bold, fontSize: 24, color: Colors.white, letterSpacing: 1.2),
+    ),
+    backgroundColor: Colors.green[700],
+    elevation: 4,
+    shadowColor: Colors.black45,
+    ),
+    body:Container(
+      width: widthval,
+      height: heightval,
+      child:
+      SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
+        scrollDirection: Axis.vertical,
+        child: Column(
+          children:
+          [
+            CommonTextField_obs_false("Enter book name.", "", false, bookNameController, context),
+            CommonTextField_obs_false("Enter price.", "", false, priceController, context),
+            CommonTextField_obs_false("Enter format.", "", false, formatController, context),
+            CommonTextField_obs_false("Enter title.", "", false, titleController, context),
+            CommonTextField_obs_false("Enter author.", "", false, authorController, context),
+            CommonTextField_obs_false("Enter publisher.", "", false, publisherController, context),
+            CommonTextField_obs_false("Enter publication date.", "", false, publicationDateController, context),
+            CommonTextField_obs_false("Enter language.", "", false, languageController, context),
+            CommonTextField_obs_false("Enter listed at date.", "", false, listedAtController, context),
+            CommonTextField_obs_false("Enter available quantity.", "", false, availableQuantityController, context),
+            CommonTextField_obs_false("Enter the book category.", "", false, CategoryController, context),
+            CommonTextField_obs_false("Enter discount percent.", "", false, discountPercentController, context),
+            CommonTextField_obs_false("Enter discount start date.", "", false, discountStartController, context),
+            CommonTextField_obs_false("Enter discount end date.", "", false, discountEndController, context),
+            Commonbutton("Pick photo", ()async{
+              try {
+                final Pick_Photo_Result = await Pick_Photo_Cont.pickImage();
+                print(Pick_Photo_Result.toString());
+              }catch(obj){
+                print(obj.toString());
+                Toastget().Toastmsg("Review details adding failed.Try again.");
+              }
+            }, context, Colors.red),
+            Commonbutton("Add book", ()async{
+              try{
 
-                    final double_book_price = double.tryParse(
-                      priceController.text.toString(),
-                    );
-                    final book_quantity = int.tryParse(
-                      availableQuantityController.text.toString(),
-                    );
-                    final book_discount_percent = double.tryParse(
-                      discountPercentController.text.toString(),
-                    );
+                if (bookNameController.text.toString().isEmptyOrNull ||
+                    priceController.text.toString().isEmptyOrNull ||
+                    formatController.text.toString().isEmptyOrNull ||
+                    titleController.text.toString().isEmptyOrNull ||
+                    authorController.text.toString().isEmptyOrNull ||
+                    publisherController.text.toString().isEmptyOrNull ||
+                    publicationDateController.text.toString().isEmptyOrNull ||
+                    languageController.text.toString().isEmptyOrNull ||
+                    listedAtController.text.toString().isEmptyOrNull ||
+                    availableQuantityController.text.toString().isEmptyOrNull ||
+                    CategoryController.text.toString().isEmptyOrNull ||
+                    discountPercentController.text.toString().isEmptyOrNull ||
+                    discountStartController.text.toString().isEmptyOrNull ||
+                    discountEndController.text.toString().isEmptyOrNull) {
+                  print("Incorrect data format.");
+                  Toastget().Toastmsg("Incorrect data format.");
+                  return;
+                }
 
-                    if (book_discount_percent! > 0) {
-                      final Current_Date = DateTime.now().toUtc();
-                      final Start_Date = DateTime.tryParse(
-                        discountStartController.text,
-                      );
-                      final End_Date = DateTime.tryParse(
-                        discountEndController.text,
-                      );
-                      print("start date = ${Start_Date}");
-                      print("current date = ${Current_Date}");
-                      print("end date = ${End_Date}");
-                      if (Start_Date!.isBefore(End_Date!) == false ||
-                          End_Date.isAfter(Current_Date) == false ||
-                          Start_Date.isAfter(Current_Date) == false) {
-                        print(
-                          "Incorrect date format discount percent greater then 0.",
-                        );
-                        Toastget().Toastmsg("Incorrect date format.");
-                        return;
-                      }
-                    }
+                final double_book_price=double.tryParse(priceController.text.toString());
+                final book_quantity=int.tryParse(availableQuantityController.text.toString());
+                final book_discount_percent=double.tryParse(discountPercentController.text.toString());
 
-                    final Current_Date = DateTime.now().toUtc();
-                    final Listed_Date = DateTime.tryParse(
-                      listedAtController.text,
-                    );
-                    final Publication_Date = DateTime.tryParse(
-                      publicationDateController.text,
-                    );
+                if(book_discount_percent! > 0)
+                {
+                  final Current_Date = DateTime.now().toUtc();
+                  final Start_Date = DateTime.tryParse(
+                      discountStartController.text);
+                  final End_Date = DateTime.tryParse(discountEndController.text);
+                  print("start date = ${Start_Date}");
+                  print("current date = ${Current_Date}");
+                  print("end date = ${End_Date}");
+                  if(
+                  Start_Date!.isBefore(End_Date!)==false ||
+                      End_Date.isAfter(Current_Date)==false ||
+                      Start_Date.isAfter(Current_Date)==false
+                    )
+                          {
+                            print("Incorrect date format discount percent greater then 0.");
+                            Toastget().Toastmsg("Incorrect date format.");
+                            return;
+                          }
+                }
 
-                    if (Listed_Date!.isAfter(Current_Date) == true ||
-                        Publication_Date!.isBefore(Current_Date) == false) {
-                      print(
-                        "Incorrect listed or publication date date format.",
-                      );
-                      Toastget().Toastmsg("Incorrect date format.");
-                      return;
-                    }
+                final Current_Date = DateTime.now().toUtc();
+                final Listed_Date = DateTime.tryParse(
+                    listedAtController.text);
+                final Publication_Date = DateTime.tryParse(
+                    publicationDateController.text);
 
-                    final Result = await Add_Book(
-                      BookName: bookNameController.text.toString(),
-                      Price: double_book_price!,
-                      Format: formatController.text.toString(),
-                      Title: titleController.text.toString(),
-                      Author: authorController.text.toString(),
-                      Publisher: publisherController.text.toString(),
-                      PublicationDate: publicationDateController.text,
-                      Language: languageController.text.toString(),
-                      Category: CategoryController.text.toString(),
-                      AvailableQuantity: book_quantity!,
-                      DiscountPercent: book_discount_percent!,
-                      DiscountStart: discountStartController.text,
-                      DiscountEnd: discountEndController.text,
-                      ListedAt: listedAtController.text,
-                      imagebytes: Pick_Photo_Cont.imageBytes.value,
-                    );
-                    print(Result);
-                  } catch (Obj) {
-                    print(Obj.toString());
-                    Toastget().Toastmsg("Incorrect data validation.");
+                if(
+                Listed_Date!.isAfter(Current_Date) == true ||
+                Publication_Date!.isBefore(Current_Date) ==false
+                )
+                  {
+                    print("Incorrect listed or publication date date format.");
+                    Toastget().Toastmsg("Incorrect date format.");
                     return;
                   }
-                },
-                context,
-                Colors.red,
-              ),
-            ],
-          ),
+
+
+                final Result=await Add_Book(
+                    BookName:bookNameController.text.toString(),
+                    Price: double_book_price!,
+                    Format: formatController.text.toString(),
+                    Title: titleController.text.toString(),
+                    Author: authorController.text.toString(),
+                    Publisher: publisherController.text.toString(),
+                    PublicationDate: publicationDateController.text,
+                    Language: languageController.text.toString(),
+                    Category: CategoryController.text.toString(),
+                    AvailableQuantity:book_quantity!,
+                    DiscountPercent:book_discount_percent!,
+                    DiscountStart:discountStartController.text,
+                    DiscountEnd: discountEndController.text,
+                  ListedAt: listedAtController.text,
+                  imagebytes: Pick_Photo_Cont.imageBytes.value
+                );
+                print(Result);
+              }catch(Obj){
+                print(Obj.toString());
+                Toastget().Toastmsg("Incorrect data validation.");
+                return;
+              }
+            }, context, Colors.red)
+          ],
         ),
       ),
+
+
+    ),
+
     );
   }
 }

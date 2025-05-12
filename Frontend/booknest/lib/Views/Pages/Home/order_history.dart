@@ -177,20 +177,16 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                                     Text("${order.publicationDate}"),
                                   ],
                                 ),
+                              )
+                            ).onTap((){
+
+                              Navigator.push (context, MaterialPageRoute(builder: (context) => OrderDetailsPage(
+                                jwttoken: widget.jwttoken,
+                                usertype: widget.usertype,
+                                email: widget.email,
+                                OrderObject: order,
                               ),
-                            ).onTap(() {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder:
-                                      (context) => OrderDetailsPage(
-                                        jwttoken: widget.jwttoken,
-                                        usertype: widget.usertype,
-                                        email: widget.email,
-                                        OrderObject: order,
-                                      ),
-                                ),
-                              );
+                              ));
                             });
                           },
                           itemCount: CurrentUserOrdrInfoList.length,

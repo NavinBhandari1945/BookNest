@@ -12,17 +12,13 @@ class ChangeEmailScreen extends StatefulWidget {
   final String email;
   final String usertype;
   final String jwttoken;
-  const ChangeEmailScreen({
-    super.key,
-    required this.jwttoken,
-    required this.usertype,
-    required this.email,
-  });
+  const ChangeEmailScreen({super.key,required this.jwttoken,required this.usertype,required this.email});
   @override
   State<ChangeEmailScreen> createState() => _ChangeEmailScreenState();
 }
 
 class _ChangeEmailScreenState extends State<ChangeEmailScreen> {
+
   @override
   void initState() {
     super.initState();
@@ -34,30 +30,22 @@ class _ChangeEmailScreenState extends State<ChangeEmailScreen> {
       //check jwt called in admin home screen.
       print("check jwt called in book screen.");
       int result = await checkJwtToken_initistate_member(
-        widget.email,
-        widget.usertype,
-        widget.jwttoken,
-      );
-      if (result == 0) {
+          widget.email, widget.usertype, widget.jwttoken);
+      if (result == 0)
+      {
         await clearUserData();
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => UserNotLoginHomeScreen()),
-        );
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => UserNotLoginHomeScreen()));
         Toastget().Toastmsg("Session End. Relogin please.");
       }
     } catch (obj) {
       print("Exception caught while verifying jwt for admin home screen.");
       print(obj.toString());
       await clearUserData();
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => UserNotLoginHomeScreen()),
-      );
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UserNotLoginHomeScreen()));
       Toastget().Toastmsg("Error. Relogin please.");
     }
   }
-
   final _newEmailController = TextEditingController();
   final _confirmEmailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -119,6 +107,7 @@ class _ChangeEmailScreenState extends State<ChangeEmailScreen> {
           key: _formKey,
           child: Column(
             children: [
+
               TextFormField(
                 controller: _newEmailController,
                 decoration: InputDecoration(
@@ -131,12 +120,8 @@ class _ChangeEmailScreenState extends State<ChangeEmailScreen> {
                   if (value == null || value.isEmpty) {
                     Toastget().Toastmsg("Enter new email.Try again.");
                     return 'Please enter new email';
-                  } else if (!RegExp(
-                    r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
-                  ).hasMatch(value)) {
-                    Toastget().Toastmsg(
-                      "Enter new email format incorrect.Try again.",
-                    );
+                  } else if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                    Toastget().Toastmsg("Enter new email format incorrect.Try again.");
                     return 'Enter valid email';
                   }
                   return null;
@@ -187,11 +172,10 @@ class _ChangeEmailScreenState extends State<ChangeEmailScreen> {
                     if (_formKey.currentState!.validate()) {
                       await updateEmail();
                     }
-                  } catch (obj) {
+                  }catch(obj)
+                  {
                     print(obj.toString());
-                    Toastget().Toastmsg(
-                      'Update email fial.Try again with correct data format.',
-                    );
+                    Toastget().Toastmsg('Update email fial.Try again with correct data format.');
                   }
                 },
                 child: "Update Email".text.white.xl.make(),

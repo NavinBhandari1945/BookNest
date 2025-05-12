@@ -16,21 +16,17 @@ class ClaimCodePage extends StatefulWidget {
   final String email;
   final String usertype;
   final String jwttoken;
-  const ClaimCodePage({
-    super.key,
-    required this.jwttoken,
-    required this.usertype,
-    required this.email,
-  });
+  const ClaimCodePage({super.key,required this.jwttoken,required this.usertype,required this.email});
 
   @override
   State<ClaimCodePage> createState() => _ClaimCodePageState();
 }
 
 class _ClaimCodePageState extends State<ClaimCodePage> {
-  final Claimcode_Id_cont = TextEditingController();
-  final ClaimCode_Cont = TextEditingController();
-  final Order_Id_Cont = TextEditingController();
+
+  final Claimcode_Id_cont=TextEditingController();
+  final ClaimCode_Cont=TextEditingController();
+  final Order_Id_Cont=TextEditingController();
 
   @override
   void initState() {
@@ -42,29 +38,24 @@ class _ClaimCodePageState extends State<ClaimCodePage> {
     try {
       print("check jwt called in addreview screen.");
       int result = await checkJwtToken_initistate_staff(
-        widget.email,
-        widget.usertype,
-        widget.jwttoken,
-      );
-      if (result == 0) {
+          widget.email, widget.usertype, widget.jwttoken);
+      if (result == 0)
+      {
         await clearUserData();
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => UserNotLoginHomeScreen()),
-        );
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => UserNotLoginHomeScreen()));
         Toastget().Toastmsg("Session End. Relogin please.");
       }
     } catch (obj) {
       print("Exception caught while verifying jwt for admin home screen.");
       print(obj.toString());
       await clearUserData();
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => UserNotLoginHomeScreen()),
-      );
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (context) => UserNotLoginHomeScreen()));
       Toastget().Toastmsg("Error. Relogin please.");
     }
   }
+
 
   Future<int> Claim_Order({
     required int OrderId,
@@ -75,7 +66,7 @@ class _ClaimCodePageState extends State<ClaimCodePage> {
       print("Order claim start");
       // Construct the JSON payload
       Map<String, dynamic> BodyData = {
-        "OrderId": OrderId,
+        "OrderId":OrderId,
         "ClaimCode": ClaimCode,
         "ClaimId": ClaimId,
       };
@@ -106,18 +97,25 @@ class _ClaimCodePageState extends State<ClaimCodePage> {
           "Claim process failed.Incorrect claim data format.Try again.",
         );
         return 3; // jwt error
-      } else if (response.statusCode == 503) {
-        Toastget().Toastmsg("Order invalid status.Data don't match.Try again.");
+      }
+      else if (response.statusCode == 503) {
+        Toastget().Toastmsg(
+          "Order invalid status.Data don't match.Try again.",
+        );
         return 5;
-      } else if (response.statusCode == 500) {
+      }
+      else if (response.statusCode == 500) {
         print("Error.other status code = ${response.statusCode}");
         // print("Response body: ${response.body}");
         // final decoded = json.decode(response.body);
         // print("Error message: ${decoded['message']}");
         // print("Stack trace: ${decoded['stackTrace']}");
-        Toastget().Toastmsg("Exception caught in backend.Try again.");
+        Toastget().Toastmsg(
+          "Exception caught in backend.Try again.",
+        );
         return 5;
-      } else {
+      }
+      else {
         print("Error.other status code= ${response.statusCode}");
         Toastget().Toastmsg(" Claim process failed.");
         return 4;
@@ -130,82 +128,55 @@ class _ClaimCodePageState extends State<ClaimCodePage> {
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Text(
-          "Staff",
-          style: TextStyle(
-            fontFamily: bold,
-            fontSize: 24,
-            color: Colors.white,
-            letterSpacing: 1.2,
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          title: Text(
+            "Staff",
+            style: TextStyle(fontFamily: bold, fontSize: 24, color: Colors.white, letterSpacing: 1.2),
           ),
+          backgroundColor: Colors.green[700],
+          elevation: 4,
+          shadowColor: Colors.black45,
         ),
-        backgroundColor: Colors.green[700],
-        elevation: 4,
-        shadowColor: Colors.black45,
-      ),
-      body: Container(
-        child: Column(
-          children: [
-            CommonTextField_obs_false(
-              "Enter  order id.",
-              "",
-              false,
-              Order_Id_Cont,
-              context,
-            ),
-            CommonTextField_obs_false(
-              "Enter claim code id.",
-              "",
-              false,
-              Claimcode_Id_cont,
-              context,
-            ),
-            CommonTextField_obs_false(
-              "Enter claim code.",
-              "",
-              false,
-              ClaimCode_Cont,
-              context,
-            ),
-            10.heightBox,
-            Commonbutton(
-              "Confirm",
-              () async {
+        body:Container(
+          child: Column(
+            children: [
+              CommonTextField_obs_false("Enter  order id.", "", false, Order_Id_Cont, context),
+              CommonTextField_obs_false("Enter claim code id.", "", false, Claimcode_Id_cont, context),
+              CommonTextField_obs_false("Enter claim code.", "", false, ClaimCode_Cont, context),
+              10.heightBox,
+              Commonbutton("Confirm", ()async{
                 try {
-                  if (Claimcode_Id_cont.text.isEmptyOrNull ||
+
+                  if(Claimcode_Id_cont.text.isEmptyOrNull ||
                       ClaimCode_Cont.text.isEmptyOrNull ||
-                      Order_Id_Cont.text.isEmptyOrNull) {
+                  Order_Id_Cont.text.isEmptyOrNull
+                  ){
                     print("Incorrect enter data format.");
                     Toastget().Toastmsg("Incorrect enter data format.");
                     return;
                   }
 
-                  int? OrderId_Int = int.tryParse(
-                    Order_Id_Cont.text.toString(),
-                  );
+                  int? OrderId_Int=int.tryParse(Order_Id_Cont.text.toString());
 
-                  final Claim_Code_Result = await Claim_Order(
-                    OrderId: OrderId_Int!,
-                    ClaimCode: ClaimCode_Cont.text.toString(),
-                    ClaimId: Claimcode_Id_cont.text.toString(),
-                  );
+                  final Claim_Code_Result=await Claim_Order(OrderId: OrderId_Int!, ClaimCode:ClaimCode_Cont.text.toString(), ClaimId:Claimcode_Id_cont.text.toString());
                   print(Claim_Code_Result);
-                } catch (obj) {
+
+
+                }catch(obj){
                   print(obj.toString());
                   Toastget().Toastmsg("Order claim fail.Try again.");
                 }
-              },
-              context,
-              Colors.red,
-            ),
-          ],
-        ),
-      ),
+              }, context, Colors.red)
+
+            ],
+          ),
+        )
+
     );
   }
 }

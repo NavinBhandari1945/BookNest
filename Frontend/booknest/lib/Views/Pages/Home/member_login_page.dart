@@ -17,12 +17,7 @@ class MemberHomePage extends StatefulWidget {
   final String email;
   final String usertype;
   final String jwttoken;
-  const MemberHomePage({
-    super.key,
-    required this.jwttoken,
-    required this.usertype,
-    required this.email,
-  });
+  const MemberHomePage({super.key, required this.jwttoken, required this.usertype, required this.email});
 
   @override
   State<MemberHomePage> createState() => _MemberHomePageState();
@@ -39,26 +34,19 @@ class _MemberHomePageState extends State<MemberHomePage> {
     try {
       print("check jwt called in member home screen.");
       int result = await checkJwtToken_initistate_member(
-        widget.email,
-        widget.usertype,
-        widget.jwttoken,
-      );
+          widget.email, widget.usertype, widget.jwttoken);
       if (result == 0) {
         await clearUserData();
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => UserNotLoginHomeScreen()),
-        );
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => UserNotLoginHomeScreen()));
         Toastget().Toastmsg("Session End. Relogin please.");
       }
     } catch (obj) {
       print("Exception caught while verifying jwt for admin home screen.");
       print(obj.toString());
       await clearUserData();
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => UserNotLoginHomeScreen()),
-      );
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (context) => UserNotLoginHomeScreen()));
       Toastget().Toastmsg("Error. Relogin please.");
     }
   }
@@ -78,9 +66,7 @@ class _MemberHomePageState extends State<MemberHomePage> {
         List<dynamic> responseData = await jsonDecode(response.body);
         print("response statuscode = ${response.statusCode}");
         SuccessOrderList.clear();
-        SuccessOrderList.addAll(
-          responseData.map((data) => OrderModel.fromJson(data)).toList(),
-        );
+        SuccessOrderList.addAll(responseData.map((data) => OrderModel.fromJson(data)).toList());
         print("SuccessOrderList count value");
         print(SuccessOrderList.length);
         return;
@@ -91,9 +77,7 @@ class _MemberHomePageState extends State<MemberHomePage> {
       }
     } catch (obj) {
       SuccessOrderList.clear();
-      print(
-        "Exception caught while fetching SuccessOrderList data in http method",
-      );
+      print("Exception caught while fetching SuccessOrderList data in http method");
       print(obj.toString());
       return;
     }
@@ -103,8 +87,7 @@ class _MemberHomePageState extends State<MemberHomePage> {
   Future<void> GetAnnouncementInfo() async {
     try {
       print("Get announcement info method called");
-      const String url =
-          Backend_Server_Url + "api/Member/get_announcement_info";
+      const String url = Backend_Server_Url + "api/Member/get_announcement_info";
       final headers = {
         'Authorization': 'Bearer ${widget.jwttoken}',
         'Content-Type': 'application/json',
@@ -113,9 +96,7 @@ class _MemberHomePageState extends State<MemberHomePage> {
       if (response.statusCode == 200) {
         List<dynamic> responseData = await jsonDecode(response.body);
         AnnouncementInfoList.clear();
-        AnnouncementInfoList.addAll(
-          responseData.map((data) => AnnouncementModel.fromJson(data)).toList(),
-        );
+        AnnouncementInfoList.addAll(responseData.map((data) => AnnouncementModel.fromJson(data)).toList());
         print("AnnouncementInfoList count value");
         print(AnnouncementInfoList.length);
         return;
@@ -126,9 +107,7 @@ class _MemberHomePageState extends State<MemberHomePage> {
       }
     } catch (obj) {
       AnnouncementInfoList.clear();
-      print(
-        "Exception caught while fetching AnnouncementInfoList data in http method",
-      );
+      print("Exception caught while fetching AnnouncementInfoList data in http method");
       print(obj.toString());
       return;
     }
@@ -167,6 +146,8 @@ class _MemberHomePageState extends State<MemberHomePage> {
         ),
         child: Column(
           children: [
+
+
             // Header (Full Width)
             SizedBox(
               width: double.infinity,
@@ -176,6 +157,7 @@ class _MemberHomePageState extends State<MemberHomePage> {
                 jwttoken: widget.jwttoken,
               ),
             ),
+
 
             // Constrained Content
             Expanded(
@@ -187,31 +169,30 @@ class _MemberHomePageState extends State<MemberHomePage> {
                   ),
                   child: Column(
                     children: [
+
+
                       Padding(
-                        padding: EdgeInsets.symmetric(
-                          vertical: heightval * 0.01,
-                        ),
+                        padding: EdgeInsets.symmetric(vertical: heightval * 0.01),
                         child: Text(
                           "Successful Order Details",
                           style: TextStyle(
                             fontSize: 15,
 
                             color: Colors.green[800],
+
                           ),
                         ),
                       ),
 
+
                       // Success Order Section (30% height)
-                      SizedBox(
+                      SizedBox (
                         height: heightval * 0.3,
                         child: FutureBuilder(
                           future: GetSuccessOrderInfo(),
                           builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return Center(
-                                child: Circular_pro_indicator_Yellow(context),
-                              );
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return Center(child: Circular_pro_indicator_Yellow(context));
                             } else if (snapshot.hasError) {
                               return Center(
                                 child: Text(
@@ -223,17 +204,11 @@ class _MemberHomePageState extends State<MemberHomePage> {
                                   ),
                                 ),
                               );
-                            } else if (snapshot.connectionState ==
-                                ConnectionState.done) {
+                            } else if (snapshot.connectionState == ConnectionState.done) {
                               if (SuccessOrderList.isNotEmpty) {
                                 return LayoutBuilder(
                                   builder: (context, constraints) {
-                                    double fontScale =
-                                        constraints.maxWidth < 360
-                                            ? 0.85
-                                            : constraints.maxWidth < 400
-                                            ? 0.9
-                                            : 1.0;
+                                    double fontScale = constraints.maxWidth < 360 ? 0.85 : constraints.maxWidth < 400 ? 0.9 : 1.0;
                                     return ListView.builder(
                                       shrinkWrap: true,
                                       physics: const BouncingScrollPhysics(),
@@ -244,135 +219,44 @@ class _MemberHomePageState extends State<MemberHomePage> {
                                         return Card(
                                           elevation: 4,
                                           shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                              12,
-                                            ),
+                                            borderRadius: BorderRadius.circular(12),
                                           ),
                                           margin: EdgeInsets.symmetric(
                                             horizontal: widthval * 0.02,
                                             vertical: heightval * 0.005,
                                           ),
                                           child: Padding(
-                                            padding: EdgeInsets.all(
-                                              widthval * 0.02,
-                                            ),
+                                            padding: EdgeInsets.all(widthval * 0.02),
                                             child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
+                                              crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
-                                                _buildInfoRow(
-                                                  'Order ID',
-                                                  order.orderId?.toString() ??
-                                                      'N/A',
-                                                  widthval,
-                                                  heightval,
-                                                  fontScale,
-                                                  isBold: true,
-                                                ),
-                                                _buildInfoRow(
-                                                  'Status',
-                                                  order.status ?? 'N/A',
-                                                  widthval,
-                                                  heightval,
-                                                  fontScale,
-                                                  color:
-                                                      order.status == 'Success'
-                                                          ? Colors.green[600]
-                                                          : Colors.red[600],
-                                                ),
-                                                _buildInfoRow(
-                                                  'Book Quantity',
-                                                  order.bookQuantity
-                                                          ?.toString() ??
-                                                      'N/A',
-                                                  widthval,
-                                                  heightval,
-                                                  fontScale,
-                                                ),
-                                                _buildInfoRow(
-                                                  'Claim ID',
-                                                  order.claimId ?? 'N/A',
-                                                  widthval,
-                                                  heightval,
-                                                  fontScale,
-                                                ),
-                                                _buildInfoRow(
-                                                  'Discount Amount',
-                                                  order.discountAmount
-                                                          ?.toString() ??
-                                                      'N/A',
-                                                  widthval,
-                                                  heightval,
-                                                  fontScale,
-                                                ),
-                                                _buildInfoRow(
-                                                  'Total Price',
-                                                  order.totalPrice
-                                                          ?.toStringAsFixed(
-                                                            2,
-                                                          ) ??
-                                                      'N/A',
-                                                  widthval,
-                                                  heightval,
-                                                  fontScale,
-                                                  color: Colors.green[700],
-                                                ),
-                                                _buildInfoRow(
-                                                  'Claim Code',
-                                                  order.claimCode ?? 'N/A',
-                                                  widthval,
-                                                  heightval,
-                                                  fontScale,
-                                                ),
-                                                _buildInfoRow(
-                                                  'Order Date',
-                                                  order.orderDate ?? 'N/A',
-                                                  widthval,
-                                                  heightval,
-                                                  fontScale,
-                                                ),
-                                                _buildInfoRow(
-                                                  'User ID',
-                                                  order.userId?.toString() ??
-                                                      'N/A',
-                                                  widthval,
-                                                  heightval,
-                                                  fontScale,
-                                                ),
-                                                _buildInfoRow(
-                                                  'Book ID',
-                                                  order.bookId?.toString() ??
-                                                      'N/A',
-                                                  widthval,
-                                                  heightval,
-                                                  fontScale,
-                                                ),
+                                                _buildInfoRow('Order ID', order.orderId?.toString() ?? 'N/A', widthval, heightval, fontScale, isBold: true),
+                                                _buildInfoRow('Status', order.status ?? 'N/A', widthval, heightval, fontScale, color: order.status == 'Success' ? Colors.green[600] : Colors.red[600]),
+                                                _buildInfoRow('Book Quantity', order.bookQuantity?.toString() ?? 'N/A', widthval, heightval, fontScale),
+                                                _buildInfoRow('Claim ID', order.claimId ?? 'N/A', widthval, heightval, fontScale),
+                                                _buildInfoRow('Discount Amount', order.discountAmount?.toString() ?? 'N/A', widthval, heightval, fontScale),
+                                                _buildInfoRow('Total Price', order.totalPrice?.toStringAsFixed(2) ?? 'N/A', widthval, heightval, fontScale, color: Colors.green[700]),
+                                                _buildInfoRow('Claim Code', order.claimCode ?? 'N/A', widthval, heightval, fontScale),
+                                                _buildInfoRow('Order Date', order.orderDate ?? 'N/A', widthval, heightval, fontScale),
+                                                _buildInfoRow('User ID', order.userId?.toString() ?? 'N/A', widthval, heightval, fontScale),
+                                                _buildInfoRow('Book ID', order.bookId?.toString() ?? 'N/A', widthval, heightval, fontScale),
                                                 ExpansionTile(
                                                   title: Text(
                                                     'Message',
                                                     style: TextStyle(
-                                                      fontSize:
-                                                          widthval *
-                                                          0.03 *
-                                                          fontScale,
+                                                      fontSize: widthval * 0.03 * fontScale,
                                                       fontFamily: bold,
                                                       color: Colors.black87,
                                                     ),
                                                   ),
                                                   children: [
                                                     Padding(
-                                                      padding: EdgeInsets.all(
-                                                        widthval * 0.02,
-                                                      ),
+                                                      padding: EdgeInsets.all(widthval * 0.02),
                                                       child: Text(
                                                         'Thank you for your order.Your purchase of ${order.bookQuantity ?? '-'} item totaling ${order.totalPrice?.toStringAsFixed(2) ?? '-'} has been successfully placed on ${order.orderDate ?? '-'}. We appreciate your trust in BookNest.',
                                                         style: TextStyle(
-                                                          fontSize:
-                                                              widthval *
-                                                              0.028 *
-                                                              fontScale,
-                                                          color:
-                                                              Colors.grey[800],
+                                                          fontSize: widthval * 0.028 * fontScale,
+                                                          color: Colors.grey[800],
                                                         ),
                                                         softWrap: true,
                                                       ),
@@ -414,28 +298,39 @@ class _MemberHomePageState extends State<MemberHomePage> {
                           },
                         ),
                       ),
+
                     ],
                   ),
                 ),
               ),
             ),
 
+
+
+
             Column(
               children: [
+
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: heightval * 0.01),
                   child: Text(
                     "Announceemnt Details",
-                    style: TextStyle(fontSize: 15, color: Colors.green[800]),
+                    style: TextStyle(
+                      fontSize: 15,
+
+                      color: Colors.green[800],
+
+                    ),
                   ),
                 ),
 
-                FutureBuilder<void>(
+                FutureBuilder<void>  (
                   future: GetAnnouncementInfo(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Circular_pro_indicator_Yellow(context);
-                    } else if (snapshot.hasError) {
+                    }
+                    else if (snapshot.hasError) {
                       // Handle any error from the future
                       return Center(
                         child: Text(
@@ -443,90 +338,87 @@ class _MemberHomePageState extends State<MemberHomePage> {
                           style: TextStyle(color: Colors.red, fontSize: 16),
                         ),
                       );
-                    } else if (snapshot.connectionState ==
-                        ConnectionState.done) {
+                    }
+                    else if (snapshot.connectionState == ConnectionState.done) {
                       return AnnouncementInfoList.isEmpty
                           ? const Center(
-                            child: Text("No announcement data available."),
-                          )
+                        child: Text("No announcement data available."),
+                      )
                           : Container(
-                            // color: Colors.green,
-                            height: heightval * 0.28,
-                            width: widthval,
-                            child: VxSwiper.builder(
-                              itemCount: AnnouncementInfoList.length,
-                              autoPlay: true,
-                              enlargeCenterPage:
-                                  false, // Disable enlargement effect
-                              viewportFraction:
-                                  1.0, // Each item occupies full width
-                              aspectRatio: 16 / 9,
-                              scrollDirection: Axis.horizontal,
-                              itemBuilder: (context, index) {
-                                final ad = AnnouncementInfoList[index];
-                                return Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    // messsage Text
-                                    Center(
-                                      child: Text(
-                                        "Tittle=${ad.title!}",
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(height: heightval * 0.01),
+                        // color: Colors.green,
+                        height: heightval * 0.28,
+                        width: widthval,
+                        child: VxSwiper.builder(
+                          itemCount: AnnouncementInfoList.length,
+                          autoPlay: true,
+                          enlargeCenterPage: false,  // Disable enlargement effect
+                          viewportFraction: 1.0,    // Each item occupies full width
+                          aspectRatio: 16 / 9,
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (context, index) {
+                            final ad = AnnouncementInfoList[index];
+                            return Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
 
-                                    // messsage Text
-                                    Text(
-                                      "Message;${ad.message!}",
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                // messsage Text
+                                Center(
+                                  child: Text(
+                                   "Tittle=${ad.title!}",
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
                                     ),
-                                    SizedBox(height: heightval * 0.01),
+                                  ),
+                                ),
+                                SizedBox(height: heightval * 0.01),
 
-                                    // Image converted from Base64 String
-                                    Expanded(
-                                      child: Container(
-                                        height: heightval * 0.5,
-                                        width: widthval,
-                                        decoration: BoxDecoration(
-                                          color: Colors.green,
-                                          borderRadius: BorderRadius.circular(
-                                            16,
-                                          ),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.black26,
-                                              blurRadius: 8,
-                                              offset: Offset(0, 4),
-                                            ),
-                                          ],
+                                // messsage Text
+                                Text("Message;${ad.message!}",
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                SizedBox(height: heightval * 0.01),
+
+                                // Image converted from Base64 String
+                                Expanded(
+                                  child: Container(
+                                    height: heightval * 0.5,
+                                    width: widthval,
+                                    decoration: BoxDecoration(
+                                      color: Colors.green,
+                                      borderRadius: BorderRadius.circular(16),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black26,
+                                          blurRadius: 8,
+                                          offset: Offset(0, 4),
                                         ),
-                                        child: ClipRRect(
-                                          borderRadius: BorderRadius.circular(
-                                            16,
-                                          ),
-                                          child: Image.memory(
-                                            base64Decode(ad.photo!),
-                                            height: heightval * 0.05,
-                                            width: widthval,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
+                                      ],
+                                    ),
+                                    child:
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(16),
+                                      child: Image.memory(
+                                          base64Decode(ad.photo!),
+                                          height:heightval*0.05 ,
+                                          width: widthval,
+                                          fit: BoxFit.cover
                                       ),
                                     ),
-                                  ],
-                                );
-                              },
-                            ),
-                          );
-                    } else {
+                                  ),
+                                ),
+
+                              ],
+                            );
+                          },
+                        ),
+                      );
+                    }
+                    else {
                       return Center(
                         child: Text(
                           "Please close and reopen app.",
@@ -539,10 +431,18 @@ class _MemberHomePageState extends State<MemberHomePage> {
               ],
             ),
 
-            SizedBox(height: heightval * 0.01),
+            SizedBox(
+              height: heightval*0.01,
+            ),
+
 
             // Footer (Full Width)
-            SizedBox(width: double.infinity, child: FooterWidget()),
+            SizedBox(
+              width: double.infinity,
+              child: FooterWidget(),
+            ),
+
+
           ],
         ),
       ),
@@ -551,15 +451,15 @@ class _MemberHomePageState extends State<MemberHomePage> {
 
   // Helper method to build info rows
   Widget _buildInfoRow(
-    String label,
-    String value,
-    double widthval,
-    double heightval,
-    double fontScale, {
-    bool isBold = false,
-    bool isItalic = false,
-    Color? color,
-  }) {
+      String label,
+      String value,
+      double widthval,
+      double heightval,
+      double fontScale, {
+        bool isBold = false,
+        bool isItalic = false,
+        Color? color,
+      }) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: heightval * 0.002),
       child: Row(
@@ -594,6 +494,13 @@ class _MemberHomePageState extends State<MemberHomePage> {
     );
   }
 }
+
+
+
+
+
+
+
 
 // import 'dart:convert';
 // import 'package:booknest/Views/Pages/Home/user_not_login_home_screen.dart';

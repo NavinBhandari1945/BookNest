@@ -1,6 +1,5 @@
 [
   {
-<<<<<<< HEAD
     "ContainingType": "BookNest.Controllers.AdminController",
     "Method": "Add_Announcement",
     "RelativePath": "api/Admin/add_announcement",
@@ -68,16 +67,10 @@
     "ContainingType": "BookNest.Controllers.AdminController",
     "Method": "Get_Books_Infos",
     "RelativePath": "api/Admin/get_books_info",
-=======
-    "ContainingType": "BookNest.Controllers.WeatherForecastController",
-    "Method": "Get",
-    "RelativePath": "WeatherForecast",
->>>>>>> 8ee29e5cdf66bb274459d9443bea56e30e4ac34a
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [],
-<<<<<<< HEAD
     "ReturnTypes": []
   },
   {
@@ -415,19 +408,5 @@
       }
     ],
     "ReturnTypes": []
-=======
-    "ReturnTypes": [
-      {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[BookNest.WeatherForecast, BookNest, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ],
-    "EndpointName": "GetWeatherForecast"
->>>>>>> 8ee29e5cdf66bb274459d9443bea56e30e4ac34a
   }
 ]

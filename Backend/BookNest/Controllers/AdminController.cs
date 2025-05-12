@@ -79,10 +79,6 @@ namespace BookNest.Controllers
                 var discount_start_date = DateTime.Parse(Obj.DiscountStart).ToUniversalTime();
                 var discount_end_date = DateTime.Parse(Obj.DiscountEnd).ToUniversalTime();
 
-                if (discount_end_date <= discount_start_date)
-                {
-                    return StatusCode(502, "Incorrect discount date: Discount end date must be after start date.");
-                }
                 BookInfos bookinfos = new BookInfos(
                         BookId:Obj.BookId,
                         BookName: Obj.BookName,
