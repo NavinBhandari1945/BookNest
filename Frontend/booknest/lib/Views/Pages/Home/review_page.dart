@@ -11,20 +11,23 @@ import '../../../constant/styles.dart';
 import '../../common widget/common_method.dart';
 import '../../common widget/toast.dart';
 
+// Widget definition section
 class RreviewPage extends StatefulWidget {
   final String email;
   final String usertype;
   final String jwttoken;
-  const RreviewPage({super.key,required this.jwttoken,required this.usertype,required this.email});
+  const RreviewPage({super.key, required this.jwttoken, required this.usertype, required this.email});
   @override
   State<RreviewPage> createState() => _RreviewPageState();
 }
 
+// State management and initialization section
 class _RreviewPageState extends State<RreviewPage> {
-  final comment_cont=TextEditingController();
-  final rating_cont=TextEditingController();
-  final review_date=TextEditingController();
-  final book_id=TextEditingController();
+  final comment_cont = TextEditingController();
+  final rating_cont = TextEditingController();
+  final review_date = TextEditingController();
+  final book_id = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -36,8 +39,7 @@ class _RreviewPageState extends State<RreviewPage> {
       print("check jwt called in addreview screen.");
       int result = await checkJwtToken_initistate_member(
           widget.email, widget.usertype, widget.jwttoken);
-      if (result == 0)
-      {
+      if (result == 0) {
         await clearUserData();
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) => UserNotLoginHomeScreen()));
@@ -62,9 +64,8 @@ class _RreviewPageState extends State<RreviewPage> {
   }) async {
     try {
       print("Adding review start");
-      // Construct the JSON payload
       Map<String, dynamic> BodyData = {
-        "ReviewId":0,
+        "ReviewId": 0,
         "Comment": Comment,
         "Rating": Rating,
         "ReviewDate": ReviewDate,
@@ -92,20 +93,18 @@ class _RreviewPageState extends State<RreviewPage> {
             builder: (context) => const UserNotLoginHomeScreen(),
           ),
         );
-        return 2; // jwt error
+        return 2;
       } else if (response.statusCode == 502) {
         Toastget().Toastmsg(
           "Adding review failed.Incorrect review data format.Try again.",
         );
-        return 3; // jwt error
-      }
-      else if (response.statusCode == 505) {
+        return 3;
+      } else if (response.statusCode == 505) {
         Toastget().Toastmsg(
-          "Order invalid status.Try again.",
+          "User haven't order items or the order status pending.First successfully order  and then try again.",
         );
         return 5;
-      }
-      else if (response.statusCode == 500) {
+      } else if (response.statusCode == 500) {
         print("Error.other status code.");
         print("Response body: ${response.body}");
         final decoded = json.decode(response.body);
@@ -115,8 +114,7 @@ class _RreviewPageState extends State<RreviewPage> {
           "Exception caught in backend.Try again.",
         );
         return 5;
-      }
-      else {
+      } else {
         print("Error.other status code= ${response.statusCode}");
         Toastget().Toastmsg("Adding review failed.");
         return 4;
@@ -129,86 +127,167 @@ class _RreviewPageState extends State<RreviewPage> {
     }
   }
 
+  // UI building section
   @override
   Widget build(BuildContext context) {
     var shortestval = MediaQuery.of(context).size.shortestSide;
     var widthval = MediaQuery.of(context).size.width;
     var heightval = MediaQuery.of(context).size.height;
     return Scaffold(
-        appBar: AppBar(
+      appBar: AppBar(
         automaticallyImplyLeading: true,
         title: const Text(
-        "Review Screen",
-        style: TextStyle(
-        fontFamily: bold,
-        fontSize: 24,
-        color: Colors.white,
-        letterSpacing: 1.2,
-    ),
-    ),
-    backgroundColor: Colors.green[700],
-    elevation: 4,
-    shadowColor: Colors.black45
+          "Review Screen",
+          style: TextStyle(
+            fontFamily: bold,
+            fontSize: 22,
+            color: Colors.white,
+            letterSpacing: 1.0,
+          ),
         ),
-      body:Container(
-        child: Column(
-          children:
-          [
-
-            CommonTextField_obs_false("Enter Book Id", "", false, book_id, context),
-            CommonTextField_obs_false("Enter comment", "", false, comment_cont, context),
-
-            CommonTextField_obs_false("Enter rating", "1-5", false, rating_cont, context),
-
-            CommonTextField_obs_false("Enter review date", "2023-02-03", false, review_date, context),
-            10.heightBox,
-            Commonbutton("Update", ()async{
-              try {
-                if (
-                book_id.text
-                    .toString()
-                    .isEmptyOrNull ||
-                    comment_cont.text
-                        .toString()
-                        .isEmptyOrNull ||
-                    rating_cont.text
-                        .toString()
-                        .isEmptyOrNull ||
-                    review_date.text
-                        .toString()
-                        .isEmptyOrNull
-                ) {
-                  print("Incorrect enter data format.");
-                  Toastget().Toastmsg("Incorrect enter data format.");
-                  return;
-                }
-                int? Rating_Id=int.tryParse(rating_cont.text.toString());
-                if(Rating_Id! <=0 && Rating_Id! >=6)
-                {
-
-                  print("Incorrect rating data format.");
-                  Toastget().Toastmsg("Incorrect rating data format.");
-                  return;
-
-                }
-
-                  int? IntBook_Id=int.tryParse(book_id.text.toString());
-
-                  final Review_Result = await Add_Review(BookId:IntBook_Id!, Email: widget.email, Comment: comment_cont.text.toString() ,Rating: Rating_Id!, ReviewDate: review_date.text.toString(),);
-                  print(Review_Result);
-
-              }catch(obj){
-                print(obj.toString());
-                Toastget().Toastmsg("Review details adding failed.Try again.");
-
-              }
-
-            }, context, Colors.red)
-
-          ],
+        backgroundColor: Colors.green[800],
+        elevation: 5,
+        shadowColor: Colors.black54,
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.green[50]!.withOpacity(0.9),
+              Colors.white.withOpacity(0.95)
+            ],
+          ),
         ),
-      ) ,
+        child: SingleChildScrollView(
+          padding: EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // Form header
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: heightval * 0.02),
+                child: Text(
+                  'Add Your Review',
+                  style: TextStyle(
+                    fontSize: widthval * 0.045,
+                    fontFamily: bold,
+                    color: Colors.green[900],
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              // Form fields section
+              Card(
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                margin: EdgeInsets.symmetric(vertical: heightval * 0.01),
+                child: Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CommonTextField_obs_false(
+                        "Enter Book ID",
+                        "",
+                        false,
+                        book_id,
+                        context,
+                      ),
+                      SizedBox(height: heightval * 0.02),
+                      // Wrapping Comment field in a custom TextField for multi-line support
+                      TextField(
+                        controller: comment_cont,
+                        maxLines: 3,
+                        style: TextStyle(fontSize: widthval * 0.04),
+                        decoration: InputDecoration(
+                          labelText: "Enter Comment",
+                          labelStyle: TextStyle(
+                            fontSize: widthval * 0.04,
+                            color: Colors.green[800],
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                            borderSide: BorderSide(color: Colors.green[300]!),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                            borderSide: BorderSide(color: Colors.green[800]!),
+                          ),
+                          contentPadding: EdgeInsets.symmetric(
+                            vertical: 12.0,
+                            horizontal: 16.0,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: heightval * 0.02),
+                      CommonTextField_obs_false(
+                        "Enter Rating (1-5)",
+                        "1-5",
+                        false,
+                        rating_cont,
+                        context,
+                      ),
+                      SizedBox(height: heightval * 0.02),
+                      CommonTextField_obs_false(
+                        "Enter Review Date",
+                        "YYYY-MM-DD",
+                        false,
+                        review_date,
+                        context,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(height: heightval * 0.03),
+              // Submit button section
+              Commonbutton(
+                "Submit Review",
+                    () async {
+                  try {
+                    if (
+                    book_id.text.toString().isEmptyOrNull ||
+                        comment_cont.text.toString().isEmptyOrNull ||
+                        rating_cont.text.toString().isEmptyOrNull ||
+                        review_date.text.toString().isEmptyOrNull) {
+                      print("Incorrect enter data format.");
+                      Toastget().Toastmsg("Incorrect enter data format.");
+                      return;
+                    }
+                    int? Rating_Id = int.tryParse(rating_cont.text.toString());
+                    if (Rating_Id! <= 0 && Rating_Id! >= 6) {
+                      print("Incorrect rating data format.");
+                      Toastget().Toastmsg("Incorrect rating data format.");
+                      return;
+                    }
 
+                    int? IntBook_Id = int.tryParse(book_id.text.toString());
+
+                    final Review_Result = await Add_Review(
+                      BookId: IntBook_Id!,
+                      Email: widget.email,
+                      Comment: comment_cont.text.toString(),
+                      Rating: Rating_Id!,
+                      ReviewDate: review_date.text.toString(),
+                    );
+                    print(Review_Result);
+                  } catch (obj) {
+                    print(obj.toString());
+                    Toastget().Toastmsg("Review details adding failed.Try again.");
+                  }
+                },
+                context,
+                Colors.green[800]!,
+              ),
+              SizedBox(height: heightval * 0.03),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

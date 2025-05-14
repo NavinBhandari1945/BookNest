@@ -1,3 +1,4 @@
+// Imports section
 import 'dart:convert';
 import 'package:booknest/Views/Pages/Home/book_details.dart';
 import 'package:booknest/Views/Pages/Home/user_not_login_home_screen.dart';
@@ -12,9 +13,10 @@ import '../../common widget/circular_progress_ind_yellow.dart';
 import '../../common widget/common_method.dart';
 import '../../common widget/header_footer.dart';
 import '../../common widget/toast.dart';
-import 'Ctegory_Book_Screen.dart';
+import 'category_book_screen.dart';
 import 'member_login_page.dart';
 
+// Widget definition section
 class BookScreen extends StatefulWidget {
   final String email;
   final String usertype;
@@ -30,6 +32,7 @@ class BookScreen extends StatefulWidget {
   State<BookScreen> createState() => _BookScreenState();
 }
 
+// State management section
 class _BookScreenState extends State<BookScreen> {
   @override
   void initState() {
@@ -37,9 +40,9 @@ class _BookScreenState extends State<BookScreen> {
     checkJWTExpiationmember();
   }
 
+  // JWT and authentication section
   Future<void> checkJWTExpiationmember() async {
     try {
-      //check jwt called in admin home screen.
       print("check jwt called in book screen.");
       int result = await checkJwtToken_initistate_member(
         widget.email,
@@ -79,6 +82,7 @@ class _BookScreenState extends State<BookScreen> {
   List<BooksWithReviewModel> FilteredBookListRatingsAesc = [];
   List<BooksWithReviewModel> FilteredBookListRatingsDesc = [];
 
+  // API data fetching section
   Future<void> GetBookReviewInfos() async {
     try {
       print("Get books with review info method called");
@@ -115,7 +119,7 @@ class _BookScreenState extends State<BookScreen> {
       }
     } catch (obj) {
       BookReviewInfoList.clear();
-      print("Exception caught while fetching book  review data in http method");
+      print("Exception caught while fetching book review data in http method");
       print(obj.toString());
       return;
     }
@@ -157,6 +161,7 @@ class _BookScreenState extends State<BookScreen> {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  // UI building section
   @override
   Widget build(BuildContext context) {
     var shortestval = MediaQuery.of(context).size.shortestSide;
@@ -173,11 +178,18 @@ class _BookScreenState extends State<BookScreen> {
             fontSize: 24,
             color: Colors.white,
             letterSpacing: 1.2,
+            shadows: [
+              Shadow(
+                color: Colors.black26,
+                offset: Offset(0, 2),
+                blurRadius: 4,
+              ),
+            ],
           ),
         ),
-        backgroundColor: Colors.green[700],
-        elevation: 4,
-        shadowColor: Colors.black45,
+        backgroundColor: Colors.teal[700],
+        elevation: 6,
+        shadowColor: Colors.black54,
         actions: [
           Row(
             children: [
@@ -185,15 +197,19 @@ class _BookScreenState extends State<BookScreen> {
                 onPressed: () {
                   _scaffoldKey.currentState!.openDrawer();
                 },
-                icon: Icon(Icons.book_online_sharp),
+                icon: Icon(
+                  Icons.book_online_sharp,
+                  color: Colors.white,
+                  size: shortestval * 0.07,
+                ),
+                tooltip: "Categories",
               ),
-
               Text(
                 "Sort/Filters",
                 style: TextStyle(
                   fontFamily: semibold,
                   color: Colors.white,
-                  fontSize: shortestval * 0.04,
+                  fontSize: shortestval * 0.045,
                 ),
               ),
               PopupMenuButton<String>(
@@ -236,19 +252,19 @@ class _BookScreenState extends State<BookScreen> {
                           'No filter/sort',
                           style: TextStyle(
                             fontFamily: semibold,
-                            color: Colors.black,
-                            fontSize: shortestval * 0.06,
+                            color: Colors.teal[800],
+                            fontSize: shortestval * 0.05,
                           ),
                         ),
                       ),
                       PopupMenuItem(
                         value: 'Date aescending',
                         child: Text(
-                          'Date aescending',
+                          'Date ascending',
                           style: TextStyle(
                             fontFamily: semibold,
-                            color: Colors.black,
-                            fontSize: shortestval * 0.06,
+                            color: Colors.teal[800],
+                            fontSize: shortestval * 0.05,
                           ),
                         ),
                       ),
@@ -258,19 +274,19 @@ class _BookScreenState extends State<BookScreen> {
                           'Date descending',
                           style: TextStyle(
                             fontFamily: semibold,
-                            color: Colors.black,
-                            fontSize: shortestval * 0.06,
+                            color: Colors.teal[800],
+                            fontSize: shortestval * 0.05,
                           ),
                         ),
                       ),
                       PopupMenuItem(
                         value: 'Price aescending',
                         child: Text(
-                          'Price aescending',
+                          'Price ascending',
                           style: TextStyle(
                             fontFamily: semibold,
-                            color: Colors.black,
-                            fontSize: shortestval * 0.06,
+                            color: Colors.teal[800],
+                            fontSize: shortestval * 0.05,
                           ),
                         ),
                       ),
@@ -280,19 +296,19 @@ class _BookScreenState extends State<BookScreen> {
                           'Price descending',
                           style: TextStyle(
                             fontFamily: semibold,
-                            color: Colors.black,
-                            fontSize: shortestval * 0.06,
+                            color: Colors.teal[800],
+                            fontSize: shortestval * 0.05,
                           ),
                         ),
                       ),
                       PopupMenuItem(
                         value: 'Ratings aescending',
                         child: Text(
-                          'Ratings aescending',
+                          'Ratings ascending',
                           style: TextStyle(
                             fontFamily: semibold,
-                            color: Colors.black,
-                            fontSize: shortestval * 0.06,
+                            color: Colors.teal[800],
+                            fontSize: shortestval * 0.05,
                           ),
                         ),
                       ),
@@ -302,965 +318,1943 @@ class _BookScreenState extends State<BookScreen> {
                           'Ratings descending',
                           style: TextStyle(
                             fontFamily: semibold,
-                            color: Colors.black,
-                            fontSize: shortestval * 0.06,
+                            color: Colors.teal[800],
+                            fontSize: shortestval * 0.05,
                           ),
                         ),
                       ),
                     ],
+                color: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  side: BorderSide(color: Colors.teal[300]!, width: 1),
+                ),
               ),
             ],
           ),
         ],
       ),
-
       drawer: Drawer(
-        child: FutureBuilder(
-          future: GetBookInfo(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Circular_pro_indicator_Yellow(
-                context,
-              ); // While waiting for response
-            } else if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}'); // If there's an error
-            } else if (snapshot.connectionState == ConnectionState.done) {
-              if (BookInfoList.isNotEmpty || BookInfoList.length >= 1) {
-                return ListView.builder(
-                  itemBuilder: (context, index) {
-                    return Card(
-                      child: Column(
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  "Book category name:${BookInfoList[index].category}",
-                                  style: TextStyle(
-                                    fontFamily: semibold,
-                                    fontSize: shortestval * 0.05,
-                                  ),
-                                ),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Colors.teal[700]!, Colors.teal[100]!],
+            ),
+          ),
+          child: FutureBuilder(
+            future: GetBookInfo(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Circular_pro_indicator_Yellow(context);
+              } else if (snapshot.hasError) {
+                return Center(
+                  child: Text(
+                    'Error: ${snapshot.error}',
+                    style: TextStyle(
+                      fontFamily: regular,
+                      color: Colors.red[700],
+                      fontSize: shortestval * 0.05,
+                    ),
+                  ),
+                );
+              } else if (snapshot.connectionState == ConnectionState.done) {
+                if (BookInfoList.isNotEmpty || BookInfoList.length >= 1) {
+                  return ListView.builder(
+                    padding: EdgeInsets.symmetric(vertical: shortestval * 0.03),
+                    itemBuilder: (context, index) {
+                      return Card(
+                        elevation: 6,
+                        margin: EdgeInsets.symmetric(
+                          horizontal: shortestval * 0.04,
+                          vertical: shortestval * 0.02,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [Colors.white, Colors.teal[50]!],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            borderRadius: BorderRadius.circular(15),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black26,
+                                blurRadius: 8,
+                                offset: const Offset(0, 4),
                               ),
-                              Expanded(child: Icon(Icons.category)),
                             ],
                           ),
-                          Container(
-                            height: heightval * 0.006,
-                            color: Colors.teal,
-                            width: widthval,
+                          child: Column(
+                            children: [
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    child: Padding(
+                                      padding: EdgeInsets.all(
+                                        shortestval * 0.03,
+                                      ),
+                                      child: Text(
+                                        "Category: ${BookInfoList[index].category}",
+                                        style: TextStyle(
+                                          fontFamily: semibold,
+                                          fontSize:
+                                              shortestval *
+                                              0.04, // Reduced from 0.055
+                                          color: Colors.teal[900],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                      right: shortestval * 0.03,
+                                    ),
+                                    child: Icon(
+                                      Icons.category,
+                                      color: Colors.teal[600],
+                                      size: shortestval * 0.07,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Container(
+                                height: heightval * 0.006,
+                                color: Colors.teal[400],
+                                width: widthval,
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ).onTap(() {
-                      String selectedCategory =
-                          BookInfoList[index].category ?? "";
-
-                      // Filter books by selected category
-                      List<BooKInfos> Category_Book_Set =
-                          BookInfoList.where(
-                            (book) => book.category == selectedCategory,
-                          ).toList();
-
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return CategoryBookPage(
-                              jwttoken: widget.jwttoken!,
-                              usertype: widget.usertype,
-                              email: widget.email,
-                              BookInfo: Category_Book_Set,
-                            );
-                          },
                         ),
-                      );
-                    });
-                  },
-                  itemCount: BookInfoList.length,
-                );
+                      ).onTap(() {
+                        String selectedCategory =
+                            BookInfoList[index].category ?? "";
+                        List<BooKInfos> Category_Book_Set =
+                            BookInfoList.where(
+                              (book) => book.category == selectedCategory,
+                            ).toList();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return CategoryBookPage(
+                                jwttoken: widget.jwttoken!,
+                                usertype: widget.usertype,
+                                email: widget.email,
+                                BookInfo: Category_Book_Set,
+                              );
+                            },
+                          ),
+                        );
+                      });
+                    },
+                    itemCount: BookInfoList.length,
+                  );
+                } else {
+                  return Center(
+                    child: Text(
+                      'No categories available. Please close and reopen app.',
+                      style: TextStyle(
+                        fontFamily: regular,
+                        color: Colors.teal[800],
+                        fontSize: shortestval * 0.05,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  );
+                }
               } else {
                 return Center(
                   child: Text(
-                    'No friend info.Please close and reopen app or add friend.',
+                    'Error. Please relogin.',
+                    style: TextStyle(
+                      fontFamily: regular,
+                      color: Colors.red[700],
+                      fontSize: shortestval * 0.05,
+                    ),
                   ),
-                ); // If no user data
+                );
               }
-            } else {
-              return Center(
-                child: Text('Error.Relogin.'),
-              ); // Default loading state
-            }
-          },
+            },
+          ),
         ),
       ),
-
       body: Container(
         width: widthval,
         height: heightval,
-        child: Column(
-          children: [
-            // Header (Full Width)
-            SizedBox(
-              width: double.infinity,
-              child: HeaderWidget(
-                email: widget.email,
-                usertype: widget.usertype,
-                jwttoken: widget.jwttoken,
-              ),
-            ),
-
-            TextFormField(
-              onChanged: (value) {
-                setState(() {});
-              },
-              controller: Search_Box_Cont,
-              obscureText: false,
-              decoration: InputDecoration(
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Colors.black,
-                    width: shortestval * 0.01,
-                  ),
-                  borderRadius: BorderRadius.circular(shortestval * 0.04),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Colors.teal[700]!, Colors.teal[100]!],
+          ),
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(
+                width: double.infinity,
+                child: HeaderWidget(
+                  email: widget.email,
+                  usertype: widget.usertype,
+                  jwttoken: widget.jwttoken,
                 ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Colors.black,
-                    width: shortestval * 0.01,
-                  ),
-                  borderRadius: BorderRadius.circular(shortestval * 0.04),
-                ),
-                hintText: "Search by ISBN,tittle or author.",
-                prefixIcon: Icon(Icons.search),
               ),
-            ),
-            SizedBox(height: heightval * 0.01),
-
-            FutureBuilder<void>(
-              future:
-                  Filter_Sort_Value == ""
-                      ? GetBookInfo()
-                      : GetBookReviewInfos(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  // Show a loading indicator while the future is executing
-                  return Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  // Handle any error from the future
-                  return Center(
-                    child: Text(
-                      "Error fetching user data. Please reopen app.",
-                      style: TextStyle(color: Colors.red, fontSize: 16),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: shortestval * 0.05,
+                  vertical: shortestval * 0.03,
+                ),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(shortestval * 0.06),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black26,
+                        blurRadius: 8,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: TextFormField(
+                    onChanged: (value) {
+                      setState(() {});
+                    },
+                    controller: Search_Box_Cont,
+                    obscureText: false,
+                    decoration: InputDecoration(
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.teal[300]!,
+                          width: shortestval * 0.005,
+                        ),
+                        borderRadius: BorderRadius.circular(shortestval * 0.06),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.teal[700]!,
+                          width: shortestval * 0.008,
+                        ),
+                        borderRadius: BorderRadius.circular(shortestval * 0.06),
+                      ),
+                      hintText: "Search by ISBN, title, or author",
+                      hintStyle: TextStyle(
+                        fontFamily: regular,
+                        color: Colors.teal[600],
+                        fontSize: shortestval * 0.045,
+                      ),
+                      prefixIcon: Icon(
+                        Icons.search,
+                        color: Colors.teal[700],
+                        size: shortestval * 0.07,
+                      ),
+                      contentPadding: EdgeInsets.symmetric(
+                        vertical: shortestval * 0.04,
+                        horizontal: shortestval * 0.05,
+                      ),
                     ),
-                  );
-                } else if (snapshot.connectionState == ConnectionState.done) {
-                  if (Search_Box_Cont.text.toString().isNotEmptyAndNotNull &&
-                      BookInfoList.length >= 1 &&
-                      Filter_Sort_Value == "") {
-                    try {
-                      print("Filtere user list add item condition called.");
-                      // Iterate through your CampaignInfoList and check if postId matches the text input.
-                      for (var book_info in BookInfoList) {
-                        if (book_info.bookId.toString().toLowerCase().trim() ==
-                                Search_Box_Cont.text
-                                    .toString()
-                                    .toLowerCase()
-                                    .trim() ||
-                            book_info.title.toString().toLowerCase().trim() ==
-                                Search_Box_Cont.text
-                                    .toString()
-                                    .toLowerCase()
-                                    .trim() ||
-                            book_info.author.toString().toLowerCase().trim() ==
-                                Search_Box_Cont.text
-                                    .toString()
-                                    .toLowerCase()
-                                    .trim()) {
-                          // If the postId matches, add it to the FilteredCampaigns list.
-                          print(
-                            "Search by ISBN,author or tittle of book match and add in filter ISBN/tittle/AUTHOR info list add start.",
-                          );
-                          FilteredBookListIdOrTittleOrAuthor.clear();
-                          FilteredBookListIdOrTittleOrAuthor.add(book_info);
-                        }
-                      }
+                    style: TextStyle(
+                      fontFamily: regular,
+                      fontSize: shortestval * 0.05,
+                      color: Colors.teal[900],
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: heightval * 0.02),
 
-                      if (FilteredBookListIdOrTittleOrAuthor.length <= 0) {
+              FutureBuilder<void>(
+                future:
+                    Filter_Sort_Value == ""
+                        ? GetBookInfo()
+                        : GetBookReviewInfos(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: CircularProgressIndicator(color: Colors.teal[700]),
+                    );
+                  } else if (snapshot.hasError) {
+                    return Center(
+                      child: Text(
+                        "Error fetching user data. Please reopen app.",
+                        style: TextStyle(
+                          fontFamily: regular,
+                          color: Colors.red[700],
+                          fontSize: shortestval * 0.05,
+                        ),
+                      ),
+                    );
+                  } else if (snapshot.connectionState == ConnectionState.done) {
+                    if (Search_Box_Cont.text.toString().isNotEmptyAndNotNull &&
+                        BookInfoList.length >= 1 &&
+                        Filter_Sort_Value == "") {
+                      try {
+                        print("Filtered user list add item condition called.");
+                        for (var book_info in BookInfoList) {
+                          if (book_info.bookId
+                                      .toString()
+                                      .toLowerCase()
+                                      .trim() ==
+                                  Search_Box_Cont.text
+                                      .toString()
+                                      .toLowerCase()
+                                      .trim() ||
+                              book_info.title.toString().toLowerCase().trim() ==
+                                  Search_Box_Cont.text
+                                      .toString()
+                                      .toLowerCase()
+                                      .trim() ||
+                              book_info.author
+                                      .toString()
+                                      .toLowerCase()
+                                      .trim() ==
+                                  Search_Box_Cont.text
+                                      .toString()
+                                      .toLowerCase()
+                                      .trim()) {
+                            print(
+                              "Search by ISBN, author, or title of book match.",
+                            );
+                            FilteredBookListIdOrTittleOrAuthor.clear();
+                            FilteredBookListIdOrTittleOrAuthor.add(book_info);
+                          }
+                        }
+                        if (FilteredBookListIdOrTittleOrAuthor.length <= 0) {
+                          FilteredBookListIdOrTittleOrAuthor.clear();
+                          Toastget().Toastmsg(
+                            "Entered ID, author, or title didn't match any books.",
+                          );
+                          print(
+                            "Entered ID, author, or title didn't match any books.",
+                          );
+                        }
+                      } catch (Obj) {
                         FilteredBookListIdOrTittleOrAuthor.clear();
                         Toastget().Toastmsg(
-                          "Enter id,author or tittle of book didn't match with available user book information.",
+                          "Entered ID or title didn't match any books.",
                         );
                         print(
-                          "Enter id,author or tittle of book didn't match with available user book information.",
+                          "Exception caught while filtering book info list",
                         );
+                        print(Obj.toString());
                       }
-                    } catch (Obj) {
-                      FilteredBookListIdOrTittleOrAuthor.clear();
-                      Toastget().Toastmsg(
-                        "Enter id or tittle of book didn't match with available user book information.",
-                      );
-                      print("Exception caught while filtering book info list");
-                      print(Obj.toString());
-                    }
-                    return FilteredBookListIdOrTittleOrAuthor.isEmpty
-                        ? const Center(child: Text("No book data available."))
-                        : Builder(
-                          builder:
-                              (context) => ListView.builder(
-                                shrinkWrap: true,
-                                itemBuilder: (context, index) {
-                                  final book =
-                                      FilteredBookListIdOrTittleOrAuthor[index];
-                                  return Card(
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: [
-                                        Text(
-                                          "Book name:${book.bookName}",
-                                          style: TextStyle(
-                                            fontFamily: semibold,
-                                            fontSize: shortestval * 0.05,
-                                          ),
-                                        ),
-                                        Icon(Icons.book_online_outlined),
-                                      ],
-                                    ).onTap(() {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) {
-                                            return BookDetails(
-                                              jwttoken: widget.jwttoken,
-                                              usertype: widget.usertype,
-                                              email: widget.email,
-                                              BookId: book.bookId.toString(),
-                                              BookName:
-                                                  book.bookName.toString(),
-                                              Price: book.price.toString(),
-                                              Format: book.format.toString(),
-                                              Title: book.title.toString(),
-                                              Author: book.author.toString(),
-                                              Publisher:
-                                                  book.publisher.toString(),
-                                              PublicationDate:
-                                                  book.publicationDate
-                                                      .toString(),
-                                              Language:
-                                                  book.language.toString(),
-                                              Category:
-                                                  book.category.toString(),
-                                              ListedAt:
-                                                  book.listedAt.toString(),
-                                              AvailableQuantity:
-                                                  book.availableQuantity
-                                                      .toString(),
-                                              DiscountPercent:
-                                                  book.discountPercent
-                                                      .toString(),
-                                              DiscountStart:
-                                                  book.discountStart.toString(),
-                                              DiscountEnd:
-                                                  book.discountEnd.toString(),
-                                              Photo: book.photo.toString(),
-                                            );
-                                          },
-                                        ),
-                                      );
-                                    }),
-                                  );
-                                },
-                                itemCount:
-                                    FilteredBookListIdOrTittleOrAuthor.length,
+                      return FilteredBookListIdOrTittleOrAuthor.isEmpty
+                          ? Center(
+                            child: Text(
+                              "No book data available.",
+                              style: TextStyle(
+                                fontFamily: regular,
+                                color: Colors.teal[800],
+                                fontSize: shortestval * 0.05,
                               ),
-                        );
-                  } //condition for filter
-                  else if (BookInfoList.length >= 1 &&
-                      Search_Box_Cont.text.isEmptyOrNull &&
-                      Filter_Sort_Value.isNotEmptyAndNotNull &&
-                      Filter_Sort_Value == "Date aescending") {
-                    try {
-                      print("Filtere book list add item condition called.");
-                      // Iterate through your CampaignInfoList and check if postId matches the text input.
-                      final sort_result = sortBooksByPublicationDateAsc(
-                        BookInfoList,
-                      );
-                      if (FilteredBookListDateAesc.length <= 0) {
-                        FilteredBookListDateAesc.clear();
-                        Toastget().Toastmsg("Not available  book information.");
-                        print("Not available  book information.");
-                      }
-                    } catch (Obj) {
-                      FilteredBookListDateAesc.clear();
-                      Toastget().Toastmsg("Not available  book information.");
-                      print("Not available  book information.");
-                      print(Obj.toString());
-                    }
-                    return FilteredBookListDateAesc.isEmpty
-                        ? const Center(child: Text("No book data available."))
-                        : Builder(
-                          builder:
-                              (context) => ListView.builder(
-                                shrinkWrap: true,
-                                itemBuilder: (context, index) {
-                                  final book = FilteredBookListDateAesc[index];
-                                  return Card(
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: [
-                                        Text(
-                                          "Book name:${book.bookName}",
-                                          style: TextStyle(
-                                            fontFamily: semibold,
-                                            fontSize: shortestval * 0.05,
+                            ),
+                          )
+                          : Builder(
+                            builder:
+                                (context) => ListView.builder(
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: shortestval * 0.05,
+                                  ),
+                                  shrinkWrap: true,
+                                  itemBuilder: (context, index) {
+                                    final book =
+                                        FilteredBookListIdOrTittleOrAuthor[index];
+                                    return Card(
+                                      elevation: 6,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(15),
+                                      ),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            colors: [
+                                              Colors.white,
+                                              Colors.teal[50]!,
+                                            ],
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
                                           ),
-                                        ),
-                                        Icon(Icons.book_outlined),
-                                        Text("${book.publicationDate}"),
-                                      ],
-                                    ).onTap(() {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) {
-                                            return BookDetails(
-                                              jwttoken: widget.jwttoken,
-                                              usertype: widget.usertype,
-                                              email: widget.email,
-                                              BookId: book.bookId.toString(),
-                                              BookName:
-                                                  book.bookName.toString(),
-                                              Price: book.price.toString(),
-                                              Format: book.format.toString(),
-                                              Title: book.title.toString(),
-                                              Author: book.author.toString(),
-                                              Publisher:
-                                                  book.publisher.toString(),
-                                              PublicationDate:
-                                                  book.publicationDate
-                                                      .toString(),
-                                              Language:
-                                                  book.language.toString(),
-                                              Category:
-                                                  book.category.toString(),
-                                              ListedAt:
-                                                  book.listedAt.toString(),
-                                              AvailableQuantity:
-                                                  book.availableQuantity
-                                                      .toString(),
-                                              DiscountPercent:
-                                                  book.discountPercent
-                                                      .toString(),
-                                              DiscountStart:
-                                                  book.discountStart.toString(),
-                                              DiscountEnd:
-                                                  book.discountEnd.toString(),
-                                              Photo: book.photo.toString(),
-                                            );
-                                          },
-                                        ),
-                                      );
-                                    }),
-                                  );
-                                },
-                                itemCount: FilteredBookListDateAesc.length,
-                              ),
-                        );
-                  } else if (BookInfoList.length >= 1 &&
-                      Search_Box_Cont.text.isEmptyOrNull &&
-                      Filter_Sort_Value.isNotEmptyAndNotNull &&
-                      Filter_Sort_Value == "Date descending") {
-                    try {
-                      print("Filtere book list add item condition called.");
-                      // Iterate through your CampaignInfoList and check if postId matches the text input.
-                      final sort_result = sortBooksByPublicationDateDesc(
-                        BookInfoList,
-                      );
-                      if (FilteredBookListDateDesc.length <= 0) {
-                        FilteredBookListDateDesc.clear();
-                        Toastget().Toastmsg("Not available  book information.");
-                        print("Not available  book information.");
-                      }
-                    } catch (Obj) {
-                      FilteredBookListDateDesc.clear();
-                      Toastget().Toastmsg("Not available  book information.");
-                      print("Not available  book information.");
-                      print(Obj.toString());
-                    }
-                    return FilteredBookListDateDesc.isEmpty
-                        ? const Center(child: Text("No book data available."))
-                        : Builder(
-                          builder:
-                              (context) => ListView.builder(
-                                shrinkWrap: true,
-                                itemBuilder: (context, index) {
-                                  final book = FilteredBookListDateDesc[index];
-                                  return Card(
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: [
-                                        Text(
-                                          "Book name:${book.bookName}",
-                                          style: TextStyle(
-                                            fontFamily: semibold,
-                                            fontSize: shortestval * 0.05,
+                                          borderRadius: BorderRadius.circular(
+                                            15,
                                           ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black26,
+                                              blurRadius: 8,
+                                              offset: const Offset(0, 4),
+                                            ),
+                                          ],
                                         ),
-                                        Icon(Icons.book_outlined),
-                                        Text("${book.publicationDate}"),
-                                      ],
-                                    ).onTap(() {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) {
-                                            return BookDetails(
-                                              jwttoken: widget.jwttoken,
-                                              usertype: widget.usertype,
-                                              email: widget.email,
-                                              BookId: book.bookId.toString(),
-                                              BookName:
-                                                  book.bookName.toString(),
-                                              Price: book.price.toString(),
-                                              Format: book.format.toString(),
-                                              Title: book.title.toString(),
-                                              Author: book.author.toString(),
-                                              Publisher:
-                                                  book.publisher.toString(),
-                                              PublicationDate:
-                                                  book.publicationDate
-                                                      .toString(),
-                                              Language:
-                                                  book.language.toString(),
-                                              Category:
-                                                  book.category.toString(),
-                                              ListedAt:
-                                                  book.listedAt.toString(),
-                                              AvailableQuantity:
-                                                  book.availableQuantity
-                                                      .toString(),
-                                              DiscountPercent:
-                                                  book.discountPercent
-                                                      .toString(),
-                                              DiscountStart:
-                                                  book.discountStart.toString(),
-                                              DiscountEnd:
-                                                  book.discountEnd.toString(),
-                                              Photo: book.photo.toString(),
-                                            );
-                                          },
-                                        ),
-                                      );
-                                    }),
-                                  );
-                                },
-                                itemCount: FilteredBookListDateDesc.length,
-                              ),
-                        );
-                  } else if (BookInfoList.length >= 1 &&
-                      Search_Box_Cont.text.isEmptyOrNull &&
-                      Filter_Sort_Value.isNotEmptyAndNotNull &&
-                      Filter_Sort_Value == "Price descending") {
-                    try {
-                      print("Filtere book list add item condition called.");
-                      // Iterate through your CampaignInfoList and check if postId matches the text input.
-                      final sort_result = sortBooksByPriceDesc(BookInfoList);
-                      if (FilteredBookListPriceDesc.length <= 0) {
-                        FilteredBookListPriceDesc.clear();
-                        Toastget().Toastmsg("Not available  book information.");
-                        print("Not available  book information.");
-                      }
-                    } catch (Obj) {
-                      FilteredBookListPriceDesc.clear();
-                      Toastget().Toastmsg("Not available  book information.");
-                      print("Not available  book information.");
-                      print(Obj.toString());
-                    }
-                    return FilteredBookListPriceDesc.isEmpty
-                        ? const Center(child: Text("No book data available."))
-                        : Builder(
-                          builder:
-                              (context) => ListView.builder(
-                                shrinkWrap: true,
-                                itemBuilder: (context, index) {
-                                  final book = FilteredBookListPriceDesc[index];
-                                  return Card(
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: [
-                                        Text(
-                                          "Book name:${book.bookName}",
-                                          style: TextStyle(
-                                            fontFamily: semibold,
-                                            fontSize: shortestval * 0.05,
-                                          ),
-                                        ),
-                                        Icon(Icons.book_outlined),
-                                        Text("${book.price}"),
-                                      ],
-                                    ).onTap(() {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) {
-                                            return BookDetails(
-                                              jwttoken: widget.jwttoken,
-                                              usertype: widget.usertype,
-                                              email: widget.email,
-                                              BookId: book.bookId.toString(),
-                                              BookName:
-                                                  book.bookName.toString(),
-                                              Price: book.price.toString(),
-                                              Format: book.format.toString(),
-                                              Title: book.title.toString(),
-                                              Author: book.author.toString(),
-                                              Publisher:
-                                                  book.publisher.toString(),
-                                              PublicationDate:
-                                                  book.publicationDate
-                                                      .toString(),
-                                              Language:
-                                                  book.language.toString(),
-                                              Category:
-                                                  book.category.toString(),
-                                              ListedAt:
-                                                  book.listedAt.toString(),
-                                              AvailableQuantity:
-                                                  book.availableQuantity
-                                                      .toString(),
-                                              DiscountPercent:
-                                                  book.discountPercent
-                                                      .toString(),
-                                              DiscountStart:
-                                                  book.discountStart.toString(),
-                                              DiscountEnd:
-                                                  book.discountEnd.toString(),
-                                              Photo: book.photo.toString(),
-                                            );
-                                          },
-                                        ),
-                                      );
-                                    }),
-                                  );
-                                },
-                                itemCount: FilteredBookListPriceDesc.length,
-                              ),
-                        );
-                  } else if (BookInfoList.length >= 1 &&
-                      Search_Box_Cont.text.isEmptyOrNull &&
-                      Filter_Sort_Value.isNotEmptyAndNotNull &&
-                      Filter_Sort_Value == "Price aescending") {
-                    try {
-                      print("Filtere book list add item condition called.");
-                      // Iterate through your CampaignInfoList and check if postId matches the text input.
-                      final sort_result = sortBooksByPriceAsc(BookInfoList);
-                      if (FilteredBookListPriceAesc.length <= 0) {
-                        FilteredBookListPriceAesc.clear();
-                        Toastget().Toastmsg("Not available  book information.");
-                        print("Not available  book information.");
-                      }
-                    } catch (Obj) {
-                      FilteredBookListPriceAesc.clear();
-                      Toastget().Toastmsg("Not available  book information.");
-                      print("Not available  book information.");
-                      print(Obj.toString());
-                    }
-                    return FilteredBookListPriceAesc.isEmpty
-                        ? const Center(child: Text("No book data available."))
-                        : Builder(
-                          builder:
-                              (context) => ListView.builder(
-                                shrinkWrap: true,
-                                itemBuilder: (context, index) {
-                                  final book = FilteredBookListPriceAesc[index];
-                                  return Card(
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: [
-                                        Text(
-                                          "Book name:${book.bookName}",
-                                          style: TextStyle(
-                                            fontFamily: semibold,
-                                            fontSize: shortestval * 0.05,
-                                          ),
-                                        ),
-                                        Icon(Icons.book_outlined),
-                                        Text("${book.price}"),
-                                      ],
-                                    ).onTap(() {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) {
-                                            return BookDetails(
-                                              jwttoken: widget.jwttoken,
-                                              usertype: widget.usertype,
-                                              email: widget.email,
-                                              BookId: book.bookId.toString(),
-                                              BookName:
-                                                  book.bookName.toString(),
-                                              Price: book.price.toString(),
-                                              Format: book.format.toString(),
-                                              Title: book.title.toString(),
-                                              Author: book.author.toString(),
-                                              Publisher:
-                                                  book.publisher.toString(),
-                                              PublicationDate:
-                                                  book.publicationDate
-                                                      .toString(),
-                                              Language:
-                                                  book.language.toString(),
-                                              Category:
-                                                  book.category.toString(),
-                                              ListedAt:
-                                                  book.listedAt.toString(),
-                                              AvailableQuantity:
-                                                  book.availableQuantity
-                                                      .toString(),
-                                              DiscountPercent:
-                                                  book.discountPercent
-                                                      .toString(),
-                                              DiscountStart:
-                                                  book.discountStart.toString(),
-                                              DiscountEnd:
-                                                  book.discountEnd.toString(),
-                                              Photo: book.photo.toString(),
-                                            );
-                                          },
-                                        ),
-                                      );
-                                    }),
-                                  );
-                                },
-                                itemCount: FilteredBookListPriceAesc.length,
-                              ),
-                        );
-                  } else if (BookReviewInfoList.length >= 1 &&
-                      Search_Box_Cont.text.isEmptyOrNull &&
-                      Filter_Sort_Value.isNotEmptyAndNotNull &&
-                      Filter_Sort_Value == "Ratings aescending") {
-                    try {
-                      print("Filtere user list add item condition called.");
-
-                      final Sort_Result = sortBooksByRatingAsc(
-                        BookReviewInfoList,
-                      );
-                      if (FilteredBookListRatingsAesc.length <= 0) {
-                        FilteredBookListRatingsAesc.clear();
-                        Toastget().Toastmsg("No book data available.");
-                        print("No book data available.");
-                      }
-                    } catch (Obj) {
-                      FilteredBookListRatingsAesc.clear();
-                      Toastget().Toastmsg("No book data available.");
-                      print("Exception caught while filtering book info list");
-                      print(Obj.toString());
-                    }
-                    return FilteredBookListRatingsAesc.isEmpty
-                        ? const Center(child: Text("No book data available."))
-                        : Builder(
-                          builder:
-                              (context) => ListView.builder(
-                                shrinkWrap: true,
-                                itemBuilder: (context, index) {
-                                  final book =
-                                      FilteredBookListRatingsAesc[index];
-                                  return Card(
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: [
-                                        Text(
-                                          "Book name:${book.bookName}",
-                                          style: TextStyle(
-                                            fontFamily: semibold,
-                                            fontSize: shortestval * 0.05,
-                                          ),
-                                        ),
-                                        Icon(Icons.book_online_outlined),
-                                        Text("${book.rating}"),
-                                      ],
-                                    ).onTap(() {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) {
-                                            return BookDetails(
-                                              jwttoken: widget.jwttoken,
-                                              usertype: widget.usertype,
-                                              email: widget.email,
-                                              BookId: book.bookId.toString(),
-                                              BookName:
-                                                  book.bookName.toString(),
-                                              Price: book.price.toString(),
-                                              Format: book.format.toString(),
-                                              Title: book.title.toString(),
-                                              Author: book.author.toString(),
-                                              Publisher:
-                                                  book.publisher.toString(),
-                                              PublicationDate:
-                                                  book.publicationDate
-                                                      .toString(),
-                                              Language:
-                                                  book.language.toString(),
-                                              Category:
-                                                  book.category.toString(),
-                                              ListedAt:
-                                                  book.listedAt.toString(),
-                                              AvailableQuantity:
-                                                  book.availableQuantity
-                                                      .toString(),
-                                              DiscountPercent:
-                                                  book.discountPercent
-                                                      .toString(),
-                                              DiscountStart:
-                                                  book.discountStart.toString(),
-                                              DiscountEnd:
-                                                  book.discountEnd.toString(),
-                                              Photo: book.photo.toString(),
-                                            );
-                                          },
-                                        ),
-                                      );
-                                    }),
-                                  );
-                                },
-                                itemCount: FilteredBookListRatingsAesc.length,
-                              ),
-                        );
-                  } //condition for filter
-                  else if (BookReviewInfoList.length >= 1 &&
-                      Search_Box_Cont.text.isEmptyOrNull &&
-                      Filter_Sort_Value.isNotEmptyAndNotNull &&
-                      Filter_Sort_Value == "Ratings descending") {
-                    try {
-                      print("Filtere user list add item condition called.");
-
-                      final Sort_Result = sortBooksByRatingDesc(
-                        BookReviewInfoList,
-                      );
-                      print("Filter rating result");
-                      print(Sort_Result);
-                      if (FilteredBookListRatingsDesc.length <= 0) {
-                        FilteredBookListRatingsDesc.clear();
-                        Toastget().Toastmsg("No book data available.");
-                        print("No book data available.");
-                      }
-                    } catch (Obj) {
-                      FilteredBookListRatingsDesc.clear();
-                      Toastget().Toastmsg("No book data available.");
-                      print("Exception caught while filtering book info list");
-                      print(Obj.toString());
-                    }
-
-                    return FilteredBookListRatingsDesc.isEmpty
-                        ? const Center(child: Text("No book data available."))
-                        : Builder(
-                          builder:
-                              (context) => ListView.builder(
-                                shrinkWrap: true,
-                                itemBuilder: (context, index) {
-                                  final book =
-                                      FilteredBookListRatingsDesc[index];
-                                  return Card(
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: [
-                                        Text(
-                                          "Book name:${book.bookName}",
-                                          style: TextStyle(
-                                            fontFamily: semibold,
-                                            fontSize: shortestval * 0.05,
-                                          ),
-                                        ),
-                                        Icon(Icons.book_online_outlined),
-                                        Text("${book.rating}"),
-                                      ],
-                                    ).onTap(() {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) {
-                                            return BookDetails(
-                                              jwttoken: widget.jwttoken,
-                                              usertype: widget.usertype,
-                                              email: widget.email,
-                                              BookId: book.bookId.toString(),
-                                              BookName:
-                                                  book.bookName.toString(),
-                                              Price: book.price.toString(),
-                                              Format: book.format.toString(),
-                                              Title: book.title.toString(),
-                                              Author: book.author.toString(),
-                                              Publisher:
-                                                  book.publisher.toString(),
-                                              PublicationDate:
-                                                  book.publicationDate
-                                                      .toString(),
-                                              Language:
-                                                  book.language.toString(),
-                                              Category:
-                                                  book.category.toString(),
-                                              ListedAt:
-                                                  book.listedAt.toString(),
-                                              AvailableQuantity:
-                                                  book.availableQuantity
-                                                      .toString(),
-                                              DiscountPercent:
-                                                  book.discountPercent
-                                                      .toString(),
-                                              DiscountStart:
-                                                  book.discountStart.toString(),
-                                              DiscountEnd:
-                                                  book.discountEnd.toString(),
-                                              Photo: book.photo.toString(),
-                                            );
-                                          },
-                                        ),
-                                      );
-                                    }),
-                                  );
-                                },
-                                itemCount: FilteredBookListRatingsDesc.length,
-                              ),
-                        );
-                  } //condition for filtering
-                  else if (BookInfoList.length >= 1 &&
-                      Search_Box_Cont.text.isEmptyOrNull &&
-                      Filter_Sort_Value.isEmptyOrNull) {
-                    return Builder(
-                      builder:
-                          (context) => Column(
-                            children: [
-                              Text("All book data."),
-
-                              ListView.builder(
-                                shrinkWrap: true,
-                                itemBuilder: (context, index) {
-                                  final book = BookInfoList[index];
-                                  return Card(
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: [
-                                        Text(
-                                          "Book name:${book.bookName}",
-                                          style: TextStyle(
-                                            fontFamily: semibold,
-                                            fontSize: shortestval * 0.05,
-                                          ),
-                                        ),
-                                        Icon(Icons.book_online_outlined),
-                                      ],
-                                    ).onTap(() {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) {
-                                            return BookDetails(
-                                              jwttoken: widget.jwttoken,
-                                              usertype: widget.usertype,
-                                              email: widget.email,
-                                              BookId: book.bookId.toString(),
-                                              BookName:
-                                                  book.bookName.toString(),
-                                              Price: book.price.toString(),
-                                              Format: book.format.toString(),
-                                              Title: book.title.toString(),
-                                              Author: book.author.toString(),
-                                              Publisher:
-                                                  book.publisher.toString(),
-                                              PublicationDate:
-                                                  book.publicationDate
-                                                      .toString(),
-                                              Language:
-                                                  book.language.toString(),
-                                              Category:
-                                                  book.category.toString(),
-                                              ListedAt:
-                                                  book.listedAt.toString(),
-                                              AvailableQuantity:
-                                                  book.availableQuantity
-                                                      .toString(),
-                                              DiscountPercent:
-                                                  book.discountPercent
-                                                      .toString(),
-                                              DiscountStart:
-                                                  book.discountStart.toString(),
-                                              DiscountEnd:
-                                                  book.discountEnd.toString(),
-                                              Photo: book.photo.toString(),
-                                            );
-                                          },
-                                        ),
-                                      );
-                                    }),
-                                  );
-                                },
-                                itemCount: BookInfoList.length,
-                              ),
-                            ],
-                          ),
-                    );
-                  } else {
-                    return BookInfoList.isEmpty
-                        ? const Center(
-                          child: Column(
-                            children: [
-                              Text("All book data."),
-                              Text("No book data available."),
-                            ],
-                          ),
-                        )
-                        : Builder(
-                          builder:
-                              (context) => Column(
-                                children: [
-                                  Text("All book data."),
-                                  ListView.builder(
-                                    shrinkWrap: true,
-                                    itemBuilder: (context, index) {
-                                      final book = BookInfoList[index];
-                                      return Card(
                                         child: Row(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.center,
                                           mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
-                                            Text(
-                                              "Book name:${book.bookName}",
-                                              style: TextStyle(
-                                                fontFamily: semibold,
-                                                fontSize: shortestval * 0.05,
+
+                                            Expanded(
+                                              child: Padding(
+                                                padding: EdgeInsets.all(
+                                                  shortestval * 0.03,
+                                                ),
+                                                child: Text(
+                                                  "Book ISBN: ${book.bookId}",
+                                                  style: TextStyle(
+                                                    fontFamily: semibold,
+                                                    fontSize:
+                                                        shortestval * 0.055,
+                                                    color: Colors.teal[900],
+                                                  ),
+                                                ),
                                               ),
                                             ),
-                                            Icon(Icons.book_online_outlined),
+
+                                            Expanded(
+                                              child: Padding(
+                                                padding: EdgeInsets.all(
+                                                  shortestval * 0.03,
+                                                ),
+                                                child: Text(
+                                                  "Book Name: ${book.bookName}",
+                                                  style: TextStyle(
+                                                    fontFamily: semibold,
+                                                    fontSize:
+                                                    shortestval * 0.055,
+                                                    color: Colors.teal[900],
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+
+
+
+                                            Padding(
+                                              padding: EdgeInsets.only(
+                                                right: shortestval * 0.03,
+                                              ),
+                                              child: Icon(
+                                                Icons.book_online_outlined,
+                                                color: Colors.teal[600],
+                                                size: shortestval * 0.07,
+                                              ),
+                                            ),
                                           ],
+                                        ),
+                                      ),
+                                    ).onTap(() {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) {
+                                            return BookDetails(
+                                              jwttoken: widget.jwttoken,
+                                              usertype: widget.usertype,
+                                              email: widget.email,
+                                              BookId: book.bookId.toString(),
+                                              BookName:
+                                                  book.bookName.toString(),
+                                              Price: book.price.toString(),
+                                              Format: book.format.toString(),
+                                              Title: book.title.toString(),
+                                              Author: book.author.toString(),
+                                              Publisher:
+                                                  book.publisher.toString(),
+                                              PublicationDate:
+                                                  book.publicationDate
+                                                      .toString(),
+                                              Language:
+                                                  book.language.toString(),
+                                              Category:
+                                                  book.category.toString(),
+                                              ListedAt:
+                                                  book.listedAt.toString(),
+                                              AvailableQuantity:
+                                                  book.availableQuantity
+                                                      .toString(),
+                                              DiscountPercent:
+                                                  book.discountPercent
+                                                      .toString(),
+                                              DiscountStart:
+                                                  book.discountStart.toString(),
+                                              DiscountEnd:
+                                                  book.discountEnd.toString(),
+                                              Photo: book.photo.toString(),
+                                            );
+                                          },
+                                        ),
+                                      );
+                                    });
+                                  },
+                                  itemCount:
+                                      FilteredBookListIdOrTittleOrAuthor.length,
+                                ),
+                          );
+                    } else if (BookInfoList.length >= 1 &&
+                        Search_Box_Cont.text.isEmptyOrNull &&
+                        Filter_Sort_Value.isNotEmptyAndNotNull &&
+                        Filter_Sort_Value == "Date aescending") {
+                      try {
+                        print("Filtered book list add item condition called.");
+                        final sort_result = sortBooksByPublicationDateAsc(
+                          BookInfoList,
+                        );
+                        if (FilteredBookListDateAesc.length <= 0) {
+                          FilteredBookListDateAesc.clear();
+                          Toastget().Toastmsg(
+                            "Not available book information.",
+                          );
+                          print("Not available book information.");
+                        }
+                      } catch (Obj) {
+                        FilteredBookListDateAesc.clear();
+                        Toastget().Toastmsg("Not available book information.");
+                        print("Not available book information.");
+                        print(Obj.toString());
+                      }
+                      return FilteredBookListDateAesc.isEmpty
+                          ? Center(
+                            child: Text(
+                              "No book data available.",
+                              style: TextStyle(
+                                fontFamily: regular,
+                                color: Colors.teal[800],
+                                fontSize: shortestval * 0.05,
+                              ),
+                            ),
+                          )
+                          : Builder(
+                            builder:
+                                (context) => ListView.builder(
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: shortestval * 0.05,
+                                  ),
+                                  shrinkWrap: true,
+                                  itemBuilder: (context, index) {
+                                    final book =
+                                        FilteredBookListDateAesc[index];
+                                    return Card(
+                                      elevation: 6,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(15),
+                                      ),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            colors: [
+                                              Colors.white,
+                                              Colors.teal[50]!,
+                                            ],
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
+                                          ),
+                                          borderRadius: BorderRadius.circular(
+                                            15,
+                                          ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black26,
+                                              blurRadius: 8,
+                                              offset: const Offset(0, 4),
+                                            ),
+                                          ],
+                                        ),
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+
+
+                                            Expanded(
+                                              child: Padding(
+                                                padding: EdgeInsets.all(
+                                                  shortestval * 0.03,
+                                                ),
+                                                child: Text(
+                                                  "Book ISBN: ${book.bookId}",
+                                                  style: TextStyle(
+                                                    fontFamily: semibold,
+                                                    fontSize:
+                                                    shortestval * 0.055,
+                                                    color: Colors.teal[900],
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+
+                                            Expanded(
+                                              child: Padding(
+                                                padding: EdgeInsets.all(
+                                                  shortestval * 0.03,
+                                                ),
+                                                child: Text(
+                                                  "Book Name: ${book.bookName}",
+                                                  style: TextStyle(
+                                                    fontFamily: semibold,
+                                                    fontSize:
+                                                    shortestval * 0.055,
+                                                    color: Colors.teal[900],
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+
+
+                                            Padding(
+                                              padding: EdgeInsets.only(
+                                                right: shortestval * 0.03,
+                                              ),
+                                              child: Row(
+                                                children: [
+                                                  Text(
+                                                    "${book.publicationDate}",
+                                                    style: TextStyle(
+                                                      fontFamily: regular,
+                                                      fontSize:
+                                                          shortestval * 0.045,
+                                                      color: Colors.teal[600],
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: shortestval * 0.02,
+                                                  ),
+                                                  Icon(
+                                                    Icons.book_outlined,
+                                                    color: Colors.teal[600],
+                                                    size: shortestval * 0.07,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ).onTap(() {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) {
+                                            return BookDetails(
+                                              jwttoken: widget.jwttoken,
+                                              usertype: widget.usertype,
+                                              email: widget.email,
+                                              BookId: book.bookId.toString(),
+                                              BookName:
+                                                  book.bookName.toString(),
+                                              Price: book.price.toString(),
+                                              Format: book.format.toString(),
+                                              Title: book.title.toString(),
+                                              Author: book.author.toString(),
+                                              Publisher:
+                                                  book.publisher.toString(),
+                                              PublicationDate:
+                                                  book.publicationDate
+                                                      .toString(),
+                                              Language:
+                                                  book.language.toString(),
+                                              Category:
+                                                  book.category.toString(),
+                                              ListedAt:
+                                                  book.listedAt.toString(),
+                                              AvailableQuantity:
+                                                  book.availableQuantity
+                                                      .toString(),
+                                              DiscountPercent:
+                                                  book.discountPercent
+                                                      .toString(),
+                                              DiscountStart:
+                                                  book.discountStart.toString(),
+                                              DiscountEnd:
+                                                  book.discountEnd.toString(),
+                                              Photo: book.photo.toString(),
+                                            );
+                                          },
+                                        ),
+                                      );
+                                    });
+                                  },
+                                  itemCount: FilteredBookListDateAesc.length,
+                                ),
+                          );
+                    } else if (BookInfoList.length >= 1 &&
+                        Search_Box_Cont.text.isEmptyOrNull &&
+                        Filter_Sort_Value.isNotEmptyAndNotNull &&
+                        Filter_Sort_Value == "Date descending") {
+                      try {
+                        print("Filtered book list add item condition called.");
+                        final sort_result = sortBooksByPublicationDateDesc(
+                          BookInfoList,
+                        );
+                        if (FilteredBookListDateDesc.length <= 0) {
+                          FilteredBookListDateDesc.clear();
+                          Toastget().Toastmsg(
+                            "Not available book information.",
+                          );
+                          print("Not available book information.");
+                        }
+                      } catch (Obj) {
+                        FilteredBookListDateDesc.clear();
+                        Toastget().Toastmsg("Not available book information.");
+                        print("Not available book information.");
+                        print(Obj.toString());
+                      }
+                      return FilteredBookListDateDesc.isEmpty
+                          ? Center(
+                            child: Text(
+                              "No book data available.",
+                              style: TextStyle(
+                                fontFamily: regular,
+                                color: Colors.teal[800],
+                                fontSize: shortestval * 0.05,
+                              ),
+                            ),
+                          )
+                          : Builder(
+                            builder:
+                                (context) => ListView.builder(
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: shortestval * 0.05,
+                                  ),
+                                  shrinkWrap: true,
+                                  itemBuilder: (context, index) {
+                                    final book =
+                                        FilteredBookListDateDesc[index];
+                                    return Card(
+                                      elevation: 6,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(15),
+                                      ),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            colors: [
+                                              Colors.white,
+                                              Colors.teal[50]!,
+                                            ],
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
+                                          ),
+                                          borderRadius: BorderRadius.circular(
+                                            15,
+                                          ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black26,
+                                              blurRadius: 8,
+                                              offset: const Offset(0, 4),
+                                            ),
+                                          ],
+                                        ),
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+
+
+                                            Expanded(
+                                              child: Padding(
+                                                padding: EdgeInsets.all(
+                                                  shortestval * 0.03,
+                                                ),
+                                                child: Text(
+                                                  "Book ISBN: ${book.bookId}",
+                                                  style: TextStyle(
+                                                    fontFamily: semibold,
+                                                    fontSize:
+                                                    shortestval * 0.055,
+                                                    color: Colors.teal[900],
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+
+                                            Expanded(
+                                              child: Padding(
+                                                padding: EdgeInsets.all(
+                                                  shortestval * 0.03,
+                                                ),
+                                                child: Text(
+                                                  "Book Name: ${book.bookName}",
+                                                  style: TextStyle(
+                                                    fontFamily: semibold,
+                                                    fontSize:
+                                                    shortestval * 0.055,
+                                                    color: Colors.teal[900],
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+
+
+                                            Padding(
+                                              padding: EdgeInsets.only(
+                                                right: shortestval * 0.03,
+                                              ),
+                                              child: Row(
+                                                children: [
+                                                  Text(
+                                                    "${book.publicationDate}",
+                                                    style: TextStyle(
+                                                      fontFamily: regular,
+                                                      fontSize:
+                                                          shortestval * 0.045,
+                                                      color: Colors.teal[600],
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: shortestval * 0.02,
+                                                  ),
+                                                  Icon(
+                                                    Icons.book_outlined,
+                                                    color: Colors.teal[600],
+                                                    size: shortestval * 0.07,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ).onTap(() {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) {
+                                            return BookDetails(
+                                              jwttoken: widget.jwttoken,
+                                              usertype: widget.usertype,
+                                              email: widget.email,
+                                              BookId: book.bookId.toString(),
+                                              BookName:
+                                                  book.bookName.toString(),
+                                              Price: book.price.toString(),
+                                              Format: book.format.toString(),
+                                              Title: book.title.toString(),
+                                              Author: book.author.toString(),
+                                              Publisher:
+                                                  book.publisher.toString(),
+                                              PublicationDate:
+                                                  book.publicationDate
+                                                      .toString(),
+                                              Language:
+                                                  book.language.toString(),
+                                              Category:
+                                                  book.category.toString(),
+                                              ListedAt:
+                                                  book.listedAt.toString(),
+                                              AvailableQuantity:
+                                                  book.availableQuantity
+                                                      .toString(),
+                                              DiscountPercent:
+                                                  book.discountPercent
+                                                      .toString(),
+                                              DiscountStart:
+                                                  book.discountStart.toString(),
+                                              DiscountEnd:
+                                                  book.discountEnd.toString(),
+                                              Photo: book.photo.toString(),
+                                            );
+                                          },
+                                        ),
+                                      );
+                                    });
+                                  },
+                                  itemCount: FilteredBookListDateDesc.length,
+                                ),
+                          );
+                    } else if (BookInfoList.length >= 1 &&
+                        Search_Box_Cont.text.isEmptyOrNull &&
+                        Filter_Sort_Value.isNotEmptyAndNotNull &&
+                        Filter_Sort_Value == "Price descending") {
+                      try {
+                        print("Filtered book list add item condition called.");
+                        final sort_result = sortBooksByPriceDesc(BookInfoList);
+                        if (FilteredBookListPriceDesc.length <= 0) {
+                          FilteredBookListPriceDesc.clear();
+                          Toastget().Toastmsg(
+                            "Not available book information.",
+                          );
+                          print("Not available book information.");
+                        }
+                      } catch (Obj) {
+                        FilteredBookListPriceDesc.clear();
+                        Toastget().Toastmsg("Not available book information.");
+                        print("Not available book information.");
+                        print(Obj.toString());
+                      }
+                      return FilteredBookListPriceDesc.isEmpty
+                          ? Center(
+                            child: Text(
+                              "No book data available.",
+                              style: TextStyle(
+                                fontFamily: regular,
+                                color: Colors.teal[800],
+                                fontSize: shortestval * 0.05,
+                              ),
+                            ),
+                          )
+                          : Builder(
+                            builder:
+                                (context) => ListView.builder(
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: shortestval * 0.05,
+                                  ),
+                                  shrinkWrap: true,
+                                  itemBuilder: (context, index) {
+                                    final book =
+                                        FilteredBookListPriceDesc[index];
+                                    return Card(
+                                      elevation: 6,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(15),
+                                      ),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            colors: [
+                                              Colors.white,
+                                              Colors.teal[50]!,
+                                            ],
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
+                                          ),
+                                          borderRadius: BorderRadius.circular(
+                                            15,
+                                          ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black26,
+                                              blurRadius: 8,
+                                              offset: const Offset(0, 4),
+                                            ),
+                                          ],
+                                        ),
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+
+
+                                            Expanded(
+                                              child: Padding(
+                                                padding: EdgeInsets.all(
+                                                  shortestval * 0.03,
+                                                ),
+                                                child: Text(
+                                                  "Book ISBN: ${book.bookId}",
+                                                  style: TextStyle(
+                                                    fontFamily: semibold,
+                                                    fontSize:
+                                                    shortestval * 0.055,
+                                                    color: Colors.teal[900],
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+
+                                            Expanded(
+                                              child: Padding(
+                                                padding: EdgeInsets.all(
+                                                  shortestval * 0.03,
+                                                ),
+                                                child: Text(
+                                                  "Book Name: ${book.bookName}",
+                                                  style: TextStyle(
+                                                    fontFamily: semibold,
+                                                    fontSize:
+                                                    shortestval * 0.055,
+                                                    color: Colors.teal[900],
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+
+
+                                            Padding(
+                                              padding: EdgeInsets.only(
+                                                right: shortestval * 0.03,
+                                              ),
+                                              child: Row(
+                                                children: [
+                                                  Text(
+                                                    "${book.price}",
+                                                    style: TextStyle(
+                                                      fontFamily: regular,
+                                                      fontSize:
+                                                          shortestval * 0.045,
+                                                      color: Colors.teal[600],
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: shortestval * 0.02,
+                                                  ),
+                                                  Icon(
+                                                    Icons.book_outlined,
+                                                    color: Colors.teal[600],
+                                                    size: shortestval * 0.07,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ).onTap(() {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) {
+                                            return BookDetails(
+                                              jwttoken: widget.jwttoken,
+                                              usertype: widget.usertype,
+                                              email: widget.email,
+                                              BookId: book.bookId.toString(),
+                                              BookName:
+                                                  book.bookName.toString(),
+                                              Price: book.price.toString(),
+                                              Format: book.format.toString(),
+                                              Title: book.title.toString(),
+                                              Author: book.author.toString(),
+                                              Publisher:
+                                                  book.publisher.toString(),
+                                              PublicationDate:
+                                                  book.publicationDate
+                                                      .toString(),
+                                              Language:
+                                                  book.language.toString(),
+                                              Category:
+                                                  book.category.toString(),
+                                              ListedAt:
+                                                  book.listedAt.toString(),
+                                              AvailableQuantity:
+                                                  book.availableQuantity
+                                                      .toString(),
+                                              DiscountPercent:
+                                                  book.discountPercent
+                                                      .toString(),
+                                              DiscountStart:
+                                                  book.discountStart.toString(),
+                                              DiscountEnd:
+                                                  book.discountEnd.toString(),
+                                              Photo: book.photo.toString(),
+                                            );
+                                          },
+                                        ),
+                                      );
+                                    });
+                                  },
+                                  itemCount: FilteredBookListPriceDesc.length,
+                                ),
+                          );
+                    } else if (BookInfoList.length >= 1 &&
+                        Search_Box_Cont.text.isEmptyOrNull &&
+                        Filter_Sort_Value.isNotEmptyAndNotNull &&
+                        Filter_Sort_Value == "Price aescending") {
+                      try {
+                        print("Filtered book list add item condition called.");
+                        final sort_result = sortBooksByPriceAsc(BookInfoList);
+                        if (FilteredBookListPriceAesc.length <= 0) {
+                          FilteredBookListPriceAesc.clear();
+                          Toastget().Toastmsg(
+                            "Not available book information.",
+                          );
+                          print("Not available book information.");
+                        }
+                      } catch (Obj) {
+                        FilteredBookListPriceAesc.clear();
+                        Toastget().Toastmsg("Not available book information.");
+                        print("Not available book information.");
+                        print(Obj.toString());
+                      }
+                      return FilteredBookListPriceAesc.isEmpty
+                          ? Center(
+                            child: Text(
+                              "No book data available.",
+                              style: TextStyle(
+                                fontFamily: regular,
+                                color: Colors.teal[800],
+                                fontSize: shortestval * 0.05,
+                              ),
+                            ),
+                          )
+                          : Builder(
+                            builder:
+                                (context) => ListView.builder(
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: shortestval * 0.05,
+                                  ),
+                                  shrinkWrap: true,
+                                  itemBuilder: (context, index) {
+                                    final book =
+                                        FilteredBookListPriceAesc[index];
+                                    return Card(
+                                      elevation: 6,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(15),
+                                      ),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            colors: [
+                                              Colors.white,
+                                              Colors.teal[50]!,
+                                            ],
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
+                                          ),
+                                          borderRadius: BorderRadius.circular(
+                                            15,
+                                          ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black26,
+                                              blurRadius: 8,
+                                              offset: const Offset(0, 4),
+                                            ),
+                                          ],
+                                        ),
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+
+
+                                            Expanded(
+                                              child: Padding(
+                                                padding: EdgeInsets.all(
+                                                  shortestval * 0.03,
+                                                ),
+                                                child: Text(
+                                                  "Book ISBN: ${book.bookId}",
+                                                  style: TextStyle(
+                                                    fontFamily: semibold,
+                                                    fontSize:
+                                                    shortestval * 0.055,
+                                                    color: Colors.teal[900],
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+
+                                            Expanded(
+                                              child: Padding(
+                                                padding: EdgeInsets.all(
+                                                  shortestval * 0.03,
+                                                ),
+                                                child: Text(
+                                                  "Book Name: ${book.bookName}",
+                                                  style: TextStyle(
+                                                    fontFamily: semibold,
+                                                    fontSize:
+                                                    shortestval * 0.055,
+                                                    color: Colors.teal[900],
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+
+
+                                            Padding(
+                                              padding: EdgeInsets.only(
+                                                right: shortestval * 0.03,
+                                              ),
+                                              child: Row(
+                                                children: [
+                                                  Text(
+                                                    "${book.price}",
+                                                    style: TextStyle(
+                                                      fontFamily: regular,
+                                                      fontSize:
+                                                          shortestval * 0.045,
+                                                      color: Colors.teal[600],
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: shortestval * 0.02,
+                                                  ),
+                                                  Icon(
+                                                    Icons.book_outlined,
+                                                    color: Colors.teal[600],
+                                                    size: shortestval * 0.07,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ).onTap(() {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) {
+                                            return BookDetails(
+                                              jwttoken: widget.jwttoken,
+                                              usertype: widget.usertype,
+                                              email: widget.email,
+                                              BookId: book.bookId.toString(),
+                                              BookName:
+                                                  book.bookName.toString(),
+                                              Price: book.price.toString(),
+                                              Format: book.format.toString(),
+                                              Title: book.title.toString(),
+                                              Author: book.author.toString(),
+                                              Publisher:
+                                                  book.publisher.toString(),
+                                              PublicationDate:
+                                                  book.publicationDate
+                                                      .toString(),
+                                              Language:
+                                                  book.language.toString(),
+                                              Category:
+                                                  book.category.toString(),
+                                              ListedAt:
+                                                  book.listedAt.toString(),
+                                              AvailableQuantity:
+                                                  book.availableQuantity
+                                                      .toString(),
+                                              DiscountPercent:
+                                                  book.discountPercent
+                                                      .toString(),
+                                              DiscountStart:
+                                                  book.discountStart.toString(),
+                                              DiscountEnd:
+                                                  book.discountEnd.toString(),
+                                              Photo: book.photo.toString(),
+                                            );
+                                          },
+                                        ),
+                                      );
+                                    });
+                                  },
+                                  itemCount: FilteredBookListPriceAesc.length,
+                                ),
+                          );
+                    } else if (BookReviewInfoList.length >= 1 &&
+                        Search_Box_Cont.text.isEmptyOrNull &&
+                        Filter_Sort_Value.isNotEmptyAndNotNull &&
+                        Filter_Sort_Value == "Ratings aescending") {
+                      try {
+                        print("Filtered user list add item condition called.");
+                        final Sort_Result = sortBooksByRatingAsc(
+                          BookReviewInfoList,
+                        );
+                        if (FilteredBookListRatingsAesc.length <= 0) {
+                          FilteredBookListRatingsAesc.clear();
+                          Toastget().Toastmsg("No book data available.");
+                          print("No book data available.");
+                        }
+                      } catch (Obj) {
+                        FilteredBookListRatingsAesc.clear();
+                        Toastget().Toastmsg("No book data available.");
+                        print(
+                          "Exception caught while filtering book info list",
+                        );
+                        print(Obj.toString());
+                      }
+                      return FilteredBookListRatingsAesc.isEmpty
+                          ? Center(
+                            child: Text(
+                              "No book data available.",
+                              style: TextStyle(
+                                fontFamily: regular,
+                                color: Colors.teal[800],
+                                fontSize: shortestval * 0.05,
+                              ),
+                            ),
+                          )
+                          : Builder(
+                            builder:
+                                (context) => ListView.builder(
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: shortestval * 0.05,
+                                  ),
+                                  shrinkWrap: true,
+                                  itemBuilder: (context, index) {
+                                    final book =
+                                        FilteredBookListRatingsAesc[index];
+                                    return Card(
+                                      elevation: 6,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(15),
+                                      ),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            colors: [
+                                              Colors.white,
+                                              Colors.teal[50]!,
+                                            ],
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
+                                          ),
+                                          borderRadius: BorderRadius.circular(
+                                            15,
+                                          ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black26,
+                                              blurRadius: 8,
+                                              offset: const Offset(0, 4),
+                                            ),
+                                          ],
+                                        ),
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+
+
+
+                                            Expanded(
+                                              child: Padding(
+                                                padding: EdgeInsets.all(
+                                                  shortestval * 0.03,
+                                                ),
+                                                child: Text(
+                                                  "Book ISBN: ${book.bookId}",
+                                                  style: TextStyle(
+                                                    fontFamily: semibold,
+                                                    fontSize:
+                                                    shortestval * 0.055,
+                                                    color: Colors.teal[900],
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+
+                                            Expanded(
+                                              child: Padding(
+                                                padding: EdgeInsets.all(
+                                                  shortestval * 0.03,
+                                                ),
+                                                child: Text(
+                                                  "Book Name: ${book.bookName}",
+                                                  style: TextStyle(
+                                                    fontFamily: semibold,
+                                                    fontSize:
+                                                    shortestval * 0.055,
+                                                    color: Colors.teal[900],
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+
+
+                                            Padding(
+                                              padding: EdgeInsets.only(
+                                                right: shortestval * 0.03,
+                                              ),
+                                              child: Row(
+                                                children: [
+                                                  Text(
+                                                    "Rating: ${book.rating}",
+                                                    style: TextStyle(
+                                                      fontFamily: regular,
+                                                      fontSize:
+                                                          shortestval * 0.045,
+                                                      color: Colors.teal[600],
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: shortestval * 0.02,
+                                                  ),
+                                                  Icon(
+                                                    Icons.book_online_outlined,
+                                                    color: Colors.teal[600],
+                                                    size: shortestval * 0.07,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ).onTap(() {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) {
+                                            return BookDetails(
+                                              jwttoken: widget.jwttoken,
+                                              usertype: widget.usertype,
+                                              email: widget.email,
+                                              BookId: book.bookId.toString(),
+                                              BookName:
+                                                  book.bookName.toString(),
+                                              Price: book.price.toString(),
+                                              Format: book.format.toString(),
+                                              Title: book.title.toString(),
+                                              Author: book.author.toString(),
+                                              Publisher:
+                                                  book.publisher.toString(),
+                                              PublicationDate:
+                                                  book.publicationDate
+                                                      .toString(),
+                                              Language:
+                                                  book.language.toString(),
+                                              Category:
+                                                  book.category.toString(),
+                                              ListedAt:
+                                                  book.listedAt.toString(),
+                                              AvailableQuantity:
+                                                  book.availableQuantity
+                                                      .toString(),
+                                              DiscountPercent:
+                                                  book.discountPercent
+                                                      .toString(),
+                                              DiscountStart:
+                                                  book.discountStart.toString(),
+                                              DiscountEnd:
+                                                  book.discountEnd.toString(),
+                                              Photo: book.photo.toString(),
+                                            );
+                                          },
+                                        ),
+                                      );
+                                    });
+                                  },
+                                  itemCount: FilteredBookListRatingsAesc.length,
+                                ),
+                          );
+                    } else if (BookReviewInfoList.length >= 1 &&
+                        Search_Box_Cont.text.isEmptyOrNull &&
+                        Filter_Sort_Value.isNotEmptyAndNotNull &&
+                        Filter_Sort_Value == "Ratings descending") {
+                      try {
+                        print("Filtered user list add item condition called.");
+                        final Sort_Result = sortBooksByRatingDesc(
+                          BookReviewInfoList,
+                        );
+                        print("Filter rating result");
+                        print(Sort_Result);
+                        if (FilteredBookListRatingsDesc.length <= 0) {
+                          FilteredBookListRatingsDesc.clear();
+                          Toastget().Toastmsg("No book data available.");
+                          print("No book data available.");
+                        }
+                      } catch (Obj) {
+                        FilteredBookListRatingsDesc.clear();
+                        Toastget().Toastmsg("No book data available.");
+                        print(
+                          "Exception caught while filtering book info list",
+                        );
+                        print(Obj.toString());
+                      }
+                      return FilteredBookListRatingsDesc.isEmpty
+                          ? Center(
+                            child: Text(
+                              "No book data available.",
+                              style: TextStyle(
+                                fontFamily: regular,
+                                color: Colors.teal[800],
+                                fontSize: shortestval * 0.05,
+                              ),
+                            ),
+                          )
+                          : Builder(
+                            builder:
+                                (context) => ListView.builder(
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: shortestval * 0.05,
+                                  ),
+                                  shrinkWrap: true,
+                                  itemBuilder: (context, index) {
+                                    final book =
+                                        FilteredBookListRatingsDesc[index];
+                                    return Card(
+                                      elevation: 6,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(15),
+                                      ),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            colors: [
+                                              Colors.white,
+                                              Colors.teal[50]!,
+                                            ],
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
+                                          ),
+                                          borderRadius: BorderRadius.circular(
+                                            15,
+                                          ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black26,
+                                              blurRadius: 8,
+                                              offset: const Offset(0, 4),
+                                            ),
+                                          ],
+                                        ),
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+
+
+                                            Expanded(
+                                              child: Padding(
+                                                padding: EdgeInsets.all(
+                                                  shortestval * 0.03,
+                                                ),
+                                                child: Text(
+                                                  "Book ISBN: ${book.bookId}",
+                                                  style: TextStyle(
+                                                    fontFamily: semibold,
+                                                    fontSize:
+                                                    shortestval * 0.055,
+                                                    color: Colors.teal[900],
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+
+                                            Expanded(
+                                              child: Padding(
+                                                padding: EdgeInsets.all(
+                                                  shortestval * 0.03,
+                                                ),
+                                                child: Text(
+                                                  "Book Name: ${book.bookName}",
+                                                  style: TextStyle(
+                                                    fontFamily: semibold,
+                                                    fontSize:
+                                                    shortestval * 0.055,
+                                                    color: Colors.teal[900],
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+
+
+                                            Padding(
+                                              padding: EdgeInsets.only(
+                                                right: shortestval * 0.03,
+                                              ),
+                                              child: Row(
+                                                children: [
+                                                  Text(
+                                                    "Rating: ${book.rating}",
+                                                    style: TextStyle(
+                                                      fontFamily: regular,
+                                                      fontSize:
+                                                          shortestval * 0.045,
+                                                      color: Colors.teal[600],
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: shortestval * 0.02,
+                                                  ),
+                                                  Icon(
+                                                    Icons.book_online_outlined,
+                                                    color: Colors.teal[600],
+                                                    size: shortestval * 0.07,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ).onTap(() {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) {
+                                            return BookDetails(
+                                              jwttoken: widget.jwttoken,
+                                              usertype: widget.usertype,
+                                              email: widget.email,
+                                              BookId: book.bookId.toString(),
+                                              BookName:
+                                                  book.bookName.toString(),
+                                              Price: book.price.toString(),
+                                              Format: book.format.toString(),
+                                              Title: book.title.toString(),
+                                              Author: book.author.toString(),
+                                              Publisher:
+                                                  book.publisher.toString(),
+                                              PublicationDate:
+                                                  book.publicationDate
+                                                      .toString(),
+                                              Language:
+                                                  book.language.toString(),
+                                              Category:
+                                                  book.category.toString(),
+                                              ListedAt:
+                                                  book.listedAt.toString(),
+                                              AvailableQuantity:
+                                                  book.availableQuantity
+                                                      .toString(),
+                                              DiscountPercent:
+                                                  book.discountPercent
+                                                      .toString(),
+                                              DiscountStart:
+                                                  book.discountStart.toString(),
+                                              DiscountEnd:
+                                                  book.discountEnd.toString(),
+                                              Photo: book.photo.toString(),
+                                            );
+                                          },
+                                        ),
+                                      );
+                                    });
+                                  },
+                                  itemCount: FilteredBookListRatingsDesc.length,
+                                ),
+                          );
+                    } else if (BookInfoList.length >= 1 &&
+                        Search_Box_Cont.text.isEmptyOrNull &&
+                        Filter_Sort_Value.isEmptyOrNull) {
+                      return Builder(
+                        builder:
+                            (context) => Column(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: shortestval * 0.03,
+                                  ),
+                                  child: Text(
+                                    "All Books",
+                                    style: TextStyle(
+                                      fontFamily: bold,
+                                      fontSize: shortestval * 0.07,
+                                      color: Colors.teal[900],
+                                      shadows: [
+                                        Shadow(
+                                          color: Colors.black26,
+                                          offset: Offset(0, 2),
+                                          blurRadius: 4,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                ListView.builder(
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: shortestval * 0.05,
+                                  ),
+                                  shrinkWrap: true,
+                                  itemBuilder: (context, index) {
+                                    final book = BookInfoList[index];
+                                    return Card(
+                                      elevation: 6,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(15),
+                                      ),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            colors: [
+                                              Colors.white,
+                                              Colors.teal[50]!,
+                                            ],
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
+                                          ),
+                                          borderRadius: BorderRadius.circular(
+                                            15,
+                                          ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black26,
+                                              blurRadius: 8,
+                                              offset: const Offset(0, 4),
+                                            ),
+                                          ],
+                                        ),
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Expanded(
+                                              child: Padding(
+                                                padding: EdgeInsets.all(
+                                                  shortestval * 0.03,
+                                                ),
+                                                child: Text(
+                                                  "Book ISBN: ${book.bookId}",
+                                                  style: TextStyle(
+                                                    fontFamily: semibold,
+                                                    fontSize:
+                                                        shortestval * 0.055,
+                                                    color: Colors.teal[900],
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+
+                                            Expanded(
+                                              child: Padding(
+                                                padding: EdgeInsets.all(
+                                                  shortestval * 0.03,
+                                                ),
+                                                child: Text(
+                                                  "Book: ${book.bookName}",
+                                                  style: TextStyle(
+                                                    fontFamily: semibold,
+                                                    fontSize:
+                                                        shortestval * 0.055,
+                                                    color: Colors.teal[900],
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+
+                                            Padding(
+                                              padding: EdgeInsets.only(
+                                                right: shortestval * 0.03,
+                                              ),
+                                              child: Icon(
+                                                Icons.book_online_outlined,
+                                                color: Colors.teal[600],
+                                                size: shortestval * 0.07,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ).onTap(() {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) {
+                                            return BookDetails(
+                                              jwttoken: widget.jwttoken,
+                                              usertype: widget.usertype,
+                                              email: widget.email,
+                                              BookId: book.bookId.toString(),
+                                              BookName:
+                                                  book.bookName.toString(),
+                                              Price: book.price.toString(),
+                                              Format: book.format.toString(),
+                                              Title: book.title.toString(),
+                                              Author: book.author.toString(),
+                                              Publisher:
+                                                  book.publisher.toString(),
+                                              PublicationDate:
+                                                  book.publicationDate
+                                                      .toString(),
+                                              Language:
+                                                  book.language.toString(),
+                                              Category:
+                                                  book.category.toString(),
+                                              ListedAt:
+                                                  book.listedAt.toString(),
+                                              AvailableQuantity:
+                                                  book.availableQuantity
+                                                      .toString(),
+                                              DiscountPercent:
+                                                  book.discountPercent
+                                                      .toString(),
+                                              DiscountStart:
+                                                  book.discountStart.toString(),
+                                              DiscountEnd:
+                                                  book.discountEnd.toString(),
+                                              Photo: book.photo.toString(),
+                                            );
+                                          },
+                                        ),
+                                      );
+                                    });
+                                  },
+                                  itemCount: BookInfoList.length,
+                                ),
+                              ],
+                            ),
+                      );
+                    } else {
+                      return BookInfoList.isEmpty
+                          ? Center(
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: shortestval * 0.03,
+                                  ),
+                                  child: Text(
+                                    "All Books",
+                                    style: TextStyle(
+                                      fontFamily: bold,
+                                      fontSize: shortestval * 0.07,
+                                      color: Colors.teal[900],
+                                      shadows: [
+                                        Shadow(
+                                          color: Colors.black26,
+                                          offset: Offset(0, 2),
+                                          blurRadius: 4,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Text(
+                                  "No book data available.",
+                                  style: TextStyle(
+                                    fontFamily: regular,
+                                    color: Colors.teal[800],
+                                    fontSize: shortestval * 0.05,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
+                          : Builder(
+                            builder:
+                                (context) => Column(
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: shortestval * 0.03,
+                                      ),
+                                      child: Text(
+                                        "All Books",
+                                        style: TextStyle(
+                                          fontFamily: bold,
+                                          fontSize: shortestval * 0.07,
+                                          color: Colors.teal[900],
+                                          shadows: [
+                                            Shadow(
+                                              color: Colors.black26,
+                                              offset: Offset(0, 2),
+                                              blurRadius: 4,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    ListView.builder(
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: shortestval * 0.05,
+                                      ),
+                                      shrinkWrap: true,
+                                      itemBuilder: (context, index) {
+                                        final book = BookInfoList[index];
+                                        return Card(
+                                          elevation: 6,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              15,
+                                            ),
+                                          ),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              gradient: LinearGradient(
+                                                colors: [
+                                                  Colors.white,
+                                                  Colors.teal[50]!,
+                                                ],
+                                                begin: Alignment.topLeft,
+                                                end: Alignment.bottomRight,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.black26,
+                                                  blurRadius: 8,
+                                                  offset: const Offset(0, 4),
+                                                ),
+                                              ],
+                                            ),
+                                            child: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                // ClipOval(
+                                                //   child: Image.memory(
+                                                //     base64Decode(book.photo!),
+                                                //     fit: BoxFit.cover,
+                                                //     errorBuilder: (context, error, stackTrace) =>
+                                                //     const Icon(
+                                                //       Icons.broken_image,
+                                                //       size: 100,
+                                                //       color: Colors.grey,
+                                                //     ),
+                                                //   ),
+                                                // ),
+                                                Expanded(
+                                                  child: Padding(
+                                                    padding: EdgeInsets.all(
+                                                      shortestval * 0.03,
+                                                    ),
+                                                    child: Text(
+                                                      "Book ISBN: ${book.bookId}",
+                                                      style: TextStyle(
+                                                        fontFamily: semibold,
+                                                        fontSize:
+                                                            shortestval * 0.055,
+                                                        color: Colors.teal[900],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  child: Padding(
+                                                    padding: EdgeInsets.all(
+                                                      shortestval * 0.03,
+                                                    ),
+                                                    child: Text(
+                                                      "Book: ${book.bookName}",
+                                                      style: TextStyle(
+                                                        fontFamily: semibold,
+                                                        fontSize:
+                                                            shortestval * 0.055,
+                                                        color: Colors.teal[900],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+
+                                                Padding(
+                                                  padding: EdgeInsets.only(
+                                                    right: shortestval * 0.03,
+                                                  ),
+                                                  child: Icon(
+                                                    Icons.book_online_outlined,
+                                                    color: Colors.teal[600],
+                                                    size: shortestval * 0.07,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
                                         ).onTap(() {
                                           Navigator.push(
                                             context,
@@ -1308,37 +2302,39 @@ class _BookScreenState extends State<BookScreen> {
                                               },
                                             ),
                                           );
-                                        }),
-                                      );
-                                    },
-                                    itemCount: BookInfoList.length,
-                                  ),
-                                ],
-                              ),
-                        );
+                                        });
+                                      },
+                                      itemCount: BookInfoList.length,
+                                    ),
+                                  ],
+                                ),
+                          );
+                    }
+                  } else {
+                    return Center(
+                      child: Text(
+                        "Please reopen app.",
+                        style: TextStyle(
+                          fontFamily: regular,
+                          color: Colors.red[700],
+                          fontSize: shortestval * 0.05,
+                        ),
+                      ),
+                    );
                   }
-                } //conection state waiting
-                else {
-                  return Center(
-                    child: Text(
-                      "Please reopen app.",
-                      style: TextStyle(color: Colors.red, fontSize: 16),
-                    ),
-                  );
-                }
-              },
-            ),
-
-            Expanded(child: Container()),
-
-            SizedBox(width: double.infinity, child: FooterWidget()),
-          ],
+                },
+              ),
+              SizedBox(height: heightval * 0.02),
+              SizedBox(width: double.infinity, child: FooterWidget()),
+              SizedBox(height: heightval * 0.02),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  //add method
+  // Sorting methods section
   int sortBooksByPublicationDateAsc(List<BooKInfos> bookList) {
     try {
       List<BooKInfos> sortedList = List.from(bookList);
@@ -1349,13 +2345,12 @@ class _BookScreenState extends State<BookScreen> {
             DateTime.tryParse(b.publicationDate ?? '') ?? DateTime(1900);
         return dateA.compareTo(dateB);
       });
-
       FilteredBookListDateAesc.clear();
       FilteredBookListDateAesc.addAll(sortedList);
-      return 1; // success
+      return 1;
     } catch (e) {
       print('Error sorting by publication date ASC: $e');
-      return 0; // failure
+      return 0;
     }
   }
 
@@ -1369,13 +2364,12 @@ class _BookScreenState extends State<BookScreen> {
             DateTime.tryParse(b.publicationDate ?? '') ?? DateTime(1900);
         return dateB.compareTo(dateA);
       });
-
       FilteredBookListDateDesc.clear();
       FilteredBookListDateDesc.addAll(sortedList);
-      return 1; // success
+      return 1;
     } catch (e) {
       print('Error sorting by publication date DESC: $e');
-      return 0; // failure
+      return 0;
     }
   }
 
@@ -1387,13 +2381,12 @@ class _BookScreenState extends State<BookScreen> {
         double priceB = b.price ?? 0.0;
         return priceA.compareTo(priceB);
       });
-
       FilteredBookListPriceAesc.clear();
       FilteredBookListPriceAesc.addAll(sortedList);
-      return 1; // success
+      return 1;
     } catch (e) {
       print('Error sorting by price ASC: $e');
-      return 0; // failure
+      return 0;
     }
   }
 
@@ -1405,17 +2398,15 @@ class _BookScreenState extends State<BookScreen> {
         double priceB = b.price ?? 0.0;
         return priceB.compareTo(priceA);
       });
-
       FilteredBookListPriceDesc.clear();
       FilteredBookListPriceDesc.addAll(sortedList);
-      return 1; // success
+      return 1;
     } catch (e) {
       print('Error sorting by price DESC: $e');
-      return 0; // failure
+      return 0;
     }
   }
 
-  // Sort ratings in ascending order
   int sortBooksByRatingAsc(List<BooksWithReviewModel> bookList) {
     try {
       List<BooksWithReviewModel> sortedList = List.from(bookList);
@@ -1424,17 +2415,15 @@ class _BookScreenState extends State<BookScreen> {
         int ratingB = b.rating ?? 0;
         return ratingA.compareTo(ratingB);
       });
-
       FilteredBookListRatingsAesc.clear();
       FilteredBookListRatingsAesc.addAll(sortedList);
-      return 1; // success
+      return 1;
     } catch (e) {
       print('Error sorting by rating ASC: $e');
-      return 0; // failure
+      return 0;
     }
   }
 
-  // Sort ratings in descending order
   int sortBooksByRatingDesc(List<BooksWithReviewModel> bookList) {
     try {
       List<BooksWithReviewModel> sortedList = List.from(bookList);
@@ -1443,13 +2432,12 @@ class _BookScreenState extends State<BookScreen> {
         int ratingB = b.rating ?? 0;
         return ratingB.compareTo(ratingA);
       });
-
       FilteredBookListRatingsDesc.clear();
       FilteredBookListRatingsDesc.addAll(sortedList);
-      return 1; // success
+      return 1;
     } catch (e) {
       print('Error sorting by rating DESC: $e');
-      return 0; // failure
+      return 0;
     }
   }
 }

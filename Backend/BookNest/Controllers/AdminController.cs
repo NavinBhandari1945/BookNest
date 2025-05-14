@@ -115,7 +115,7 @@ namespace BookNest.Controllers
         }
 
 
-        //[Authorize(Policy = "RequireAdminRole")]
+        [Authorize(Policy = "RequireAdminRole")]
         [HttpPost]
         [Route("add_announcement")]
         public async Task<IActionResult> Add_Announcement([FromBody] AnnouncementStringModel Obj)
@@ -130,10 +130,7 @@ namespace BookNest.Controllers
                 var Start_Date = DateTime.Parse(Obj.StartDate).ToUniversalTime();
                 var End_Date = DateTime.Parse(Obj.EndDate).ToUniversalTime();
 
-                if (End_Date <= Start_Date)
-                {
-                    return StatusCode(502, "Incorrect discount date: Discount end date must be after start date.");
-                }
+      
 
                 AnoucementModel announcement = new AnoucementModel(
                     announcementId:Obj.AnnouncementId,

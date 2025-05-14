@@ -13,6 +13,7 @@ import '../../common widget/common_method.dart';
 import '../../common widget/toast.dart';
 import 'cart_screen.dart';
 
+// Widget definition section
 class CartDetailsScreen extends StatefulWidget {
   final String email;
   final String usertype;
@@ -68,8 +69,8 @@ class CartDetailsScreen extends StatefulWidget {
   State<CartDetailsScreen> createState() => _CartDetailsScreenState();
 }
 
+// State management and initialization section
 class _CartDetailsScreenState extends State<CartDetailsScreen> {
-
   @override
   void initState() {
     super.initState();
@@ -78,27 +79,32 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
 
   Future<void> checkJWTExpiationmember() async {
     try {
-      //check jwt called in admin home screen.
       print("check jwt called in book screen.");
       int result = await checkJwtToken_initistate_member(
-          widget.email, widget.usertype, widget.jwttoken);
-      if (result == 0)
-      {
+        widget.email,
+        widget.usertype,
+        widget.jwttoken,
+      );
+      if (result == 0) {
         await clearUserData();
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => UserNotLoginHomeScreen()));
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => UserNotLoginHomeScreen()),
+        );
         Toastget().Toastmsg("Session End. Relogin please.");
       }
     } catch (obj) {
       print("Exception caught while verifying jwt for admin home screen.");
       print(obj.toString());
       await clearUserData();
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UserNotLoginHomeScreen()));
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => UserNotLoginHomeScreen()),
+      );
       Toastget().Toastmsg("Error. Relogin please.");
     }
   }
 
-  // Calculate total price (quantity * price)
   double? get totalPrice {
     if (widget.quantity != null && widget.price != null) {
       return widget.quantity! * widget.price!;
@@ -106,11 +112,9 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
     return null;
   }
 
-  int? GetTotalPrice()
-  {
-    if (widget.quantity != null && widget.price != null)
-    {
-      int? IntPrice=int.tryParse(widget.price.toString());
+  int? GetTotalPrice() {
+    if (widget.quantity != null && widget.price != null) {
+      int? IntPrice = int.tryParse(widget.price.toString());
       return widget.quantity! * IntPrice!;
     }
     return null;
@@ -162,7 +166,7 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
       }
     } catch (Obj) {
       Toastget().Toastmsg(
-        "Exception caught in lDelete cart method in http method.",
+        "Exception caught in Delete cart method in http method.",
       );
       print("Exception caught in Delete cart method in http method.");
       print(Obj.toString());
@@ -181,30 +185,34 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
         'Content-Type': 'application/json',
       };
       Map<String, dynamic> BodyData = {"UserId": widget.cartUserId};
+      print("user id for order= ${widget.cartUserId}");
       final response = await http.post(
         Uri.parse(url),
         headers: headers,
-        body:json.encode(BodyData),
+        body: json.encode(BodyData),
       );
+      print("response status codde = ${response.statusCode}");
       if (response.statusCode == 200) {
         List<dynamic> responseData = await jsonDecode(response.body);
         OrderInfoList.clear();
         OrderInfoList.addAll(
           responseData.map((data) => OrderModel.fromJson(data)).toList(),
         );
-        print("OrderInfoList  count value");
+        print("OrderInfoList count value");
         print(OrderInfoList.length);
         return 1;
       } else {
         OrderInfoList.clear();
-        Toastget().Toastmsg("Fail to load order details.Try again.");
+        Toastget().Toastmsg(
+          "User didn't order 10 successful orders.10% discount not added..Fail to load order details.Try again.",
+        );
         print("Data insert in OrderInfoList failed.");
         return 2;
       }
     } catch (obj) {
       OrderInfoList.clear();
       print(
-        "Exception caught while fetching OrderInfoList data in http method",
+        "User didn't complete 10 successful order .Exception caught while fetching OrderInfoList data for 10% discount addition in http method",
       );
       print(obj.toString());
       return 0;
@@ -266,6 +274,7 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
     }
   }
 
+  // UI building section
   @override
   Widget build(BuildContext context) {
     var shortestval = MediaQuery.of(context).size.shortestSide;
@@ -273,270 +282,294 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
     var heightval = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      appBar:
-
-      AppBar(
+      appBar: AppBar(
         automaticallyImplyLeading: false,
         title: const Text(
           "Cart Details",
           style: TextStyle(
             fontFamily: bold,
-            fontSize: 24,
+            fontSize: 22,
             color: Colors.white,
-            letterSpacing: 1.2,
+            letterSpacing: 1.0,
           ),
         ),
-        backgroundColor: Colors.green[700],
-        elevation: 4,
-        shadowColor: Colors.black45,
+        backgroundColor: Colors.green[800],
+        elevation: 5,
+        shadowColor: Colors.black54,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
       ),
-
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Book Image
-            Center(
-              child: Card(
-                elevation: 8,
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.green[50]!.withOpacity(0.9),
+              Colors.white.withOpacity(0.95),
+            ],
+          ),
+        ),
+        child: SingleChildScrollView(
+          padding: EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Book image section
+              Center(
+                child: Card(
+                  elevation: 8,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child:
+                        widget.photo != null
+                            ? Image.memory(
+                              base64Decode(widget.photo!),
+                              height: heightval * 0.35,
+                              width: widthval * 0.7,
+                              fit: BoxFit.cover,
+                              errorBuilder:
+                                  (context, error, stackTrace) => Container(
+                                    height: heightval * 0.35,
+                                    width: widthval * 0.7,
+                                    color: Colors.grey[300],
+                                    child: const Icon(
+                                      Icons.broken_image,
+                                      size: 50,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                            )
+                            : Container(
+                              height: heightval * 0.35,
+                              width: widthval * 0.7,
+                              color: Colors.grey[300],
+                              child: const Icon(
+                                Icons.image,
+                                size: 50,
+                                color: Colors.grey,
+                              ),
+                            ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 20.0),
+              // Book details section
+              Card(
+                elevation: 4,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child:
-                      widget.photo != null
-                          ? Image.memory(
-                            base64Decode(widget.photo!),
-                            height: heightval * 0.3,
-                            width: widthval * 0.6,
-                            fit: BoxFit.cover,
-                            errorBuilder:
-                                (context, error, stackTrace) => Container(
-                                  height: heightval * 0.3,
-                                  width: widthval * 0.6,
-                                  color: Colors.grey[300],
-                                  child: const Icon(
-                                    Icons.broken_image,
-                                    size: 50,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                          )
-                          : Container(
-                            height: heightval * 0.3,
-                            width: widthval * 0.6,
-                            color: Colors.grey[300],
-                            child: const Icon(
-                              Icons.image,
-                              size: 50,
-                              color: Colors.grey,
-                            ),
-                          ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            // Book Details Card
-            Card(
-              elevation: 4,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Book Name : ${widget.bookName}" ?? 'N/A',
-                      style: const TextStyle(
-                        fontFamily: bold,
-                        fontSize: 22,
-                        color: Colors.black87,
+                child: Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Book Name: ${widget.bookName ?? 'N/A'}",
+                        style: TextStyle(
+                          fontFamily: bold,
+                          fontSize: 20,
+                          color: Colors.black87,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      "Book Tittle : ${widget.title}" ?? 'N/A',
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.grey[600],
-                        fontStyle: FontStyle.italic,
+                      SizedBox(height: 10.0),
+                      Text(
+                        "Title: ${widget.title ?? 'N/A'}",
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey[600],
+                          fontStyle: FontStyle.italic,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 12),
-                    _buildDetailRow('Author', widget.author ?? 'N/A'),
-                    _buildDetailRow('Publisher', widget.publisher ?? 'N/A'),
-                    _buildDetailRow('Language', widget.language ?? 'N/A'),
-                    _buildDetailRow('Category', widget.category ?? 'N/A'),
-                    _buildDetailRow('Format', widget.format ?? 'N/A'),
-                    _buildDetailRow(
-                      'Publication Date',
-                      widget.publicationDate ?? 'N/A',
-                    ),
-                    _buildDetailRow('Listed At', widget.listedAt ?? 'N/A'),
-                    _buildDetailRow(
-                      'Price',
-                      widget.price != null
-                          ? '${widget.price!.toStringAsFixed(2)}'
-                          : 'N/A',
-                    ),
-                    _buildDetailRow(
-                      'Discount',
-                      widget.discountPercent != null
-                          ? '${widget.discountPercent!.toStringAsFixed(0)}%'
-                          : 'N/A',
-                    ),
-                    _buildDetailRow(
-                      'Discount Period',
-                      (widget.discountStart != null &&
-                              widget.discountEnd != null)
-                          ? '${widget.discountStart} to ${widget.discountEnd}'
-                          : 'N/A',
-                    ),
-                    _buildDetailRow(
-                      'Available Quantity',
-                      widget.availableQuantity?.toString() ?? 'N/A',
-                    ),
-                    _buildDetailRow(
-                      'Quantity',
-                      widget.quantity?.toString() ?? 'N/A',
-                    ),
-                    _buildDetailRow(
-                      'Total Price',
-                      totalPrice != null
-                          ? '${totalPrice!.toStringAsFixed(2)}'
-                          : 'N/A',
-                    ),
-                    _buildDetailRow('Added At', widget.addedAt ?? 'N/A'),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 24),
-            // Action Buttons
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton(
-                  onPressed: () async {
-                    try {
-                      final Delete_Cart_Result = await Delete_Cart_Item();
-                      print(Delete_Cart_Result);
-                    } catch (obj) {
-                      print(obj.toString());
-                      Toastget().Toastmsg("Try again.fail.");
-                      return;
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red[600],
-                    foregroundColor: Colors.white,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: widthval * 0.1,
-                      vertical: 12,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    elevation: 4,
-                  ),
-                  child: const Text(
-                    'Delete',
-                    style: TextStyle(fontFamily: bold, fontSize: 16),
+                      SizedBox(height: 12.0),
+                      _buildDetailRow('Author', widget.author ?? 'N/A'),
+                      _buildDetailRow('Publisher', widget.publisher ?? 'N/A'),
+                      _buildDetailRow('Language', widget.language ?? 'N/A'),
+                      _buildDetailRow('Category', widget.category ?? 'N/A'),
+                      _buildDetailRow('Format', widget.format ?? 'N/A'),
+                      _buildDetailRow(
+                        'Publication Date',
+                        widget.publicationDate ?? 'N/A',
+                      ),
+                      _buildDetailRow('Listed At', widget.listedAt ?? 'N/A'),
+                      _buildDetailRow(
+                        'Price',
+                        widget.price != null
+                            ? '${widget.price!.toStringAsFixed(2)}'
+                            : 'N/A',
+                        color: Colors.green[700],
+                      ),
+                      _buildDetailRow(
+                        'Discount',
+                        widget.discountPercent != null
+                            ? '${widget.discountPercent!.toStringAsFixed(0)}%'
+                            : 'N/A',
+                      ),
+                      _buildDetailRow(
+                        'Discount Period',
+                        (widget.discountStart != null &&
+                                widget.discountEnd != null)
+                            ? '${widget.discountStart} to ${widget.discountEnd}'
+                            : 'N/A',
+                      ),
+                      _buildDetailRow(
+                        'Available Quantity',
+                        widget.availableQuantity?.toString() ?? 'N/A',
+                      ),
+                      _buildDetailRow(
+                        'Quantity',
+                        widget.quantity?.toString() ?? 'N/A',
+                      ),
+                      _buildDetailRow(
+                        'Total Price',
+                        totalPrice != null
+                            ? '${totalPrice!.toStringAsFixed(2)}'
+                            : 'N/A',
+                        color: Colors.green[700],
+                      ),
+                      _buildDetailRow('Added At', widget.addedAt ?? 'N/A'),
+                    ],
                   ),
                 ),
+              ),
+              SizedBox(height: 24.0),
+              // Action buttons section
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    onPressed: () async {
+                      try {
+                        final Delete_Cart_Result = await Delete_Cart_Item();
+                        print(Delete_Cart_Result);
+                      } catch (obj) {
+                        print(obj.toString());
+                        Toastget().Toastmsg("Try again.fail.");
+                        return;
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red[600],
+                      foregroundColor: Colors.white,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: widthval * 0.12,
+                        vertical: 14.0,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      elevation: 5,
+                    ),
+                    child: const Text(
+                      'Delete',
+                      style: TextStyle(fontFamily: bold, fontSize: 16),
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      try {
+                        int TotalDiscountPercent = 0;
 
-                ElevatedButton(
-                  onPressed: () async {
-                    try {
-
-                      int TotalDiscountPercent = 0;
-
-                      print("Discount percent from datbase = ${widget.discountPercent}");
-
-                      if (widget.discountPercent != null &&
-                          widget.discountPercent! > 0 &&
-                          widget.discountStart != null &&
-                          widget.discountEnd != null)
-                      {
-                        final currentDate = DateTime.now().toUtc();
-                        final startDate = DateTime.tryParse(
-                          widget.discountStart!,
+                        print(
+                          "Discount percent from database = ${widget.discountPercent}",
                         );
-                        final endDate = DateTime.tryParse(widget.discountEnd!);
-                        print("start date = ${startDate}");
-                        print("current date = ${currentDate}");
-                        print("end date = ${endDate}");
-                        if (startDate != null &&
-                            endDate != null &&
-                            currentDate.isAfter(startDate) &&
-                            currentDate.isBefore(endDate)) {
-                          print("Yes Book discount from databse discount percent added");
 
-                          int? DiscountFromdatabse=int.tryParse(widget.discountPercent.toString());
-                          print("Discountfromdatabse=${DiscountFromdatabse}");
-                          TotalDiscountPercent =
-                              TotalDiscountPercent + DiscountFromdatabse!;
-                        }
-                      }
+                        if (widget.discountPercent != null &&
+                            widget.discountPercent! > 0 &&
+                            widget.discountStart != null &&
+                            widget.discountEnd != null) {
+                          final currentDate = DateTime.now().toUtc();
+                          final startDate = DateTime.tryParse(
+                            widget.discountStart!,
+                          );
+                          final endDate = DateTime.tryParse(
+                            widget.discountEnd!,
+                          );
+                          print("start date = ${startDate}");
+                          print("current date = ${currentDate}");
+                          print("end date = ${endDate}");
+                          if (startDate != null &&
+                              endDate != null &&
+                              currentDate.isAfter(startDate) &&
+                              currentDate.isBefore(endDate)) {
+                            print(
+                              "Yes Book discount from database discount percent added",
+                            );
 
-                      if(TotalDiscountPercent==0)
-                      {
-                        print("No Book discount from databse discount percent added fail.Invalid discount status.");
-                      }
-
-                      print("Book order quantity = ${widget.quantity}");
-
-                      if (widget.quantity! >= 5)
-                      {
-                        print("Order quantity=${widget.quantity}");
-                        print("Yes Book discount aaded for more than or equal to 5 books order");
-                        TotalDiscountPercent = TotalDiscountPercent + 5;
-                      }
-
-                      if(widget.quantity!<5)
-                      {
-                        print("Order quantity=${widget.quantity}");
-                        print("No Book discount aaded for more than or equal to 5 books order");
-                      }
-
-
-                      final Order_History_Result = await GetOrderInfo();
-
-                      print("Order_History_Result = ${Order_History_Result}");
-
-                      if (Order_History_Result == 1)
-                      {
-
-                        if (OrderInfoList.length > 10)
-                        {
-                          print("Yes Book discount added for more than 10 successful book order.");
-                          TotalDiscountPercent = TotalDiscountPercent + 10;
+                            int? DiscountFromdatabse = int.tryParse(
+                              widget.discountPercent.toString(),
+                            );
+                            print("Discountfromdatabse=${DiscountFromdatabse}");
+                            TotalDiscountPercent =
+                                TotalDiscountPercent + DiscountFromdatabse!;
+                          }
                         }
 
-                        if(OrderInfoList.length < 10){
-                          print("No Book discount added for more than 10 successful book order.");
-
+                        if (TotalDiscountPercent == 0) {
+                          print(
+                            "No Book discount from database discount percent added fail.Invalid discount status.",
+                          );
                         }
 
-                        int? IntTotal_Price=GetTotalPrice();
-                        int IntTotalDiscountPercent=TotalDiscountPercent;
+                        print("Book order quantity = ${widget.quantity}");
 
-                        int discountAmount = ((IntTotal_Price! * IntTotalDiscountPercent) / 100).toInt();
+                        if (widget.quantity! > 5) {
+                          print("Order quantity=${widget.quantity}");
+                          print(
+                            "Yes Book discount added for more than or equal to 5 books order",
+                          );
+                          TotalDiscountPercent = TotalDiscountPercent + 5;
+                        }
 
-                        double? DoubleTotalPrice=double.tryParse(IntTotal_Price.toString());
-                        double? DoubleDiscountAmount=double.tryParse(discountAmount.toString());
+                        if (widget.quantity! <= 5) {
+                          print("Order quantity=${widget.quantity}");
+                          print(
+                            "No Book discount added for more than or equal to 5 books order",
+                          );
+                        }
 
+                        final Order_History_Result = await GetOrderInfo();
 
-                        double Total_Amount = DoubleTotalPrice! - DoubleDiscountAmount!;
+                        print("Order_History_Result = ${Order_History_Result}");
 
+                        if (Order_History_Result == 1) {
+                          if (OrderInfoList.length >= 10) {
+                            print(
+                              "Yes Book discount added for more than 10 successful book order.",
+                            );
+                            TotalDiscountPercent = TotalDiscountPercent + 10;
+                          }
+                        }
+
+                        if (OrderInfoList.length < 10) {
+                          print(
+                            "No Book discount added for more than 10 successful book order.",
+                          );
+                        }
+
+                        int? IntTotal_Price = GetTotalPrice();
+                        int IntTotalDiscountPercent = TotalDiscountPercent;
+
+                        int discountAmount =
+                            ((IntTotal_Price! * IntTotalDiscountPercent) / 100)
+                                .toInt();
+
+                        double? DoubleTotalPrice = double.tryParse(
+                          IntTotal_Price.toString(),
+                        );
+                        double? DoubleDiscountAmount = double.tryParse(
+                          discountAmount.toString(),
+                        );
+
+                        double Total_Amount =
+                            DoubleTotalPrice! - DoubleDiscountAmount!;
 
                         print("Total Discount: $TotalDiscountPercent%");
                         print("Discount Amount: $discountAmount");
@@ -556,11 +589,10 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
                         );
 
                         print("Add_Order_Result= ${Add_Order_Result}");
-                        if (Add_Order_Result != 1)
-                        {
-                          print("Failed to save order data in databse");
+                        if (Add_Order_Result != 1) {
+                          print("Failed to save order data in database");
                           Toastget().Toastmsg(
-                            "Failed to save order data in databse",
+                            "Failed to save order data in database",
                           );
                           return;
                         }
@@ -590,72 +622,70 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
                         final SendEmailResult = await sendEmail(
                           name: "BookNest",
                           email: widget.email,
-                          subject: "BookNest book order Bill and payment details.",
+                          subject:
+                              "BookNest book order Bill and payment details.",
                           message: message,
                         );
 
                         print("Send Email Result: $SendEmailResult");
 
-                        if(SendEmailResult!=1)
-                        {
+                        if (SendEmailResult != 1) {
                           print("Failed to send email");
-                          Toastget().Toastmsg("Failed to senfd email of order details");
+                          Toastget().Toastmsg(
+                            "Failed to send email of order details",
+                          );
                           return;
                         }
                         print("Success to send email");
-                        Toastget().Toastmsg("Success to send email of order details");
-                        return;
-                      } else {
                         Toastget().Toastmsg(
-                          "Order process fail.try again.server Error.",
+                          "Success to send email of order details",
                         );
                         return;
+                      } catch (obj) {
+                        print(obj.toString());
+                        Toastget().Toastmsg("Try again.fail.");
+                        return;
                       }
-                    } catch (obj) {
-                      print(obj.toString());
-                      Toastget().Toastmsg("Try again.fail.");
-                      return;
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green[700],
-                    foregroundColor: Colors.white,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: widthval * 0.1,
-                      vertical: 12,
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green[800],
+                      foregroundColor: Colors.white,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: widthval * 0.12,
+                        vertical: 14.0,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      elevation: 5,
                     ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                    child: const Text(
+                      'Buy Now',
+                      style: TextStyle(fontFamily: bold, fontSize: 16),
                     ),
-                    elevation: 4,
                   ),
-                  child: const Text(
-                    'Buy Now',
-                    style: TextStyle(fontFamily: bold, fontSize: 16),
-                  ),
-                ),
-
-
-              ],
-            ),
-          ],
+                ],
+              ),
+              SizedBox(height: 20.0),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  // Helper method to build detail rows
-  Widget _buildDetailRow(String label, String value) {
+  // Helper method section
+  Widget _buildDetailRow(String label, String value, {Color? color}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      padding: const EdgeInsets.symmetric(vertical: 6.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            width: 120,
+            width: 130,
             child: Text(
               '$label:',
-              style: const TextStyle(
+              style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
                 color: Colors.black87,
@@ -665,7 +695,7 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
           Expanded(
             child: Text(
               value,
-              style: TextStyle(fontSize: 16, color: Colors.grey[800]),
+              style: TextStyle(fontSize: 16, color: color ?? Colors.grey[800]),
             ),
           ),
         ],
@@ -683,18 +713,17 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
       const serviceId = "service_wn7e1b7";
       const userId = "55pnpAt50ARjpcT9f";
       const templateId = "template_larap3m";
-      const privateKey = "kNdcuy4zAUFmCzDYG9iZ2"; // Replace with your EmailJS private key
+      const privateKey =
+          "kNdcuy4zAUFmCzDYG9iZ2"; // Replace with your EmailJS private key
       final url = Uri.parse("https://api.emailjs.com/api/v1.0/email/send");
 
-      final headers = {
-        'Content-Type': 'application/json',
-      };
+      final headers = {'Content-Type': 'application/json'};
 
       final body = jsonEncode({
         "service_id": serviceId,
         "user_id": userId,
         "template_id": templateId,
-        "accessToken": privateKey, // Include the private key
+        "accessToken": privateKey,
         "template_params": {
           "user_name": name,
           "user_email": email,
@@ -703,11 +732,7 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
         },
       });
 
-      final response = await http.post(
-        url,
-        headers: headers,
-        body: body,
-      );
+      final response = await http.post(url, headers: headers, body: body);
 
       print("EmailJS response: ${response.body}");
       print("Status code: ${response.statusCode}");
@@ -717,5 +742,4 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
       return 0;
     }
   }
-
 }

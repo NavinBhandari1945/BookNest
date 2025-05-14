@@ -3,18 +3,28 @@ import 'dart:convert';
 import '../../../Models/BookInfosModel.dart';
 import '../../../constant/styles.dart';
 
+// Widget definition section
 class CategoryBookPage extends StatefulWidget {
   final String email;
   final String usertype;
   final String jwttoken;
   final List<BooKInfos> BookInfo;
-  const CategoryBookPage({super.key, required this.jwttoken, required this.usertype, required this.email, required this.BookInfo});
+
+  const CategoryBookPage({
+    super.key,
+    required this.jwttoken,
+    required this.usertype,
+    required this.email,
+    required this.BookInfo,
+  });
 
   @override
   State<CategoryBookPage> createState() => _CategoryBookPageState();
 }
 
+// State management section
 class _CategoryBookPageState extends State<CategoryBookPage> {
+  // UI building section
   @override
   Widget build(BuildContext context) {
     var shortestval = MediaQuery.of(context).size.shortestSide;
@@ -30,11 +40,11 @@ class _CategoryBookPageState extends State<CategoryBookPage> {
             fontFamily: bold,
             fontSize: 20,
             color: Colors.white,
-            letterSpacing: 1.0,
+            letterSpacing: 0.5,
           ),
         ),
         backgroundColor: Colors.green[700],
-        elevation: 4,
+        elevation: 2,
         shadowColor: Colors.black45,
       ),
       body: Container(
@@ -44,13 +54,13 @@ class _CategoryBookPageState extends State<CategoryBookPage> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Colors.green[50]!.withOpacity(0.7), Colors.white],
+            colors: [Colors.green[50]!.withOpacity(0.9), Colors.white],
           ),
         ),
         child: Center(
           child: ConstrainedBox(
             constraints: const BoxConstraints(
-              maxWidth: 800,
+              maxWidth: 600,
               minWidth: 300,
             ),
             child: SingleChildScrollView(
@@ -59,111 +69,116 @@ class _CategoryBookPageState extends State<CategoryBookPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Header
+                  // Header section
                   Padding(
                     padding: EdgeInsets.symmetric(
-                      horizontal: widthval * 0.03,
-                      vertical: heightval * 0.015,
+                      horizontal: widthval * 0.02,
+                      vertical: heightval * 0.01,
                     ),
                     child: Text(
-                      'Category wise Books',
+                      'Category-wise Books',
                       style: TextStyle(
-                        fontSize: widthval * 0.04,
+                        fontSize: widthval * 0.035,
                         fontFamily: bold,
-                        color: Colors.green[800],
-                        fontWeight: FontWeight.bold,
+                        color: Colors.green[900],
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ),
-                  // Book List
-                  LayoutBuilder(
+                  widget.BookInfo.isEmpty
+                      ? Center(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: heightval * 0.06),
+                      child: Text(
+                        "No books available in this category.",
+                        style: TextStyle(
+                          fontFamily: regular,
+                          fontSize: shortestval * 0.028,
+                          color: Colors.green[800],
+                        ),
+                      ),
+                    ),
+                  )
+                      : LayoutBuilder(
                     builder: (context, constraints) {
-                      double fontScale = constraints.maxWidth < 400 ? 0.9 : 1.0; // Smaller fonts on narrow screens
+                      double fontScale = constraints.maxWidth < 360 ? 0.65 : 0.8;
+                      double imageWidth = widthval * 0.2;
                       return ListView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         itemCount: widget.BookInfo.length,
                         itemBuilder: (context, index) {
                           final book = widget.BookInfo[index];
-                          return
-
-                            Card (
-                            elevation: 4,
+                          return Card(
+                            elevation: 2,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: BorderRadius.circular(10),
                             ),
                             margin: EdgeInsets.symmetric(
-                              horizontal: widthval * 0.03,
-                              vertical: heightval * 0.01,
+                              horizontal: widthval * 0.02,
+                              vertical: heightval * 0.008,
                             ),
+                            color: Colors.white,
                             child: Padding(
-                              padding: EdgeInsets.all(widthval * 0.025),
-                              child: Column(
+                              padding: EdgeInsets.all(widthval * 0.02),
+                              child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  // Book Image
-                                  Center(
-                                    child: SizedBox(
-                                      width: widthval * 0.3,
+                                  // Image section
+                                  Flexible(
+                                    child: FractionallySizedBox(
+                                      widthFactor: 0.3,
                                       child: AspectRatio(
-                                        aspectRatio: 2 / 3, // Standard book cover ratio
+                                        aspectRatio: 2 / 3,
                                         child: ClipRRect(
-                                          borderRadius: BorderRadius.circular(8),
+                                          borderRadius: BorderRadius.circular(6),
                                           child: book.photo != null
                                               ? Image.memory(
                                             base64Decode(book.photo!),
-                                            fit: BoxFit.cover,
+                                            fit: BoxFit.contain,
                                             errorBuilder: (context, error, stackTrace) => const Icon(
                                               Icons.broken_image,
-                                              size: 50,
+                                              size: 25,
                                               color: Colors.grey,
                                             ),
                                           )
                                               : const Icon(
                                             Icons.broken_image,
-                                            size: 50,
+                                            size: 25,
                                             color: Colors.grey,
                                           ),
                                         ),
                                       ),
                                     ),
                                   ),
-                                  SizedBox(height: heightval * 0.015),
-                                  // Book Details
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      _buildInfoRow('Title', book.title ?? 'N/A', widthval, heightval, fontScale, isBold: true),
-                                      _buildInfoRow('Book Name', book.bookName ?? 'N/A', widthval, heightval, fontScale),
-                                      _buildInfoRow('Author', book.author ?? 'N/A', widthval, heightval, fontScale, isItalic: true),
-                                      _buildInfoRow('Price', book.price?.toStringAsFixed(2) ?? 'N/A', widthval, heightval, fontScale, color: Colors.green[700]),
-                                      _buildInfoRow('Format', book.format ?? 'N/A', widthval, heightval, fontScale),
-                                      _buildInfoRow('Publisher', book.publisher ?? 'N/A', widthval, heightval, fontScale),
-                                      _buildInfoRow('Publication Date', book.publicationDate ?? 'N/A', widthval, heightval, fontScale),
-                                      _buildInfoRow('Language', book.language ?? 'N/A', widthval, heightval, fontScale),
-                                      _buildInfoRow('Category', book.category ?? 'N/A', widthval, heightval, fontScale),
-                                      _buildInfoRow('Listed At', book.listedAt ?? 'N/A', widthval, heightval, fontScale),
-                                      _buildInfoRow(
-                                        'Available Quantity',
-                                        book.availableQuantity?.toString() ?? 'N/A',
-                                        widthval,
-                                        heightval,
-                                        fontScale,
-                                        color: book.availableQuantity != null && book.availableQuantity! > 0
-                                            ? Colors.green[600]
-                                            : Colors.red[600],
-                                      ),
-                                      _buildInfoRow(
-                                        'Discount Percent',
-                                        book.discountPercent != null ? '${book.discountPercent}%' : 'N/A',
-                                        widthval,
-                                        heightval,
-                                        fontScale,
-                                      ),
-                                      _buildInfoRow('Discount Start', book.discountStart ?? 'N/A', widthval, heightval, fontScale),
-                                      _buildInfoRow('Discount End', book.discountEnd ?? 'N/A', widthval, heightval, fontScale),
-                                      _buildInfoRow('Book ID', book.bookId?.toString() ?? 'N/A', widthval, heightval, fontScale),
-                                    ],
+                                  SizedBox(width: widthval * 0.02),
+                                  // Details section
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        _buildInfoRow('Title', book.title ?? 'N/A', widthval, heightval, fontScale,
+                                            isBold: true),
+                                        _buildInfoRow('Author', book.author ?? 'N/A', widthval, heightval, fontScale,
+                                            isItalic: true),
+                                        _buildInfoRow('Price', book.price?.toStringAsFixed(2) ?? 'N/A', widthval,
+                                            heightval, fontScale,
+                                            color: Colors.green[700]),
+                                        _buildInfoRow('Category', book.category ?? 'N/A', widthval, heightval, fontScale),
+                                        _buildInfoRow(
+                                          'Available Quantity',
+                                          book.availableQuantity?.toString() ?? 'N/A',
+                                          widthval,
+                                          heightval,
+                                          fontScale,
+                                          color: book.availableQuantity != null && book.availableQuantity! > 0
+                                              ? Colors.green[600]
+                                              : Colors.red[600],
+                                        ),
+                                        _buildInfoRow('Book ID', book.bookId?.toString() ?? 'N/A', widthval, heightval,
+                                            fontScale),
+                                      ],
+                                    ),
                                   ),
                                 ],
                               ),
@@ -173,7 +188,7 @@ class _CategoryBookPageState extends State<CategoryBookPage> {
                       );
                     },
                   ),
-                  SizedBox(height: heightval * 0.03), // Bottom padding
+                  SizedBox(height: heightval * 0.015),
                 ],
               ),
             ),
@@ -183,7 +198,7 @@ class _CategoryBookPageState extends State<CategoryBookPage> {
     );
   }
 
-  // Helper method to build info rows
+  // Helper method section
   Widget _buildInfoRow(
       String label,
       String value,
@@ -195,14 +210,14 @@ class _CategoryBookPageState extends State<CategoryBookPage> {
         Color? color,
       }) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: heightval * 0.004),
+      padding: EdgeInsets.symmetric(vertical: heightval * 0.002),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             '$label: ',
             style: TextStyle(
-              fontSize: widthval * 0.03 * fontScale,
+              fontSize: widthval * 0.022 * fontScale,
               fontFamily: bold,
               fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
               color: Colors.black87,
@@ -214,12 +229,12 @@ class _CategoryBookPageState extends State<CategoryBookPage> {
             child: Text(
               value,
               style: TextStyle(
-                fontSize: widthval * 0.03 * fontScale,
+                fontSize: widthval * 0.022 * fontScale,
                 color: color ?? Colors.grey[800],
                 fontStyle: isItalic ? FontStyle.italic : FontStyle.normal,
                 fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
               ),
-              maxLines: 4,
+              maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
           ),
@@ -228,12 +243,3 @@ class _CategoryBookPageState extends State<CategoryBookPage> {
     );
   }
 }
-
-
-
-
-
-
-
-
-

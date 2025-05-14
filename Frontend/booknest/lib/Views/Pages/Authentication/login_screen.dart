@@ -14,7 +14,6 @@ import '../../common widget/commontextfield_obs_false.dart';
 import 'package:http/http.dart' as http;
 import '../../common widget/toast.dart';
 
-
 class LoginHomePage extends StatefulWidget {
   const LoginHomePage({super.key});
 
@@ -22,9 +21,7 @@ class LoginHomePage extends StatefulWidget {
   State<LoginHomePage> createState() => _LoginHomePageState();
 }
 
-class _LoginHomePageState extends State<LoginHomePage> with SingleTickerProviderStateMixin
-{
-
+class _LoginHomePageState extends State<LoginHomePage> with SingleTickerProviderStateMixin {
   var email_cont = TextEditingController();
   var passwoord_cont = TextEditingController();
   late AnimationController _animationController;
@@ -48,8 +45,7 @@ class _LoginHomePageState extends State<LoginHomePage> with SingleTickerProvider
   }
 
   @override
-  void dispose()
-  {
+  void dispose() {
     _animationController.dispose();
     email_cont.dispose();
     passwoord_cont.dispose();
@@ -106,52 +102,44 @@ class _LoginHomePageState extends State<LoginHomePage> with SingleTickerProvider
         final box = await Hive.openBox('userData');
         String? jwtToken = await box.get('jwt_token');
         Map<dynamic, dynamic> userData = await getUserCredentials();
-        if (jwtToken.isEmptyOrNull && userData == null)
-        {
+        if (jwtToken.isEmptyOrNull && userData == null) {
           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginHomePage()));
           Toastget().Toastmsg("Login Failed. Try again.");
           return 0;
-        } else
-        {
+        } else {
           if (userData["usertype"] == "Admin") {
             Toastget().Toastmsg("Login success");
-            Navigator.pushReplacement (
+            Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => AdminHomePage(jwttoken: jwtToken!, usertype:userData['usertype'], email: userData["email"],)
+                builder: (context) => AdminHomePage(jwttoken: jwtToken!, usertype: userData['usertype'], email: userData["email"]),
               ),
             );
             return 1;
-          }
-          else if(userData["usertype"] == "Staff")
-          {
+          } else if (userData["usertype"] == "Staff") {
             Toastget().Toastmsg("Login success");
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) =>StaffHomePage(jwttoken: jwtToken!, usertype:userData['usertype'], email: userData["email"],)
+                builder: (context) => StaffHomePage(jwttoken: jwtToken!, usertype: userData['usertype'], email: userData["email"]),
               ),
             );
-
             return 1;
-          }
-          else if(userData["usertype"] == "Member")
-          {
+          } else if (userData["usertype"] == "Member") {
             Toastget().Toastmsg("Login success");
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                  builder: (context) => MemberHomePage(jwttoken: jwtToken!, usertype:userData['usertype'], email: userData["email"],)
+                builder: (context) => MemberHomePage(jwttoken: jwtToken!, usertype: userData['usertype'], email: userData["email"]),
               ),
             );
             return 1;
-          }
-          else {
+          } else {
             Toastget().Toastmsg("Login fail.Server error.Try again.");
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                  builder: (context) => LoginHomePage()
+                builder: (context) => LoginHomePage(),
               ),
             );
             return 0;
@@ -162,7 +150,7 @@ class _LoginHomePageState extends State<LoginHomePage> with SingleTickerProvider
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-              builder: (context) => LoginHomePage()
+            builder: (context) => LoginHomePage(),
           ),
         );
         return 0;
@@ -171,7 +159,7 @@ class _LoginHomePageState extends State<LoginHomePage> with SingleTickerProvider
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-              builder: (context) => LoginHomePage()
+            builder: (context) => LoginHomePage(),
           ),
         );
         return 0;
@@ -192,127 +180,139 @@ class _LoginHomePageState extends State<LoginHomePage> with SingleTickerProvider
     }
   }
 
-
-Widget _Login_UI_Layout(double shortestval, double widthval, double heightval)
-{
-  return FadeTransition(
-    opacity:_fadeAnimation ,
-    child: SlideTransition(
-      position: _slideAnimation,
-      child: Center(
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Padding(
-            padding: EdgeInsets.all(shortestval * 0.05),
-            child: Card(
-              elevation: 8,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-              child: Container(
-                width: widthval * 0.9,
-                padding: EdgeInsets.all(shortestval * 0.06),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.2),
-                      blurRadius: 10,
-                      offset: Offset(0, 5),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Welcome Back!",
-                      style: TextStyle(
-                        fontFamily: bold,
-                        fontSize: shortestval * 0.07,
-                        color: Colors.green[700],
+  Widget _Login_UI_Layout(double shortestval, double widthval, double heightval) {
+    return FadeTransition(
+      opacity: _fadeAnimation,
+      child: SlideTransition(
+        position: _slideAnimation,
+        child: Center(
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Padding(
+              padding: EdgeInsets.all(shortestval * 0.05),
+              child: Card(
+                elevation: 8,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                child: Container(
+                  width: widthval * 0.9,
+                  padding: EdgeInsets.all(shortestval * 0.06),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.2),
+                        blurRadius: 10,
+                        offset: Offset(0, 5),
                       ),
-                    ),
-                    SizedBox(height: shortestval * 0.04),
-                    CommonTextField_obs_false(
-                      "Enter your email",
-                      "",
-                      false,
-                      email_cont,
-                      context,
-                      decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.person, color: Colors.green[700]),
-                        filled: true,
-                        fillColor: Colors.grey[100],
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide.none,
-                        ),
-                        hintStyle: TextStyle(color: Colors.grey[500], fontFamily: regular),
-                      ),
-                    ),
-                    SizedBox(height: shortestval * 0.04),
-                    CommonTextField_obs_val_true(
-                      "Enter your Password",
-                      "",
-                      passwoord_cont,
-                      context,
-                      decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.lock, color: Colors.green[700]),
-                        filled: true,
-                        fillColor: Colors.grey[100],
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide.none,
-                        ),
-                        hintStyle: TextStyle(color: Colors.grey[500], fontFamily: regular),
-                      ),
-                    ),
-                    SizedBox(height: shortestval * 0.06),
-                    Center(
-                      child: Commonbutton("Login", ()async{
-
-                        int Login_Result=await _login();
-                        print("Login result from widget = ${Login_Result}");
-
-                      }, context, Colors.red),
-                    ),
-                    SizedBox(height: shortestval * 0.04),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        TextButton(
-                          onPressed: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) =>Container()),
+                    ],
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Application name as logo
+                      Center(
+                        child: Text(
+                          "BookNest",
+                          style: TextStyle(
+                            fontFamily: bold,
+                            fontSize: shortestval * 0.08,
+                            color: Colors.green[700],
+                            shadows: [
+                              Shadow(
+                                color: Colors.green[900]!.withOpacity(0.2),
+                                blurRadius: 4,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
                           ),
-                          child: Text(
-                            "Forgot Password?",
-                            style: TextStyle(
-                              fontFamily: semibold,
-                              color: Colors.green[700],
-                              fontSize: shortestval * 0.04,
+                        ),
+                      ),
+                      SizedBox(height: shortestval * 0.02),
+                      Text(
+                        "Welcome Back!",
+                        style: TextStyle(
+                          fontFamily: bold,
+                          fontSize: shortestval * 0.07,
+                          color: Colors.green[700],
+                        ),
+                      ),
+                      SizedBox(height: shortestval * 0.04),
+                      CommonTextField_obs_false(
+                        "Enter your email",
+                        "",
+                        false,
+                        email_cont,
+                        context,
+                        decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.person, color: Colors.green[700]),
+                          filled: true,
+                          fillColor: Colors.grey[100],
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide.none,
+                          ),
+                          hintStyle: TextStyle(color: Colors.grey[500], fontFamily: regular),
+                        ),
+                      ),
+                      SizedBox(height: shortestval * 0.04),
+                      CommonTextField_obs_val_true(
+                        "Enter your Password",
+                        "",
+                        passwoord_cont,
+                        context,
+                        decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.lock, color: Colors.green[700]),
+                          filled: true,
+                          fillColor: Colors.grey[100],
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide.none,
+                          ),
+                          hintStyle: TextStyle(color: Colors.grey[500], fontFamily: regular),
+                        ),
+                      ),
+                      SizedBox(height: shortestval * 0.06),
+                      Center(
+                        child: Commonbutton("Login", () async {
+                          int Login_Result = await _login();
+                          print("Login result from widget = ${Login_Result}");
+                        }, context, Colors.red),
+                      ),
+                      SizedBox(height: shortestval * 0.04),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          TextButton(
+                            onPressed: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => Container()),
+                            ),
+                            child: Text(
+                              "Forgot Password?",
+                              style: TextStyle(
+                                fontFamily: semibold,
+                                color: Colors.green[700],
+                                fontSize: shortestval * 0.04,
+                              ),
                             ),
                           ),
-                        ),
-
-                      ],
-                    ),
-                  ],
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 
-
-@override
-  Widget build(BuildContext context)
-{
+  @override
+  Widget build(BuildContext context) {
     var shortestval = MediaQuery.of(context).size.shortestSide;
     var widthval = MediaQuery.of(context).size.width;
     var heightval = MediaQuery.of(context).size.height;
@@ -327,7 +327,7 @@ Widget _Login_UI_Layout(double shortestval, double widthval, double heightval)
         elevation: 4,
         shadowColor: Colors.black45,
       ),
-      body: Container (
+      body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
@@ -335,25 +335,8 @@ Widget _Login_UI_Layout(double shortestval, double widthval, double heightval)
             colors: [Colors.green[50]!, Colors.white],
           ),
         ),
-        child:
-        _Login_UI_Layout(shortestval, widthval, heightval),
+        child: _Login_UI_Layout(shortestval, widthval, heightval),
       ),
     );
   }
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

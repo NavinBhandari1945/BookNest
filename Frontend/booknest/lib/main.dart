@@ -6,7 +6,7 @@ import 'package:hive_flutter/adapters.dart';
 import 'Views/common widget/common_method.dart';
 
 
-//main function entryu point
+//main function entry point
 void main() async {
   Widget initialScreen;
   try {

@@ -11,8 +11,9 @@ import '../../../constant/styles.dart';
 import '../../common widget/circular_progress_ind_yellow.dart';
 import '../../common widget/common_method.dart';
 import '../../common widget/toast.dart';
-import 'order_full_detilas.dart';
+import 'order_full_details.dart';
 
+// Widget definition section
 class OrderHistoryPage extends StatefulWidget {
   final String email;
   final String usertype;
@@ -28,6 +29,7 @@ class OrderHistoryPage extends StatefulWidget {
   State<OrderHistoryPage> createState() => _OrderHistoryPageState();
 }
 
+// State management and initialization section
 class _OrderHistoryPageState extends State<OrderHistoryPage> {
   @override
   void initState() {
@@ -37,7 +39,6 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
 
   Future<void> checkJWTExpiationmember() async {
     try {
-      //check jwt called in admin home screen.
       print("check jwt called in book screen.");
       int result = await checkJwtToken_initistate_member(
         widget.email,
@@ -87,15 +88,14 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
         );
         print("OrdrInfoList count value");
         print(OrdrInfoList.length);
-        // Populate CurrentUserCartInfoList based on widget.email
         CurrentUserOrdrInfoList.clear();
         CurrentUserOrdrInfoList.addAll(
           OrdrInfoList.where(
-            (orderitem) => orderitem.email == widget.email,
+                (orderitem) => orderitem.email == widget.email,
           ).toList(),
         );
         print(
-          "Current user CurrentUserOrdrInfoList  count: ${CurrentUserOrdrInfoList.length}",
+          "Current user CurrentUserOrdrInfoList count: ${CurrentUserOrdrInfoList.length}",
         );
         return;
       } else {
@@ -111,6 +111,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
     }
   }
 
+  // UI building section
   @override
   Widget build(BuildContext context) {
     var shortestval = MediaQuery.of(context).size.shortestSide;
@@ -120,91 +121,129 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: const Text(
-          "Order Details",
+          "Order History",
           style: TextStyle(
             fontFamily: bold,
-            fontSize: 24,
+            fontSize: 22,
             color: Colors.white,
-            letterSpacing: 1.2,
+            letterSpacing: 1.0,
           ),
         ),
-        backgroundColor: Colors.green[700],
-        elevation: 4,
-        shadowColor: Colors.black45,
+        backgroundColor: Colors.green[800],
+        elevation: 5,
+        shadowColor: Colors.black54,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
       ),
-
       body: Container(
         width: widthval,
         height: heightval,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.green[50]!.withOpacity(0.9),
+              Colors.white.withOpacity(0.95)
+            ],
+          ),
+        ),
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           physics: BouncingScrollPhysics(),
           child: Column(
             children: [
-              FutureBuilder(
-                future: GetOrderInfos(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Circular_pro_indicator_Yellow(
-                      context,
-                    ); // While waiting for response
-                  } else if (snapshot.hasError) {
-                    return Text(
-                      'Error: ${snapshot.error}',
-                    ); // If there's an error
-                  } else if (snapshot.connectionState == ConnectionState.done) {
-                    if (CurrentUserOrdrInfoList.isNotEmpty ||
-                        CurrentUserOrdrInfoList.length >= 1) {
-                      return Container(
-                        width: widthval,
-                        height: heightval * 0.90,
-                        child: ListView.builder(
-                          itemBuilder: (context, index) {
-                            final order = CurrentUserOrdrInfoList[index];
-
-                            return Card(
-                              child: Container(
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text("${order.bookId}"),
-                                    Text("${order.author}"),
-                                    Text("${order.publicationDate}"),
-                                  ],
-                                ),
-                              )
-                            ).onTap((){
-
-                              Navigator.push (context, MaterialPageRoute(builder: (context) => OrderDetailsPage(
-                                jwttoken: widget.jwttoken,
-                                usertype: widget.usertype,
-                                email: widget.email,
-                                OrderObject: order,
-                              ),
-                              ));
-                            });
-                          },
-                          itemCount: CurrentUserOrdrInfoList.length,
-                        ),
+              // Order history content section
+              Container(
+                margin: EdgeInsets.all(16.0),
+                padding: EdgeInsets.all(16.0),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(15),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 8,
+                      offset: Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: FutureBuilder(
+                  future: GetOrderInfos(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Circular_pro_indicator_Yellow(
+                        context,
                       );
+                    } else if (snapshot.hasError) {
+                      return Text(
+                        'Error: ${snapshot.error}',
+                      );
+                    } else if (snapshot.connectionState == ConnectionState.done) {
+                      if (CurrentUserOrdrInfoList.isNotEmpty ||
+                          CurrentUserOrdrInfoList.length >= 1) {
+                        return Container(
+                          width: widthval,
+                          height: heightval * 0.85,
+                          child: ListView.builder(
+                            itemBuilder: (context, index) {
+                              final order = CurrentUserOrdrInfoList[index];
+                              return Card(
+                                elevation: 3,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                margin: EdgeInsets.symmetric(vertical: heightval * 0.01),
+                                color: Colors.white,
+                                child: Container(
+                                  padding: EdgeInsets.all(12.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text("${order.bookId}", style: TextStyle(fontSize: widthval * 0.04, fontFamily: bold)),
+                                      Text("${order.author}", style: TextStyle(fontSize: widthval * 0.04)),
+                                      Text("${order.publicationDate}", style: TextStyle(fontSize: widthval * 0.04)),
+                                    ],
+                                  ),
+                                ),
+                              ).onTap(() {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => OrderDetailsPage(
+                                      jwttoken: widget.jwttoken,
+                                      usertype: widget.usertype,
+                                      email: widget.email,
+                                      OrderObject: order,
+                                    ),
+                                  ),
+                                );
+                              });
+                            },
+                            itemCount: CurrentUserOrdrInfoList.length,
+                          ),
+                        );
+                      } else {
+                        return Center(
+                          child: Text(
+                            'No order history. Please close and reopen app or place an order.',
+                            style: TextStyle(
+                              fontSize: widthval * 0.04,
+                              color: Colors.grey[600],
+                              fontFamily: bold,
+                            ),
+                          ),
+                        );
+                      }
                     } else {
                       return Center(
-                        child: Text(
-                          'No friend info.Please close and reopen app or add friend.',
-                        ),
-                      ); // If no user data
+                        child: Text('Error. Relogin.'),
+                      );
                     }
-                  } else {
-                    return Center(
-                      child: Text('Error.Relogin.'),
-                    ); // Default loading state
-                  }
-                },
+                  },
+                ),
               ),
             ],
           ),

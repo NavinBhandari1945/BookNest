@@ -1,7 +1,16 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "D:\\College Workplace\\3rdyr\\sem\\app development\\sem2\\cw app\\Flutter_Dotnet\\Backend\\BookNest\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{832EAD3C-1A76-4B72-92D7-58FAE6A7A39E}|BookNest.csproj|d:\\college workplace\\3rdyr\\sem\\app development\\sem2\\cw app\\flutter_dotnet\\backend\\booknest\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{832EAD3C-1A76-4B72-92D7-58FAE6A7A39E}|BookNest.csproj|solutionrelative:controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{832EAD3C-1A76-4B72-92D7-58FAE6A7A39E}|BookNest.csproj|d:\\college workplace\\3rdyr\\sem\\app development\\sem2\\cw app\\flutter_dotnet\\backend\\booknest\\controllers\\membercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{832EAD3C-1A76-4B72-92D7-58FAE6A7A39E}|BookNest.csproj|solutionrelative:controllers\\membercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -9,8 +18,33 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": -1,
+          "SelectedChildIndex": 0,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "AdminController.cs",
+              "DocumentMoniker": "D:\\College Workplace\\3rdyr\\sem\\app development\\sem2\\cw app\\Flutter_Dotnet\\Backend\\BookNest\\Controllers\\AdminController.cs",
+              "RelativeDocumentMoniker": "Controllers\\AdminController.cs",
+              "ToolTip": "D:\\College Workplace\\3rdyr\\sem\\app development\\sem2\\cw app\\Flutter_Dotnet\\Backend\\BookNest\\Controllers\\AdminController.cs",
+              "RelativeToolTip": "Controllers\\AdminController.cs",
+              "ViewState": "AgIAAHMAAAAAAAAAAAAkwIQAAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-12T09:01:10.572Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "MemberController.cs",
+              "DocumentMoniker": "D:\\College Workplace\\3rdyr\\sem\\app development\\sem2\\cw app\\Flutter_Dotnet\\Backend\\BookNest\\Controllers\\MemberController.cs",
+              "RelativeDocumentMoniker": "Controllers\\MemberController.cs",
+              "ToolTip": "D:\\College Workplace\\3rdyr\\sem\\app development\\sem2\\cw app\\Flutter_Dotnet\\Backend\\BookNest\\Controllers\\MemberController.cs",
+              "RelativeToolTip": "Controllers\\MemberController.cs",
+              "ViewState": "AgIAAP8CAAAAAAAAAAAcwBMDAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-12T07:55:25.886Z"
+            },
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"

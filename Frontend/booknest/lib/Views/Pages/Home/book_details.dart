@@ -265,7 +265,8 @@ class _BookDetailsState extends State<BookDetails>
         print(ReviewInfoList.length);
         print(ReviewInfoList[0].bookId);
         return 1;
-      } else if (response.statusCode == 500) {
+      } else if (response.statusCode == 500)
+      {
         Toastget().Toastmsg(
           "Adding ReviewInfoList failed.Incorrect ReviewInfoList data format.Try again.",
         );
@@ -273,11 +274,8 @@ class _BookDetailsState extends State<BookDetails>
       } else {
         ReviewInfoList.clear();
         print("Error.other status code.");
-        print("Response body: ${response.body}");
-        final decoded = json.decode(response.body);
-        print("Error message: ${decoded['message']}");
-        print("Stack trace: ${decoded['stackTrace']}");
-        Toastget().Toastmsg("Adding cart failed.");
+        print("Response body: ${response.statusCode}");
+        Toastget().Toastmsg("Get review failed.");
         return 2;
       }
     } catch (obj) {
@@ -306,362 +304,387 @@ class _BookDetailsState extends State<BookDetails>
             fontSize: 24,
             color: Colors.white,
             letterSpacing: 1.2,
+            shadows: [
+              Shadow(color: Colors.black26, offset: Offset(0, 2), blurRadius: 4),
+            ],
           ),
         ),
-        backgroundColor: Colors.green[700],
-        elevation: 4,
-        shadowColor: Colors.black45,
+        backgroundColor: Colors.teal[700],
+        elevation: 6,
+        shadowColor: Colors.black54,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
       ),
-
-      body: GestureDetector(
-        onTap: () => FocusScope.of(context).unfocus(),
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Padding(
-            padding: EdgeInsets.all(shortestVal * 0.04),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Book Image
-                Center(
-                  child: AnimatedOpacity(
-                    opacity: _isImageLoaded ? 1.0 : 0.0,
-                    duration: const Duration(milliseconds: 500),
-                    child: AnimatedScale(
-                      scale: _isImageLoaded ? 1.0 : 0.8,
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Colors.teal[700]!, Colors.teal[100]!],
+          ),
+        ),
+        child: GestureDetector(
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Padding(
+              padding: EdgeInsets.all(shortestVal * 0.05),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                    child: AnimatedOpacity(
+                      opacity: _isImageLoaded ? 1.0 : 0.0,
                       duration: const Duration(milliseconds: 500),
-                      child: Container(
-                        width: shortestVal * 0.5,
-                        height: shortestVal * 0.5,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black26,
-                              blurRadius: 12,
-                              offset: const Offset(0, 6),
+                      child: AnimatedScale(
+                        scale: _isImageLoaded ? 1.0 : 0.8,
+                        duration: const Duration(milliseconds: 500),
+                        child: Container(
+                          width: shortestVal * 0.6,
+                          height: shortestVal * 0.6,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.teal[300]!, width: 4),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.teal[400]!.withOpacity(0.5),
+                                blurRadius: 15,
+                                spreadRadius: 2,
+                                offset: const Offset(0, 8),
+                              ),
+                            ],
+                          ),
+                          child: ClipOval(
+                            child: widget.Photo.isNotEmpty
+                                ? Image.memory(
+                              base64Decode(widget.Photo),
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) =>
+                              const Icon(
+                                Icons.broken_image,
+                                size: 100,
+                                color: Colors.grey,
+                              ),
+                            )
+                                : const Icon(
+                              Icons.book,
+                              size: 100,
+                              color: Colors.grey,
                             ),
-                          ],
-                        ),
-                        child: ClipOval(
-                          child:
-                              widget.Photo.isNotEmpty
-                                  ? Image.memory(
-                                    base64Decode(widget.Photo),
-                                    fit: BoxFit.cover,
-                                    errorBuilder:
-                                        (context, error, stackTrace) =>
-                                            const Icon(
-                                              Icons.broken_image,
-                                              size: 100,
-                                              color: Colors.grey,
-                                            ),
-                                  )
-                                  : const Icon(
-                                    Icons.book,
-                                    size: 100,
-                                    color: Colors.grey,
-                                  ),
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-
-                SizedBox(height: heightVal * 0.03),
-
-                // Book Title
-                Text(
-                  "Book tittle:${widget.Title}",
-                  style: TextStyle(
-                    fontFamily: bold,
-                    fontSize: shortestVal * 0.08,
-                    color: Colors.black87,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: heightVal * 0.01),
-
-                // Author
-                Text(
-                  "Author name: ${widget.Author}",
-                  style: TextStyle(
-                    fontFamily: semibold,
-                    fontSize: shortestVal * 0.05,
-                    color: Colors.grey[600],
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: heightVal * 0.02),
-
-                // Book Details Card
-                Card(
-                  elevation: 4,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.all(shortestVal * 0.04),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildDetailRow(
-                          "Price",
-                          "${widget.Price}",
-                          shortestVal,
-                        ),
-                        _buildDetailRow("Format", widget.Format, shortestVal),
-                        _buildDetailRow(
-                          "Publisher",
-                          widget.Publisher,
-                          shortestVal,
-                        ),
-                        _buildDetailRow(
-                          "ISBN number:",
-                          widget.BookId,
-                          shortestVal,
-                        ),
-                        _buildDetailRow(
-                          "Publication Date",
-                          widget.PublicationDate,
-                          shortestVal,
-                        ),
-                        _buildDetailRow(
-                          "Language",
-                          widget.Language,
-                          shortestVal,
-                        ),
-                        _buildDetailRow(
-                          "Category",
-                          widget.Category,
-                          shortestVal,
-                        ),
-                        _buildDetailRow(
-                          "Listed At",
-                          widget.ListedAt,
-                          shortestVal,
-                        ),
-                        _buildDetailRow(
-                          "Available Quantity",
-                          widget.AvailableQuantity,
-                          shortestVal,
-                        ),
-                        if (widget.DiscountPercent != "0") ...[
-                          _buildDetailRow(
-                            "Discount",
-                            "${widget.DiscountPercent}%",
-                            shortestVal,
-                          ),
-                          _buildDetailRow(
-                            "Discount Period",
-                            "${widget.DiscountStart} to ${widget.DiscountEnd}",
-                            shortestVal,
-                          ),
-                        ],
+                  SizedBox(height: heightVal * 0.04),
+                  Text(
+                    "Book Title: ${widget.Title}",
+                    style: TextStyle(
+                      fontFamily: bold,
+                      fontSize: shortestVal * 0.09,
+                      color: Colors.teal[900],
+                      shadows: [
+                        Shadow(color: Colors.black26, offset: Offset(0, 2), blurRadius: 4),
                       ],
                     ),
+                    textAlign: TextAlign.center,
                   ),
-                ),
-                SizedBox(height: heightVal * 0.03),
-
-                // Quantity Input
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: _quantityController,
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly,
+                  SizedBox(height: heightVal * 0.02),
+                  Text(
+                    "Author: ${widget.Author}",
+                    style: TextStyle(
+                      fontFamily: semibold,
+                      fontSize: shortestVal * 0.06,
+                      color: Colors.teal[600],
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: heightVal * 0.03),
+                  Card(
+                    elevation: 8,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [Colors.white, Colors.teal[50]!],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black26,
+                            blurRadius: 12,
+                            offset: const Offset(0, 6),
+                          ),
                         ],
-                        decoration: InputDecoration(
-                          labelText: "Quantity",
-                          labelStyle: TextStyle(
-                            fontFamily: semibold,
-                            fontSize: shortestVal * 0.045,
-                            color: Colors.grey[600],
+                      ),
+                      padding: EdgeInsets.all(shortestVal * 0.05),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildDetailRow(
+                            "Price",
+                            "${widget.Price}",
+                            shortestVal,
                           ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: const BorderSide(color: Colors.grey),
+                          _buildDetailRow("Format", widget.Format, shortestVal),
+                          _buildDetailRow(
+                            "Publisher",
+                            widget.Publisher,
+                            shortestVal,
                           ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: const BorderSide(color: Colors.grey),
+                          _buildDetailRow(
+                            "ISBN Number",
+                            widget.BookId,
+                            shortestVal,
                           ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(
-                              color: Colors.green[700]!,
-                              width: 2,
+                          _buildDetailRow(
+                            "Publication Date",
+                            widget.PublicationDate,
+                            shortestVal,
+                          ),
+                          _buildDetailRow(
+                            "Language",
+                            widget.Language,
+                            shortestVal,
+                          ),
+                          _buildDetailRow(
+                            "Category",
+                            widget.Category,
+                            shortestVal,
+                          ),
+                          _buildDetailRow(
+                            "Listed At",
+                            widget.ListedAt,
+                            shortestVal,
+                          ),
+                          _buildDetailRow(
+                            "Available Quantity",
+                            widget.AvailableQuantity,
+                            shortestVal,
+                          ),
+                          if (widget.DiscountPercent != "0") ...[
+                            _buildDetailRow(
+                              "Discount",
+                              "${widget.DiscountPercent}%",
+                              shortestVal,
+                            ),
+                            _buildDetailRow(
+                              "Discount Period",
+                              "${widget.DiscountStart} to ${widget.DiscountEnd}",
+                              shortestVal,
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: heightVal * 0.04),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: _quantityController,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                          ],
+                          decoration: InputDecoration(
+                            labelText: "Quantity",
+                            labelStyle: TextStyle(
+                              fontFamily: semibold,
+                              fontSize: shortestVal * 0.05,
+                              color: Colors.teal[600],
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              borderSide: BorderSide(color: Colors.teal[300]!),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              borderSide: BorderSide(color: Colors.teal[300]!),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              borderSide: BorderSide(
+                                color: Colors.teal[700]!,
+                                width: 2,
+                              ),
+                            ),
+                            contentPadding: EdgeInsets.symmetric(
+                              horizontal: shortestVal * 0.05,
+                              vertical: shortestVal * 0.04,
                             ),
                           ),
-                          contentPadding: EdgeInsets.symmetric(
-                            horizontal: shortestVal * 0.04,
-                            vertical: shortestVal * 0.03,
+                          style: TextStyle(
+                            fontFamily: regular,
+                            fontSize: shortestVal * 0.05,
                           ),
                         ),
+                      ),
+                      SizedBox(width: shortestVal * 0.04),
+                      Text(
+                        "Max: ${widget.AvailableQuantity}",
                         style: TextStyle(
-                          fontFamily: regular,
+                          fontFamily: semibold,
                           fontSize: shortestVal * 0.045,
+                          color: Colors.teal[600],
                         ),
                       ),
-                    ),
-                    SizedBox(width: shortestVal * 0.03),
-                    Text(
-                      "Max: ${widget.AvailableQuantity}",
-                      style: TextStyle(
-                        fontFamily: semibold,
-                        fontSize: shortestVal * 0.04,
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: heightVal * 0.03),
-
-                Center(child: Text("Review information ")),
-
-                FutureBuilder<void>(
-                  future: Get_Review_Info(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      // Show a loading indicator while the future is executing
-                      return Center(child: CircularProgressIndicator());
-                    } else if (snapshot.hasError) {
-                      // Handle any error from the future
-                      return Center(
-                        child: Text(
-                          "Error fetching campaigns data. Please reopen app.",
-                          style: TextStyle(color: Colors.red, fontSize: 16),
-                        ),
-                      );
-                    } else if (snapshot.connectionState ==
-                        ConnectionState.done) {
-                      return ReviewInfoList.isEmpty
-                          ? const Center(
-                            child: Text("No review data available."),
-                          )
-                          : Container(
-                            color: Colors.grey,
-                            width: widthVal,
-                            height: 200,
-                            child: Builder(
-                              builder: (context) {
-                                return ListView.builder(
-                                  itemBuilder: (context, index) {
-                                    final review = ReviewInfoList[index];
-                                    return Card(
-                                      child: ListTile(
-                                        leading: Text(
-                                          "Comment= ${review.comment!}",
-                                          style: TextStyle(
-                                            fontFamily: semibold,
-                                            fontSize: shortestVal * 0.05,
-                                          ),
-                                        ),
-                                        title: Text(
-                                          "Rating : ${review.rating!}",
-                                          style: TextStyle(
-                                            fontFamily: semibold,
-                                            fontSize: shortestVal * 0.05,
-                                          ),
-                                        ),
-                                        trailing: Text(
-                                          "User email : ${widget.email}",
-                                          style: TextStyle(
-                                            fontFamily: semibold,
-                                            fontSize: shortestVal * 0.05,
-                                          ),
+                    ],
+                  ),
+                  SizedBox(height: heightVal * 0.04),
+                  Center(child: Text("Review Information")),
+                  FutureBuilder<void>(
+                    future: Get_Review_Info(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(child: CircularProgressIndicator());
+                      } else if (snapshot.hasError) {
+                        return Center(
+                          child: Text(
+                            "Error fetching campaigns data. Please reopen app.",
+                            style: TextStyle(color: Colors.red, fontSize: 16),
+                          ),
+                        );
+                      } else if (snapshot.connectionState ==
+                          ConnectionState.done) {
+                        return ReviewInfoList.isEmpty
+                            ? const Center(
+                          child: Text("No review data available."),
+                        )
+                            : Container(
+                          width: widthVal,
+                          height: 200,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [Colors.teal[50]!, Colors.white],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                          ),
+                          child: Builder(
+                            builder: (context) {
+                              return ListView.builder(
+                                itemBuilder: (context, index) {
+                                  final review = ReviewInfoList[index];
+                                  return Card(
+                                    elevation: 6,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                      BorderRadius.circular(12),
+                                    ),
+                                    child: ListTile(
+                                      leading: Text(
+                                        "Comment: ${review.comment!}",
+                                        style: TextStyle(
+                                          fontFamily: semibold,
+                                          fontSize: shortestVal * 0.055,
+                                          color: Colors.teal[800],
                                         ),
                                       ),
-                                    );
-                                  },
-                                  itemCount: ReviewInfoList.length,
-                                );
-                              },
-                            ),
-                          );
-                    } //connection sattae wdone
-                    else {
-                      return Center(
-                        child: Text(
-                          "Please reopen app.",
-                          style: TextStyle(color: Colors.red, fontSize: 16),
-                        ),
-                      );
-                    }
-                  },
-                ),
-                10.heightBox,
-
-                // Buttons
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    _buildActionButton(
-                      label: "Add to Cart",
-                      icon: Icons.shopping_cart,
-                      onPressed: () async {
-                        try {
-                          final Quantity = int.tryParse(
-                            _quantityController.text.toString(),
-                          );
-                          if (Quantity! <= 0) {
-                            Toastget().Toastmsg(
-                              "Add atleast 1 quantity of book.",
+                                      title: Text(
+                                        "Rating: ${review.rating!}",
+                                        style: TextStyle(
+                                          fontFamily: semibold,
+                                          fontSize: shortestVal * 0.055,
+                                          color: Colors.teal[800],
+                                        ),
+                                      ),
+                                      trailing: Text(
+                                        "User Email: ${widget.email}",
+                                        style: TextStyle(
+                                          fontFamily: semibold,
+                                          fontSize: shortestVal * 0.055,
+                                          color: Colors.teal[800],
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                                itemCount: ReviewInfoList.length,
+                              );
+                            },
+                          ),
+                        );
+                      } else {
+                        return Center(
+                          child: Text(
+                            "Please reopen app.",
+                            style: TextStyle(color: Colors.red, fontSize: 16),
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                  10.heightBox,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      _buildActionButton(
+                        label: "Add to Cart",
+                        icon: Icons.shopping_cart,
+                        onPressed: () async {
+                          try {
+                            final Quantity = int.tryParse(
+                              _quantityController.text.toString(),
                             );
-                            return;
-                          }
-                          final Available_Quantity = int.tryParse(
-                            widget.AvailableQuantity,
-                          );
-                          if (Available_Quantity! < Quantity!) {
-                            Toastget().Toastmsg(
-                              "Insufficient quantity of book.",
+                            if (Quantity! <= 0) {
+                              Toastget().Toastmsg(
+                                "Add at least 1 quantity of book.",
+                              );
+                              return;
+                            }
+                            final Available_Quantity = int.tryParse(
+                              widget.AvailableQuantity,
                             );
-                            return;
+                            if (Available_Quantity! < Quantity!) {
+                              Toastget().Toastmsg(
+                                "Insufficient quantity of book.",
+                              );
+                              return;
+                            }
+                            final AddedDate = getCurrentDateFormatted();
+                            print(AddedDate);
+                            final Cart_Result = await Add_Cart(
+                              Quantity: Quantity!,
+                              DateAdded: AddedDate,
+                            );
+                          } catch (Obj) {
+                            print(Obj.toString());
+                            Toastget().Toastmsg("Add to cart failed try again.");
                           }
-                          final AddedDate = getCurrentDateFormatted();
-                          print(AddedDate);
-                          final Cart_Result = await Add_Cart(
-                            Quantity: Quantity!,
-                            DateAdded: AddedDate,
-                          );
-                        } catch (Obj) {
-                          print(Obj.toString());
-                          Toastget().Toastmsg("Add to cart failed try again.");
-                        }
-                      },
-                      shortestVal: shortestVal,
-                      animation: _scaleAnimation,
-                    ),
-
-                    _buildActionButton(
-                      label: "Bookmark",
-                      icon: Icons.bookmark,
-                      onPressed: () async {
-                        try {
-                          final Add_BookMark_Result = await Add_Bookmark();
-                          print(Add_BookMark_Result);
-                        } catch (Obj) {
-                          print(Obj.toString());
-                          Toastget().Toastmsg(
-                            "Add to bookmark failed try again.",
-                          );
-                        }
-                      },
-                      shortestVal: shortestVal,
-                      animation: _scaleAnimation,
-                    ),
-                  ],
-                ),
-                SizedBox(height: heightVal * 0.04),
-              ],
+                        },
+                        shortestVal: shortestVal,
+                        animation: _scaleAnimation,
+                      ),
+                      _buildActionButton(
+                        label: "Bookmark",
+                        icon: Icons.bookmark,
+                        onPressed: () async {
+                          try {
+                            final Add_BookMark_Result = await Add_Bookmark();
+                            print(Add_BookMark_Result);
+                          } catch (Obj) {
+                            print(Obj.toString());
+                            Toastget().Toastmsg(
+                              "Add to bookmark failed try again.",
+                            );
+                          }
+                        },
+                        shortestVal: shortestVal,
+                        animation: _scaleAnimation,
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: heightVal * 0.05),
+                ],
+              ),
             ),
           ),
         ),
@@ -671,18 +694,19 @@ class _BookDetailsState extends State<BookDetails>
 
   Widget _buildDetailRow(String label, String value, double shortestVal) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: shortestVal * 0.015),
+      padding: EdgeInsets.symmetric(vertical: shortestVal * 0.02),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            width: shortestVal * 0.3,
+            width: shortestVal * 0.35,
             child: Text(
               label,
               style: TextStyle(
                 fontFamily: semibold,
-                fontSize: shortestVal * 0.045,
-                color: Colors.black87,
+                fontSize: shortestVal * 0.05,
+                color: Colors.blueAccent[900],
+                fontWeight: FontWeight.w600,
               ),
             ),
           ),
@@ -691,8 +715,8 @@ class _BookDetailsState extends State<BookDetails>
               value,
               style: TextStyle(
                 fontFamily: regular,
-                fontSize: shortestVal * 0.045,
-                color: Colors.grey[800],
+                fontSize: shortestVal * 0.05,
+                color: Colors.blueAccent[500],
               ),
             ),
           ),
@@ -715,42 +739,43 @@ class _BookDetailsState extends State<BookDetails>
           scale: animation.value,
           child: ElevatedButton.icon(
             onPressed: onPressed,
-            icon: Icon(icon, size: shortestVal * 0.06, color: Colors.white),
+            icon: Icon(icon, size: shortestVal * 0.07, color: Colors.white),
             label: Text(
               label,
               style: TextStyle(
                 fontFamily: semibold,
-                fontSize: shortestVal * 0.045,
+                fontSize: shortestVal * 0.05,
                 color: Colors.white,
+                fontWeight: FontWeight.w600,
               ),
             ),
             style: ElevatedButton.styleFrom(
               padding: EdgeInsets.symmetric(
-                horizontal: shortestVal * 0.06,
-                vertical: shortestVal * 0.04,
+                horizontal: shortestVal * 0.08,
+                vertical: shortestVal * 0.05,
               ),
               backgroundColor: Colors.transparent,
               shadowColor: Colors.transparent,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(15),
               ),
               elevation: 0,
-              minimumSize: Size(shortestVal * 0.35, shortestVal * 0.12),
+              minimumSize: Size(shortestVal * 0.4, shortestVal * 0.14),
             ).copyWith(
               backgroundBuilder: (context, states, child) {
                 return Container(
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [Colors.green[700]!, Colors.green[400]!],
+                      colors: [Colors.green[700]!, Colors.green[300]!],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(15),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black26,
-                        blurRadius: 8,
-                        offset: const Offset(0, 4),
+                        color: Colors.black38,
+                        blurRadius: 10,
+                        offset: const Offset(0, 6),
                       ),
                     ],
                   ),
