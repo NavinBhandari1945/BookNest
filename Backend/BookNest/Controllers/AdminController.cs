@@ -13,6 +13,7 @@ namespace BookNest.Controllers
     [ApiController]
     public class AdminController : ControllerBase
     {
+
         private readonly ILogger<AdminController> _logger;
 
         public DatabaseController Database { get; set; }
@@ -156,7 +157,7 @@ namespace BookNest.Controllers
             }
         }
 
-        //[Authorize(Policy = "RequireAdminRole")]
+        [Authorize(Policy = "RequireAdminRole")]
         [HttpPut]
         [Route("update_discount")]
         public async Task<IActionResult> UpdateDiscount([FromBody] UpdateDiscountDTOModel obj)

@@ -87,7 +87,8 @@ class _SignUpScreenState extends State<SignUpScreen> with SingleTickerProviderSt
         body: json.encode(userData),
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200)
+      {
         print("Data insert in userinfo table successs.");
         return 1;
       } else if (response.statusCode == 502) {

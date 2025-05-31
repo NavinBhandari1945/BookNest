@@ -235,9 +235,19 @@ class _AddAnnouncementPageState extends State<AddAnnouncementPage> {
                           Toastget().Toastmsg("Incorrect data format.");
                           return;
                         }
+                        //
+                        // final Current_Date = DateTime.now().toUtc();
 
                         final Start_Date = DateTime.tryParse(StartDate_Cont.text);
                         final End_Date = DateTime.tryParse(EndDate_Cont.text);
+
+
+                        // if (Start_Date!.isBefore(Current_Date!)) {
+                        //   print("Incorrect start date.Date must be today.");
+                        //   Toastget().Toastmsg("Incorrect start date.Date must be today.");
+                        //   return;
+                        // }
+
 
                         if (Start_Date!.isAfter(End_Date!) ||
                             End_Date.isBefore(Start_Date)) {
@@ -256,6 +266,7 @@ class _AddAnnouncementPageState extends State<AddAnnouncementPage> {
                         print(Result);
                       } catch (obj) {
                         print(obj.toString());
+
                         Toastget().Toastmsg("Incorrect data validation.");
                       }
                     },

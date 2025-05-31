@@ -49,7 +49,7 @@ namespace BookNest.Controllers
 
 
 
-        //[Authorize(Policy = "RequireMemberRole")]
+        [Authorize(Policy = "RequireMemberRole")]
         [HttpPut]
         [Route("update_email")]
         public async Task<IActionResult> UpdateEmail([FromBody] UpdateUserEmailDTOModel obj)
@@ -376,7 +376,7 @@ namespace BookNest.Controllers
             }
         }
 
-        //[Authorize(Policy = "RequireMemberRole")]
+        [Authorize(Policy = "RequireMemberRole")]
         [HttpPost]
         [Route("getcartdata")]
         public async Task<IActionResult> Get_Cart_Infos([FromBody] GetCartDTOModel obj)

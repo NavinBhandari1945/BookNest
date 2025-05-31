@@ -34,6 +34,8 @@ class BookScreen extends StatefulWidget {
 
 // State management section
 class _BookScreenState extends State<BookScreen> {
+
+
   @override
   void initState() {
     super.initState();
@@ -134,7 +136,8 @@ class _BookScreenState extends State<BookScreen> {
         'Content-Type': 'application/json',
       };
       final response = await http.get(Uri.parse(url), headers: headers);
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200)
+      {
         List<dynamic> responseData = await jsonDecode(response.body);
         print("response body");
         print(responseData);
@@ -158,6 +161,7 @@ class _BookScreenState extends State<BookScreen> {
       return;
     }
   }
+
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -571,7 +575,7 @@ class _BookScreenState extends State<BookScreen> {
               ),
               SizedBox(height: heightval * 0.02),
 
-              FutureBuilder<void>(
+              FutureBuilder<void> (
                 future:
                     Filter_Sort_Value == ""
                         ? GetBookInfo()
@@ -734,8 +738,6 @@ class _BookScreenState extends State<BookScreen> {
                                                 ),
                                               ),
                                             ),
-
-
 
                                             Padding(
                                               padding: EdgeInsets.only(

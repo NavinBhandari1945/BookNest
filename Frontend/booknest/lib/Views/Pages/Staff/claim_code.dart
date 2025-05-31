@@ -83,6 +83,7 @@ class _ClaimCodePageState extends State<ClaimCodePage> {
       };
 
       const String url = Backend_Server_Url + "api/Staff/claim_code";
+
       final response = await http.post(
         Uri.parse(url),
         headers: {

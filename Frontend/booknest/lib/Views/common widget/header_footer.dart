@@ -33,6 +33,7 @@ class HeaderWidget extends StatelessWidget {
         children: [
 
           _buildNavButton(context, 'Home', () {
+
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
@@ -43,6 +44,7 @@ class HeaderWidget extends StatelessWidget {
                 ),
               ),
             );
+
           }),
 
           _buildNavButton(context, 'Profile', () {

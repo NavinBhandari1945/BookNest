@@ -23,7 +23,7 @@ namespace BookNest.Controllers
             Logger = logger;
         }
 
-        //[Authorize(Policy = "RequireStaffRole")]
+        [Authorize(Policy = "RequireStaffRole")]
         [HttpPost]
         [Route("claim_code")]
         public async Task<IActionResult> Add_Bookmark([FromBody] ClaimCodeDTOModel obj)

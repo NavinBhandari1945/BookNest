@@ -21,6 +21,7 @@ namespace BookNest.Controllers
         public TokenServices TokenServices { get; set; }
 
         public AuthController(DatabaseController Database, TokenServices TokenServices)
+
         {
             this.Database = Database;
             this.TokenServices = TokenServices;
